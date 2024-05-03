@@ -1,7 +1,6 @@
 <script lang="ts">
   import svelteLogo from "./assets/svelte.svg";
   import viteLogo from "/vite.svg";
-  import Counter from "./lib/Counter.svelte";
   import { onMount } from "svelte";
 
   const AUTH_URL: string = "https://localhost:8000/discord/authenticate";
@@ -54,6 +53,15 @@
 
   onMount(FetchDiscordData)
 
+  function Echo(message: String) {
+    fetch("/post/data/here", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'}, 
+      body: JSON.stringify({message: message})
+    }).then(res => {
+      console.log("Request complete! response:", res);
+    });
+  }
 
 </script>
 
@@ -68,10 +76,6 @@
   </div>
   <h1>Name: {USER_INFO.nickname}</h1>
   <h1>Admin: {USER_INFO.isadmin}</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
 
   <div class="card">
     <button on:click={AuthRedirect}> Authenticate </button>
@@ -93,9 +97,17 @@
     </button>
   </div>
 
-  {#each USER_INFO.roles as role}
-    <span>{role}</span>
-  {/each}
+  <form action="" style="display: flex">
+    <input type="text">
+    <button></button>
+  </form>
+
+  <ul>
+    {#each USER_INFO.roles as role}
+      <span>{role}</span>
+    {/each}
+  </ul>
+
 </main>
 
 <style>

@@ -23,5 +23,12 @@ class TestRoute(commands.Cog):
                 return {"message": "sent"}
             return {"message": "not admin"}
         
+        @self.router.post('/api/echo')
+        async def echo(request: Request):
+            if await IsAdmin(request) == True:
+                await self.bot.get_channel(1040851566736986193).send(request.json().message)
+                return {"message": "sent"}
+            return {"message": "not admin"}
+        
 async def setup(bot):
 	await bot.add_cog(TestRoute(bot))

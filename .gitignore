@@ -1,17 +1,17 @@
 # Logs
-./front/logs
-./front/*.log
-./front/npm-debug.log*
-./front/yarn-debug.log*
-./front/yarn-error.log*
-./front/pnpm-debug.log*
-./front/lerna-debug.log*
+/front/logs
+/front/*.log
+/front/npm-debug.log*
+/front/yarn-debug.log*
+/front/yarn-error.log*
+/front/pnpm-debug.log*
+/front/lerna-debug.log*
 
 # Node
-./front/node_modules
-./front/dist
-./front/dist-ssr
-./front/*.local
+/front/node_modules
+/front/dist
+/front/dist-ssr
+/front/*.local
 
 # Editor directories and files
 .vscode
