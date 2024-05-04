@@ -29,6 +29,19 @@ if 'http://' in OAUTH2_REDIRECT_URI:
 
 router = APIRouter()
 
+def getCookies(request):
+    state = request.cookies.get('state')
+    token = request.cookies.get('token')
+
+    if state is None:
+        state = False
+
+    if token is None:
+        token = False
+    else:
+        token = json.loads(token)
+    
+    return state, token
 
 @router.get('/discord/authenticate')
 async def index(request: Request):
@@ -74,17 +87,16 @@ async def callback(request: Request, code: str = None, state: str = None):
 
 @router.get("/discord/read-cookie")
 async def read_cookie(request: Request):
-    if request.cookies.get('my_cookie'):
-        return {"state": request.cookies.get('state'), "token": request.cookies.get('token')}
-    else:
-        return {"message": "No cookie found"}    
+    state, token = getCookies(request)
+    if not token or not state:
+        return {"error": "state or token missing"}    
+    return {"state": state, "token": token}
 
 
 async def FetchDiscordProfile(request):
-    print(request.cookies.get('state'))
-    print(request.cookies.get('token'))
-    state = request.cookies.get('state')
-    token = json.loads(request.cookies.get('token'))
+    state, token = getCookies(request)
+    if not state or not token:
+        return {'error': 'state or token missing'}, False
     client = AsyncOAuth2Client(
         client_id=OAUTH2_CLIENT_ID,
         client_secret=OAUTH2_CLIENT_SECRET,
@@ -95,22 +107,40 @@ async def FetchDiscordProfile(request):
     
     print("new_token: ", client.token)
 
-    user = await client.get(API_BASE_URL + '/users/@me')
-    guilds = await client.get(API_BASE_URL + '/users/@me/guilds')
-    seduction = await client.get(API_BASE_URL + '/users/@me/guilds/' + GUILD_ID + '/member')
+    user_response = await client.get(API_BASE_URL + '/users/@me')
+    guilds_response = await client.get(API_BASE_URL + '/users/@me/guilds')
+    seduction_response = await client.get(API_BASE_URL + '/users/@me/guilds/' + GUILD_ID + '/member')
 
-    if "591686220996935691" in seduction.json()["roles"]:
-        isadmin = True
+    print('user: ' + str(user_response.status_code))
+    print('guilds: ' + str(guilds_response.status_code))
+    print('seduction: ' + str(seduction_response.status_code))
+    if user_response.status_code !=200 or guilds_response.status_code !=200 or seduction_response.status_code != 200:
+        return {'error': 'discord @me request failed'}, False
+
+    user = user_response.json()
+    guilds = guilds_response.json()
+    seduction = seduction_response.json()
+
+    data = {"user": user, "guilds": guilds}
+
+    if [item for item in guilds if item.get('id') == secret.GUILD_ID]:
+        data["seduction"] = seduction
+        if "roles" in seduction:
+            if "591686220996935691" in seduction["roles"]:
+                isadmin = True
+            else:
+                isadmin = False
     else:
         isadmin = False
-
-    data = {"isadmin": isadmin, "user": user.json(), "seduction": seduction.json(), "guilds": guilds.json()}
+        
+    data['isadmin'] = isadmin
 
     return data, client.token
 
 async def IsAdmin(request):
-    state = request.cookies.get('state')
-    token = json.loads(request.cookies.get('token'))
+    state, token = getCookies(request)
+    if not state or not token:
+        return False
     client = AsyncOAuth2Client(
         client_id=OAUTH2_CLIENT_ID,
         client_secret=OAUTH2_CLIENT_SECRET,
@@ -128,15 +158,21 @@ async def IsAdmin(request):
 
 @router.get('/discord/me')
 async def me(request: Request):
+    state, token = getCookies(request)
+    if not state or not token:
+        return {'error': 'state or token missing'}
     data, token = await FetchDiscordProfile(request)
 
     response = JSONResponse(content=data)
-    response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='none', secure=True, domain="localhost")
-    response.set_cookie(key="test", value="me test", httponly=True, samesite='none', secure=True, domain="localhost")
+    if token:
+        response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='none', secure=True, domain="localhost")
     
     return response
 
-@router.get('/test')
+@router.get('/isadmin')
 async def test(request: Request):
-    return {"message": await IsAdmin(request)}
+    state, token = getCookies(request)
+    if not state or not token:
+        return {'error': 'state or token missing'}
+    return {"is admin": await IsAdmin(request)}
     

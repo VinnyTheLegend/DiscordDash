@@ -31,7 +31,9 @@ async def lifespan(app: FastAPI):
     greetings = bot.get_cog("Greetings")
     global test
     test = bot.get_cog("TestRoute")
-    app.include_router(test.router)
+    app.include_router(test.testrouter)
+    app.include_router(test.echorouter)
+
     yield
     # on shutdown
 

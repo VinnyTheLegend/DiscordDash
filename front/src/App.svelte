@@ -3,6 +3,7 @@
   import viteLogo from "/vite.svg";
   import { onMount } from "svelte";
 
+  const BASE_URL: string = "https://localhost:8000"
   const AUTH_URL: string = "https://localhost:8000/discord/authenticate";
   const URL_PARAMS = new URLSearchParams(window.location.search);
   const ME_URL: string = "https://localhost:8000/discord/me";
@@ -28,52 +29,53 @@
     roles: [],
     isadmin: false,
   };
+
   async function FetchDiscordData() {
     fetch(ME_URL, {mode: 'cors', credentials: 'include'})
       .then((response) => response.json())
       .then((data) => {
-        USER_INFO.id = data.user.id
-        USER_INFO.username = data.user.username
-        USER_INFO.nickname = data.seduction.nick
-        USER_INFO.roles = []
-        for(let i in data.seduction.roles) {
-          if (ROLES_DICT[data.seduction.roles[i]]) {
-            USER_INFO.roles = [...USER_INFO.roles, ROLES_DICT[data.seduction.roles[i]]]
-          } 
+        if ('error' in data) { console.log(data) } else {
+          console.log(data)
+          USER_INFO.id = data.user.id
+          USER_INFO.username = data.user.username
+          USER_INFO.nickname = data.seduction.nick
+          USER_INFO.roles = []
+          for(let i in data.seduction.roles) {
+            if (ROLES_DICT[data.seduction.roles[i]]) {
+              USER_INFO.roles = [...USER_INFO.roles, ROLES_DICT[data.seduction.roles[i]]]
+            } 
+          }
+          USER_INFO.isadmin = data.isadmin
+          console.log(USER_INFO);
         }
-        USER_INFO.isadmin = data.isadmin
-        console.log(USER_INFO);
       })
       .catch((error) => {
         console.log(error);
-        AuthRedirect()
+        // AuthRedirect()
         return [];
       });
   }
 
-  onMount(FetchDiscordData)
+  // onMount(FetchDiscordData)
 
-  function Echo(message: String) {
-    fetch("/post/data/here", {
+  function Echo(e: SubmitEvent) {
+    const formData = new FormData(e.target as HTMLFormElement)
+    const message = formData.get("message")
+
+    fetch(BASE_URL + "/api/echo", {
+      mode: 'cors', 
+      credentials: 'include',
       method: "POST",
       headers: {'Content-Type': 'application/json'}, 
       body: JSON.stringify({message: message})
     }).then(res => {
-      console.log("Request complete! response:", res);
+      console.log("Echo response", res);
     });
   }
 
 </script>
 
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
   <h1>Name: {USER_INFO.nickname}</h1>
   <h1>Admin: {USER_INFO.isadmin}</h1>
 
@@ -97,9 +99,9 @@
     </button>
   </div>
 
-  <form action="" style="display: flex">
-    <input type="text">
-    <button></button>
+  <form action="" on:submit|preventDefault={Echo} class="flex justify-center items-center">
+    <input type="text" name="message" class="h-5 text-black">
+    <button class="ml-2">Send</button>
   </form>
 
   <ul>
@@ -111,16 +113,5 @@
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
+
 </style>
