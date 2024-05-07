@@ -32,7 +32,14 @@
 
   async function FetchDiscordData() {
     fetch(ME_URL, {mode: 'cors', credentials: 'include'})
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 400) {
+          return response.json().then((data) => {
+            throw new Error(data.detail || 'Bad request')
+          })
+        }
+        return response.json();
+      })
       .then((data) => {
         if ('error' in data) { console.log(data) } else {
           console.log(data)
@@ -50,7 +57,7 @@
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
         // AuthRedirect()
         return [];
       });

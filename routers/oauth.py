@@ -89,7 +89,7 @@ async def callback(request: Request, code: str = None, state: str = None):
 async def read_cookie(request: Request):
     state, token = getCookies(request)
     if not token or not state:
-        return {"error": "state or token missing"}    
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
     return {"state": state, "token": token}
 
 
@@ -160,7 +160,8 @@ async def IsAdmin(request):
 async def me(request: Request):
     state, token = getCookies(request)
     if not state or not token:
-        return {'error': 'state or token missing'}
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
+
     data, token = await FetchDiscordProfile(request)
 
     response = JSONResponse(content=data)
@@ -173,6 +174,5 @@ async def me(request: Request):
 async def test(request: Request):
     state, token = getCookies(request)
     if not state or not token:
-        return {'error': 'state or token missing'}
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
     return {"is admin": await IsAdmin(request)}
-    
