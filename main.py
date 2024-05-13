@@ -27,8 +27,10 @@ async def lifespan(app: FastAPI):
     await bot.load_extension("hello")
     await bot.load_extension("routers.testroute")
     asyncio.create_task(bot.start(secret.BOT_TOKEN))
+    
     global greetings
     greetings = bot.get_cog("Greetings")
+
     global test
     test = bot.get_cog("TestRoute")
     app.include_router(test.testrouter)

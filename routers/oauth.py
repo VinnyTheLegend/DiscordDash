@@ -1,5 +1,6 @@
 import os
 import json
+import secret
 
 from fastapi import APIRouter, HTTPException, Request, status, Response
 from fastapi.responses import RedirectResponse, JSONResponse
@@ -8,7 +9,9 @@ from starlette.datastructures import URL
 
 from authlib.integrations.httpx_client import AsyncOAuth2Client
 
-import secret
+from sqlalchemy.orm import Session
+from database import crud, models, schemas 
+from database.database import SessionLocal, engine
 
 OAUTH2_CLIENT_ID = secret.OAUTH2_CLIENT_ID
 OAUTH2_CLIENT_SECRET = secret.OAUTH2_CLIENT_SECRET
@@ -26,6 +29,7 @@ SCOPE = 'identify guilds guilds.members.read'
 if 'http://' in OAUTH2_REDIRECT_URI:
     os.environ['AUTHLIB_INSECURE_TRANSPORT'] = 'true'
 
+models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
 
@@ -134,6 +138,26 @@ async def FetchDiscordProfile(request):
         isadmin = False
         
     data['isadmin'] = isadmin
+
+    db = SessionLocal()
+    db.close()
+
+    db_user = {
+        'id': user['id'],
+        'username': user['username'],
+        'global_name': user['global_name'],
+        'avatar': user['avatar'],
+        'token': token['access_token'],
+        'expires_in': token['expires_in'],
+        'refresh_token': token['refresh_token'],
+        'expires_at': token['expires_at'],
+        'is_admin': isadmin,
+        'nickname': seduction['nick'],
+        'joined_at': seduction['joined_at'],
+        'roles': seduction['roles']
+    }
+
+    crud.create_user(db=db, user=schemas.UserCreate(**db_user))
 
     return data, client.token
 
