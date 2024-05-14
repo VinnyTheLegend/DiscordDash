@@ -125,10 +125,7 @@ async def FetchDiscordProfile(request):
     guilds = guilds_response.json()
     seduction = seduction_response.json()
 
-    # data = {"user": user, "guilds": guilds}
-
     if [item for item in guilds if item.get('id') == secret.GUILD_ID]:
-        # data["seduction"] = seduction
         member = True
         if "roles" in seduction:
             if "591686220996935691" in seduction["roles"]:
