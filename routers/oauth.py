@@ -156,8 +156,12 @@ async def FetchDiscordProfile(request):
         'joined_at': seduction['joined_at'],
         'roles': seduction['roles']
     }
-
-    crud.create_user(db=db, user=schemas.UserCreate(**db_user))
+    
+    db_user_old = crud.get_user(db=db, user_id=user['id'])
+    if db_user_old:
+        crud.update_user(db=db, user_id=user['id'], user=schemas.UserCreate(**db_user))
+    else:
+        crud.create_user(db=db, user=schemas.UserCreate(**db_user))
 
     return data, client.token
 
