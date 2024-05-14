@@ -125,20 +125,20 @@ async def FetchDiscordProfile(request):
     guilds = guilds_response.json()
     seduction = seduction_response.json()
 
-    data = {"user": user, "guilds": guilds}
+    # data = {"user": user, "guilds": guilds}
 
     if [item for item in guilds if item.get('id') == secret.GUILD_ID]:
-        data["seduction"] = seduction
+        # data["seduction"] = seduction
+        member = True
         if "roles" in seduction:
             if "591686220996935691" in seduction["roles"]:
                 isadmin = True
             else:
                 isadmin = False
     else:
-        isadmin = False    
+        isadmin = False
+        member = False
         
-    data['isadmin'] = isadmin
-
     db = SessionLocal()
     db.close()
 
@@ -151,6 +151,7 @@ async def FetchDiscordProfile(request):
         'expires_in': token['expires_in'],
         'refresh_token': token['refresh_token'],
         'expires_at': token['expires_at'],
+        'member': member,
         'is_admin': isadmin,
         'nickname': seduction['nick'],
         'joined_at': seduction['joined_at'],
@@ -163,7 +164,7 @@ async def FetchDiscordProfile(request):
     else:
         crud.create_user(db=db, user=schemas.UserCreate(**db_user))
 
-    return data, client.token
+    return db_user, client.token
 
 async def IsAdmin(request):
     state, token = getCookies(request)

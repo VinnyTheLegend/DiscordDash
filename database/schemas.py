@@ -17,6 +17,8 @@ class User(BaseModel):
     global_name: str
     avatar: str
 
+    member: bool
+    is_admin: bool
     nickname: Optional[str]
     joined_at: Optional[datetime]
     roles: Optional[list[str]]
@@ -31,5 +33,4 @@ class UserCreate(User):
     expires_in: int
     refresh_token: str
     expires_at: int
-    is_admin: bool
 

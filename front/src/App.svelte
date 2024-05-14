@@ -43,17 +43,6 @@
       .then((data) => {
         if ('error' in data) { console.log(data) } else {
           console.log(data)
-          USER_INFO.id = data.user.id
-          USER_INFO.username = data.user.username
-          USER_INFO.nickname = data.seduction.nick
-          USER_INFO.roles = []
-          for(let i in data.seduction.roles) {
-            if (ROLES_DICT[data.seduction.roles[i]]) {
-              USER_INFO.roles = [...USER_INFO.roles, ROLES_DICT[data.seduction.roles[i]]]
-            } 
-          }
-          USER_INFO.isadmin = data.isadmin
-          console.log(USER_INFO);
         }
       })
       .catch((error) => {

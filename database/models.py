@@ -16,8 +16,9 @@ class User(Base):
     expires_in = Column(Integer)
     refresh_token = Column(String)
     expires_at = Column(Integer)
-    is_admin = Column(Boolean)
 
+    member = Column(Boolean)
+    is_admin = Column(Boolean)
     nickname = Column(String, index=True, nullable=True)
     joined_at = Column(DateTime(timezone=True), nullable=True)
     roles = Column(PickleType, nullable=True)
