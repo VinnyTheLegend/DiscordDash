@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -17,9 +17,9 @@ class User(BaseModel):
     global_name: str
     avatar: str
 
-    nickname: str
-    joined_at: datetime
-    roles: list[str]
+    nickname: Optional[str]
+    joined_at: Optional[datetime]
+    roles: Optional[list[str]]
 
     # guilds: list[Guild]
 

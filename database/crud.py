@@ -27,7 +27,7 @@ def get_guilds(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Guild).offset(skip).limit(limit).all()
 
 def create_user_guild(db: Session, guild: schemas.Guild, user_id: int):
-    db_item = models.Guild(**guild.mode_dump(), user_id=user_id)
+    db_item = models.Guild(**guild.model_dump(), user_id=user_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

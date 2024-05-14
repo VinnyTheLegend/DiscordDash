@@ -135,7 +135,7 @@ async def FetchDiscordProfile(request):
             else:
                 isadmin = False
     else:
-        isadmin = False
+        isadmin = False    
         
     data['isadmin'] = isadmin
 

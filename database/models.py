@@ -18,9 +18,9 @@ class User(Base):
     expires_at = Column(Integer)
     is_admin = Column(Boolean)
 
-    nickname = Column(String, index=True)
-    joined_at = Column(DateTime(timezone=True))
-    roles = Column(PickleType)
+    nickname = Column(String, index=True, nullable=True)
+    joined_at = Column(DateTime(timezone=True), nullable=True)
+    roles = Column(PickleType, nullable=True)
 
     guilds = relationship("Guild", back_populates="user")
 
