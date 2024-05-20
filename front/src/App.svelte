@@ -1,8 +1,4 @@
 <script lang="ts">
-  import svelteLogo from "./assets/svelte.svg";
-  import viteLogo from "/vite.svg";
-  import { onMount } from "svelte";
-
   const BASE_URL: string = "https://localhost:8000"
   const AUTH_URL: string = BASE_URL + "/discord/authenticate";
   const ME_URL: string = BASE_URL + "/discord/me";
@@ -50,8 +46,10 @@
   // onMount(FetchDiscordData)
 
   function Echo(e: SubmitEvent) {
-    const formData = new FormData(e.target as HTMLFormElement)
+    const target = e.target as HTMLFormElement
+    const formData = new FormData(target)
     const message = formData.get("message")
+    target.reset()
 
     fetch(BASE_URL + "/api/echo", {
       mode: 'cors', 

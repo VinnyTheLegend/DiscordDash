@@ -8,7 +8,9 @@ from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
-from database import crud, models, schemas 
+from database import crud, models, schemas
+
+import secret
 
 def get_db():
     db = SessionLocal()
@@ -37,7 +39,7 @@ class TestRoute(commands.Cog):
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
 
             if db_user.admin == True:
-                await self.bot.get_channel(1040851566736986193).send("Someone clicked a button on a website to trigger this message. Gio is gay. That is all.")
+                await self.bot.get_channel(secret.BOT_SPAM_CHANNEL_ID).send("Someone clicked a button on a website to trigger this message. Gio is gay. That is all.")
                 return {"message": "sent"}
             return {"message": "not admin"}
         
@@ -47,7 +49,7 @@ class TestRoute(commands.Cog):
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
 
             if db_user.admin == True:
-                await self.bot.get_channel(1040851566736986193).send(message.message)
+                await self.bot.get_channel(secret.BOT_SPAM_CHANNEL_ID).send(message.message)
                 return {"message": "sent"}
             return {"message": "not admin"}
         

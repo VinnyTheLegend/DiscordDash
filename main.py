@@ -2,7 +2,7 @@ import asyncio
 
 from fastapi import FastAPI
 
-from routers import oauth, testroute
+from routers import oauth
 
 import discord
 from discord.ext import commands
