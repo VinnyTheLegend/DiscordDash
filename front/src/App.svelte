@@ -4,9 +4,9 @@
   import { onMount } from "svelte";
 
   const BASE_URL: string = "https://localhost:8000"
-  const AUTH_URL: string = "https://localhost:8000/discord/authenticate";
+  const AUTH_URL: string = BASE_URL + "/discord/authenticate";
+  const ME_URL: string = BASE_URL + "/discord/me";
   const URL_PARAMS = new URLSearchParams(window.location.search);
-  const ME_URL: string = "https://localhost:8000/discord/me";
 
   const ROLES_DICT: { [id: string] : string; } = {
     "591686220996935691": "Warlord",
@@ -74,10 +74,10 @@
     
     <div class="card">
       <h1>Name: {USER_INFO.nickname}</h1>
-      <h1>Admin: {USER_INFO.is_admin}</h1>
+      <h1>Admin: {USER_INFO.admin}</h1>
       <button
         on:click={async () => {
-          fetch("https://localhost:8000/api/test", {mode: 'cors', credentials: 'include'})
+          fetch(BASE_URL + "/api/test", {mode: 'cors', credentials: 'include'})
             .then((response) => response.json())
             .then((data) => {
               console.log(data);

@@ -2,14 +2,13 @@ import os
 import json
 import secret
 
-from fastapi import APIRouter, HTTPException, Request, status, Response
+from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import RedirectResponse, JSONResponse
 
 from starlette.datastructures import URL
 
 from authlib.integrations.httpx_client import AsyncOAuth2Client
 
-from sqlalchemy.orm import Session
 from database import crud, models, schemas 
 from database.database import SessionLocal, engine
 
@@ -137,19 +136,18 @@ async def FetchDiscordProfile(request):
         member = False
         
     db = SessionLocal()
-    db.close()
 
     db_user = {
         'id': user['id'],
         'username': user['username'],
         'global_name': user['global_name'],
         'avatar': user['avatar'],
-        'token': token['access_token'],
+        'access_token': token['access_token'],
         'expires_in': token['expires_in'],
         'refresh_token': token['refresh_token'],
         'expires_at': token['expires_at'],
         'member': member,
-        'is_admin': isadmin,
+        'admin': isadmin,
         'nickname': seduction['nick'],
         'joined_at': seduction['joined_at'],
         'roles': seduction['roles']
@@ -161,26 +159,8 @@ async def FetchDiscordProfile(request):
     else:
         crud.create_user(db=db, user=schemas.UserCreate(**db_user))
 
+    db.close()
     return db_user, client.token
-
-async def IsAdmin(request):
-    state, token = getCookies(request)
-    if not state or not token:
-        return False
-    client = AsyncOAuth2Client(
-        client_id=OAUTH2_CLIENT_ID,
-        client_secret=OAUTH2_CLIENT_SECRET,
-        redirect_uri=OAUTH2_REDIRECT_URI,
-        state=state,
-        token=token,
-        token_endpoint=TOKEN_URL)
-    
-    seduction = await client.get(API_BASE_URL + '/users/@me/guilds/' + GUILD_ID + '/member')
-
-    if "591686220996935691" in seduction.json()["roles"]:
-        return True
-    else:
-        return False
 
 @router.get('/discord/me')
 async def me(request: Request):
@@ -195,10 +175,3 @@ async def me(request: Request):
         response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='none', secure=True, domain="localhost")
     
     return response
-
-@router.get('/isadmin')
-async def test(request: Request):
-    state, token = getCookies(request)
-    if not state or not token:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
-    return {"is admin": await IsAdmin(request)}

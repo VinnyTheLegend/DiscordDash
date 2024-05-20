@@ -8,7 +8,7 @@ interface UserData {
     refresh_token: String,
     expires_at: String,
     member: Boolean,
-    is_admin: Boolean,
+    admin: Boolean,
     nickname: String | null,
     joined_at: String | null,
     roles: Array[Number] | null
