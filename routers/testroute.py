@@ -27,13 +27,12 @@ class TestRoute(commands.Cog):
         print("starting testroute")
         self.bot = bot
         self._last_member = None
-        self.testrouter = APIRouter()   
-        self.echorouter = APIRouter()        
+        self.router = APIRouter()   
 
         async def get_router(self):
             return self.router
 
-        @self.testrouter.get('/api/test')
+        @self.router.get('/api/test')
         async def test(request: Request, db: Session = Depends(get_db)):
             state, token = getCookies(request)
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
@@ -43,7 +42,7 @@ class TestRoute(commands.Cog):
                 return {"message": "sent"}
             return {"message": "not admin"}
         
-        @self.echorouter.post('/api/echo')
+        @self.router.post('/api/echo')
         async def echo(request: Request, message: Message, db: Session = Depends(get_db)):
             state, token = getCookies(request)
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])

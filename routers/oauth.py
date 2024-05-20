@@ -23,7 +23,7 @@ FRONT_URI = secret.FRONT_URI
 API_BASE_URL = 'https://discord.com/api'
 AUTHORIZATION_BASE_URL = API_BASE_URL + '/oauth2/authorize'
 TOKEN_URL = API_BASE_URL + '/oauth2/token'
-SCOPE = 'identify guilds guilds.members.read'
+SCOPE = 'identify guilds.members.read'
 
 if 'http://' in OAUTH2_REDIRECT_URI:
     os.environ['AUTHLIB_INSECURE_TRANSPORT'] = 'true'
@@ -111,29 +111,25 @@ async def FetchDiscordProfile(request):
     print("new_token: ", client.token)
 
     user_response = await client.get(API_BASE_URL + '/users/@me')
-    guilds_response = await client.get(API_BASE_URL + '/users/@me/guilds')
     seduction_response = await client.get(API_BASE_URL + '/users/@me/guilds/' + GUILD_ID + '/member')
 
     print('user: ' + str(user_response.status_code))
-    print('guilds: ' + str(guilds_response.status_code))
     print('seduction: ' + str(seduction_response.status_code))
-    if user_response.status_code !=200 or guilds_response.status_code !=200 or seduction_response.status_code != 200:
-        return {'error': 'discord @me request failed'}, False
 
     user = user_response.json()
-    guilds = guilds_response.json()
     seduction = seduction_response.json()
 
-    if [item for item in guilds if item.get('id') == secret.GUILD_ID]:
+    isadmin = False
+    member = False
+
+    if user_response.status_code !=200:
+        return {'error': user}, False
+
+    if seduction_response.status_code == 200:
         member = True
         if "roles" in seduction:
             if "591686220996935691" in seduction["roles"]:
                 isadmin = True
-            else:
-                isadmin = False
-    else:
-        isadmin = False
-        member = False
         
     db = SessionLocal()
 
@@ -148,9 +144,9 @@ async def FetchDiscordProfile(request):
         'expires_at': token['expires_at'],
         'member': member,
         'admin': isadmin,
-        'nickname': seduction['nick'],
-        'joined_at': seduction['joined_at'],
-        'roles': seduction['roles']
+        'nickname': seduction.get('nick', None),
+        'joined_at': seduction.get('joined_at', None),
+        'roles': seduction.get('roles', None)
     }
     
     db_user_old = crud.get_user(db=db, user_id=user['id'])
@@ -168,10 +164,13 @@ async def me(request: Request):
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
 
-    data, token = await FetchDiscordProfile(request)
+    data, new_token = await FetchDiscordProfile(request)
+
+    if not new_token:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data)
 
     response = JSONResponse(content=data)
-    if token:
-        response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='none', secure=True, domain="localhost")
+    if new_token:
+        response.set_cookie(key="token", value=json.dumps(new_token), httponly=True, samesite='none', secure=True, domain="localhost")
     
     return response

@@ -94,9 +94,11 @@
       <button class="ml-2">Send</button>
     </form>
     <ul>
-      {#each USER_INFO.roles as role}
-        <div><span>{ROLES_DICT[role]}</span></div>
-      {/each}
+      {#if USER_INFO.roles}
+        {#each USER_INFO.roles as role}
+          <div><span>{ROLES_DICT[role]}</span></div>
+        {/each}
+      {/if}
     </ul>
 
   </div>
