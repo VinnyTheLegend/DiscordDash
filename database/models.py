@@ -22,16 +22,3 @@ class User(Base):
     nickname = Column(String, index=True, nullable=True)
     joined_at = Column(DateTime(timezone=True), nullable=True)
     roles = Column(PickleType, nullable=True)
-
-    guilds = relationship("Guild", back_populates="user")
-
-
-class Guild(Base):
-    __tablename__ = "guilds"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String, index=True)
-    owner = Column(Boolean)
-
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="guilds")

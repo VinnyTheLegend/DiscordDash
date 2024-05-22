@@ -4,13 +4,6 @@ from pydantic import BaseModel
 
 from datetime import datetime
 
-class Guild(BaseModel):
-    id: int
-    name: str
-    owner: bool
-
-    user_id: int
-
 class User(BaseModel):
     id: int
     username: str
@@ -22,8 +15,6 @@ class User(BaseModel):
     nickname: Optional[str]
     joined_at: Optional[datetime]
     roles: Optional[list[str]]
-
-    # guilds: list[Guild]
 
     class Config:
         orm_mode = True

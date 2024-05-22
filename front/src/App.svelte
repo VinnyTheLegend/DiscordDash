@@ -1,4 +1,7 @@
 <script lang="ts">
+  import NavBar from "./components/NavBar.svelte";
+
+  
   const BASE_URL: string = "https://localhost:8000"
   const AUTH_URL: string = BASE_URL + "/discord/authenticate";
   const ME_URL: string = BASE_URL + "/discord/me";
@@ -43,8 +46,6 @@
       });
   }
 
-  // onMount(FetchDiscordData)
-
   function Echo(e: SubmitEvent) {
     const target = e.target as HTMLFormElement
     const formData = new FormData(target)
@@ -65,45 +66,7 @@
 </script>
 
 <main>
-  <button on:click={AuthRedirect}> Authenticate </button>
-  <button on:click={FetchDiscordData}> Discord Info </button>
-  {#if USER_INFO}
-  <div>
-    
-    <div class="card">
-      <h1>Name: {USER_INFO.nickname}</h1>
-      <h1>Admin: {USER_INFO.admin}</h1>
-      <button
-        on:click={async () => {
-          fetch(BASE_URL + "/api/test", {mode: 'cors', credentials: 'include'})
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-            })
-            .catch((error) => {
-              console.log(error);
-              return [];
-            });
-        }}
-      >
-        test
-      </button>
-    </div>
-    <form action="" on:submit|preventDefault={Echo} class="flex justify-center items-center">
-      <input type="text" name="message" class="h-5 text-black">
-      <button class="ml-2">Send</button>
-    </form>
-    <ul>
-      {#if USER_INFO.roles}
-        {#each USER_INFO.roles as role}
-          <div><span>{ROLES_DICT[role]}</span></div>
-        {/each}
-      {/if}
-    </ul>
-
-  </div>
-  {/if}
-
+  <NavBar/>
 </main>
 
 <style>
