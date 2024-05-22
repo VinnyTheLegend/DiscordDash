@@ -17,13 +17,9 @@
     "591687038902992928": "Member"
   }
 
-  function AuthRedirect() {
-    window.location.href = URLS.AUTH_URL;
-  }
-
   let USER_INFO: UserData | null = null
 
-  async function FetchDiscordData() {
+  async function userUpdate() {
     fetch(URLS.ME_URL, {mode: 'cors', credentials: 'include'})
       .then((response) => {
         if (response.status === 400) {
@@ -46,12 +42,7 @@
       });
   }
 
-  function Echo(e: SubmitEvent) {
-    const target = e.target as HTMLFormElement
-    const formData = new FormData(target)
-    const message = formData.get("message")
-    target.reset()
-
+  function echo(message: string) {
     fetch(BASE_URL + "/api/echo", {
       mode: 'cors', 
       credentials: 'include',
@@ -66,7 +57,7 @@
 </script>
 
 <main>
-  <NavBar {USER_INFO} {URLS} {ROLES_DICT} on:userUpdate={FetchDiscordData} />
+  <NavBar {USER_INFO} {URLS} {ROLES_DICT} on:userUpdate={userUpdate} echo={echo}/>
 </main>
 
 <style>

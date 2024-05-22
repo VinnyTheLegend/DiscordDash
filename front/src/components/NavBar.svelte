@@ -4,10 +4,6 @@
   
     export let ROLES_DICT
   
-    function AuthRedirect() {
-      window.location.href = URLS.AUTH_URL;
-    }
-  
     export let USER_INFO: UserData | null
 
     export let URLS: any
@@ -16,28 +12,21 @@
         dispatch('userUpdate')
     }
     
-    function Echo(e: SubmitEvent) {
-      const target = e.target as HTMLFormElement
-      const formData = new FormData(target)
-      const message = formData.get("message")
-      target.reset()
-  
-      fetch(URLS.BASE_URL + "/api/echo", {
-        mode: 'cors', 
-        credentials: 'include',
-        method: "POST",
-        headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify({message: message})
-      }).then(res => {
-        console.log("Echo response", res);
-      });
+    export let echo: Function
+
+    function echoSubmit(e: SubmitEvent) {
+        const target = e.target as HTMLFormElement
+        const formData = new FormData(target)
+        const message = formData.get("message")
+        target.reset()
+        echo(message)
     }
-  
+
   </script>
   
   <main>
     <div class="flex items-center">
-      <button on:click={AuthRedirect}> Authenticate </button>
+      <button on:click={() => {window.location.href = URLS.AUTH_URL}}> Authenticate </button>
       <button on:click={userUpdate}> Discord Info </button>
       {#if USER_INFO}
       
@@ -47,17 +36,7 @@
         </div>
   
         <button
-        on:click={async () => {
-          fetch(URLS.BASE_URL + "/api/test", {mode: 'cors', credentials: 'include'})
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-            })
-            .catch((error) => {
-              console.log(error);
-              return [];
-            });
-        }}
+        on:click={echo('test')}
       >
         test
       </button>
@@ -70,7 +49,7 @@
           {/if}
         </ul>
   
-        <form action="" on:submit|preventDefault={Echo} class="flex items-center">
+        <form action="" on:submit|preventDefault={echoSubmit} class="flex items-center">
           <input type="text" name="message" class="h-5 text-black">
           <button class="ml-2">Send</button>
         </form>
