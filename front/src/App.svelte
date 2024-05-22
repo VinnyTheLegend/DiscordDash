@@ -1,11 +1,14 @@
 <script lang="ts">
   import NavBar from "./components/NavBar.svelte";
-
   
   const BASE_URL: string = "https://localhost:8000"
-  const AUTH_URL: string = BASE_URL + "/discord/authenticate";
-  const ME_URL: string = BASE_URL + "/discord/me";
-  const URL_PARAMS = new URLSearchParams(window.location.search);
+
+  const URLS = {
+    BASE_URL: BASE_URL,
+    AUTH_URL: BASE_URL + "/discord/authenticate",
+    ME_URL: BASE_URL + "/discord/me",
+    URL_PARAMS: new URLSearchParams(window.location.search)
+  }
 
   const ROLES_DICT: { [id: string] : string; } = {
     "591686220996935691": "Warlord",
@@ -14,17 +17,14 @@
     "591687038902992928": "Member"
   }
 
-  let token: string | null = URL_PARAMS.get("token");
-  let state: string | null = URL_PARAMS.get("state");
-
   function AuthRedirect() {
-    window.location.href = AUTH_URL;
+    window.location.href = URLS.AUTH_URL;
   }
 
   let USER_INFO: UserData | null = null
 
   async function FetchDiscordData() {
-    fetch(ME_URL, {mode: 'cors', credentials: 'include'})
+    fetch(URLS.ME_URL, {mode: 'cors', credentials: 'include'})
       .then((response) => {
         if (response.status === 400) {
           return response.json().then((data) => {
@@ -66,7 +66,7 @@
 </script>
 
 <main>
-  <NavBar/>
+  <NavBar {USER_INFO} {URLS} {ROLES_DICT} on:userUpdate={FetchDiscordData} />
 </main>
 
 <style>
