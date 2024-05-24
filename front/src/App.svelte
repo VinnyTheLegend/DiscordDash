@@ -11,16 +11,15 @@
   };
 
   const ROLES_DICT: { [id: string]: string } = {
-    "591686220996935691": "Warlord",
-    "591686523142012948": "General",
-    "591687458819932172": "Veteran",
-    "591687038902992928": "Member",
+    591686220996935691: "Warlord",
+    591686523142012948: "General",
+    591687458819932172: "Veteran",
+    591687038902992928: "Member",
   };
 
-  let USER_INFO: UserData | null = null;
-
-  async function userUpdate() {
-    fetch(URLS.ME_URL + '/update', { mode: "cors", credentials: "include" })
+  let USER: User = {
+    get: function(this: User) {
+      fetch(URLS.ME_URL, { mode: "cors", credentials: "include" })
       .then((response) => {
         if (response.status === 400) {
           return response.json().then((data) => {
@@ -34,7 +33,8 @@
           console.log(data);
         } else {
           console.log(data);
-          USER_INFO = { ...data };
+          Object.assign(this, data)
+          USER=USER
         }
       })
       .catch((error) => {
@@ -42,6 +42,33 @@
         // AuthRedirect()
         return [];
       });
+    },
+    
+    update: function(this: User) {
+      fetch(URLS.ME_URL + '/update', { mode: "cors", credentials: "include" })
+      .then((response) => {
+        if (response.status === 400) {
+          return response.json().then((data) => {
+            throw new Error(data.detail || "Bad request");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if ("error" in data) {
+          console.log(data);
+        } else {
+          console.log(data);
+          Object.assign(this, data)
+          USER=USER
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        // AuthRedirect()
+        return [];
+      });
+    }
   }
 
   function echo(message: string) {
@@ -58,7 +85,7 @@
 </script>
 
 <main>
-  <NavBar {USER_INFO} {URLS} {ROLES_DICT} on:userUpdate={userUpdate} {echo} />
+  <NavBar {USER} {URLS} {ROLES_DICT} {echo} />
 </main>
 
 <style>

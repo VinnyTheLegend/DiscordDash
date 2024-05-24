@@ -4,12 +4,14 @@
 
     export let ROLES_DICT;
 
-    export let USER_INFO: UserData | null;
+    export let USER: User;
 
     export let URLS: any;
 
     function userUpdate() {
-        dispatch("userUpdate");
+        USER.get()
+        console.log(USER)
+        // dispatch("userUpdate");
     }
 
     export let echo: Function;
@@ -35,17 +37,17 @@
             </button>
             <button on:click={userUpdate}> Discord Info </button>
         </div>
-        {#if USER_INFO}
+        {#if USER.member}
             <div class="flex p-2">
-                <h1>Name: {USER_INFO.nickname}</h1>
-                <h1>Admin: {USER_INFO.admin}</h1>
+                <h1>Name: {USER.nickname}</h1>
+                <h1>Admin: {USER.admin}</h1>
             </div>
 
             <button on:click={echo("test")}> test </button>
 
             <ul class="flex justify-around px-5">
-                {#if USER_INFO.roles}
-                    {#each USER_INFO.roles as role}
+                {#if USER.roles}
+                    {#each USER.roles as role}
                         <span class="p-2 border-2 border-purple-500"
                             >{ROLES_DICT[role]}</span
                         >
