@@ -1,12 +1,10 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import {echo, URLS, ROLES_DICT} from '../utils'
     const dispatch = createEventDispatcher();
-
-    export let ROLES_DICT;
 
     export let USER: User;
 
-    export let URLS: any;
 
     function userUpdate() {
         USER.get()
@@ -14,14 +12,12 @@
         // dispatch("userUpdate");
     }
 
-    export let echo: Function;
-
     function echoSubmit(e: SubmitEvent) {
         const target = e.target as HTMLFormElement;
         const formData = new FormData(target);
         const message = formData.get("message");
         target.reset();
-        echo(message);
+        if (typeof message === 'string' && message != '') { echo(message) }
     }
 </script>
 
@@ -43,7 +39,7 @@
                 <h1>Admin: {USER.admin}</h1>
             </div>
 
-            <button on:click={echo("test")}> test </button>
+            <button on:click={() => {echo("test")}}> test </button>
 
             <ul class="flex justify-around px-5">
                 {#if USER.roles}

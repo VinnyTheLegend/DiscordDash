@@ -1,25 +1,10 @@
 <script lang="ts">
   import NavBar from "./components/NavBar.svelte";
-
-  const BASE_URL: string = "https://localhost:8000";
-
-  const URLS = {
-    BASE_URL: BASE_URL,
-    AUTH_URL: BASE_URL + "/discord/authenticate",
-    ME_URL: BASE_URL + "/discord/user",
-    URL_PARAMS: new URLSearchParams(window.location.search),
-  };
-
-  const ROLES_DICT: { [id: string]: string } = {
-    591686220996935691: "Warlord",
-    591686523142012948: "General",
-    591687458819932172: "Veteran",
-    591687038902992928: "Member",
-  };
+  import {URLS, ROLES_DICT} from './utils'
 
   let USER: User = {
     get: function(this: User) {
-      fetch(URLS.ME_URL, { mode: "cors", credentials: "include" })
+      fetch(URLS.USER_URL, { mode: "cors", credentials: "include" })
       .then((response) => {
         if (response.status === 400) {
           return response.json().then((data) => {
@@ -28,7 +13,7 @@
         }
         return response.json();
       })
-      .then((data) => {
+      .then((data: UserData) => {
         if ("error" in data) {
           console.log(data);
         } else {
@@ -45,7 +30,7 @@
     },
     
     update: function(this: User) {
-      fetch(URLS.ME_URL + '/update', { mode: "cors", credentials: "include" })
+      fetch(URLS.USER_URL + '/update', { mode: "cors", credentials: "include" })
       .then((response) => {
         if (response.status === 400) {
           return response.json().then((data) => {
@@ -54,7 +39,7 @@
         }
         return response.json();
       })
-      .then((data) => {
+      .then((data: UserData) => {
         if ("error" in data) {
           console.log(data);
         } else {
@@ -71,21 +56,10 @@
     }
   }
 
-  function echo(message: string) {
-    fetch(BASE_URL + "/api/echo", {
-      mode: "cors",
-      credentials: "include",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: message }),
-    }).then((res) => {
-      console.log("Echo response", res);
-    });
-  }
 </script>
 
 <main>
-  <NavBar {USER} {URLS} {ROLES_DICT} {echo} />
+  <NavBar {USER} />
 </main>
 
 <style>
