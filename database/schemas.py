@@ -14,7 +14,7 @@ class User(BaseModel):
     admin: bool
     nickname: Optional[str]
     joined_at: Optional[datetime]
-    roles: Optional[list[str]]
+    roles: Optional[list[int]]
 
     class Config:
         orm_mode = True
