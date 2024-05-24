@@ -6,7 +6,7 @@
   const URLS = {
     BASE_URL: BASE_URL,
     AUTH_URL: BASE_URL + "/discord/authenticate",
-    ME_URL: BASE_URL + "/discord/me",
+    ME_URL: BASE_URL + "/discord/user",
     URL_PARAMS: new URLSearchParams(window.location.search),
   };
 
@@ -20,7 +20,7 @@
   let USER_INFO: UserData | null = null;
 
   async function userUpdate() {
-    fetch(URLS.ME_URL, { mode: "cors", credentials: "include" })
+    fetch(URLS.ME_URL + '/update', { mode: "cors", credentials: "include" })
       .then((response) => {
         if (response.status === 400) {
           return response.json().then((data) => {

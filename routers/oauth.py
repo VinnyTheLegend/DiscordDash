@@ -158,18 +158,31 @@ async def FetchDiscordProfile(request):
     db.close()
     return db_user, client.token
 
-@router.get('/discord/me')
-async def me(request: Request):
+@router.get('/discord/user', response_model=schemas.User)
+async def user(request: Request):
+    state, token = getCookies(request)
+    if not state or not token:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
+
+    db = SessionLocal()
+    db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
+    db.close()
+
+    return db_user
+
+@router.get('/discord/user/update', response_model=schemas.User)
+async def user_update(request: Request):
     state, token = getCookies(request)
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
 
     data, new_token = await FetchDiscordProfile(request)
+    user_data = schemas.User(**data).model_dump_json()
 
     if not new_token:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=user_data)
 
-    response = JSONResponse(content=data)
+    response = JSONResponse(content=json.loads(user_data))
     if new_token:
         response.set_cookie(key="token", value=json.dumps(new_token), httponly=True, samesite='none', secure=True, domain="localhost")
     

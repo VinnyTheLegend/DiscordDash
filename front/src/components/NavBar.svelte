@@ -25,14 +25,16 @@
 
 <main>
     <div class="flex items-center">
-        <button
-            on:click={() => {
-                window.location.href = URLS.AUTH_URL;
-            }}
-        >
-            Authenticate
-        </button>
-        <button on:click={userUpdate}> Discord Info </button>
+        <div class="h-f">
+            <button
+                on:click={() => {
+                    window.location.href = URLS.AUTH_URL;
+                }}
+            >
+                Authenticate
+            </button>
+            <button on:click={userUpdate}> Discord Info </button>
+        </div>
         {#if USER_INFO}
             <div class="flex p-2">
                 <h1>Name: {USER_INFO.nickname}</h1>
