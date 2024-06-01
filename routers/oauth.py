@@ -85,6 +85,7 @@ async def callback(request: Request, code: str = None, state: str = None):
     response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='none', secure=True, domain="localhost")
     response.set_cookie(key="state", value=request.session.get('oauth2_state'), httponly=True, samesite='none', secure=True, domain="localhost")
 
+    await FetchDiscordProfile(request)
 
     return response
 
@@ -164,11 +165,14 @@ async def user(request: Request):
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
 
+    print(token['access_token'])
     db = SessionLocal()
     db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
     db.close()
 
-    return db_user
+    if db_user:
+        return db_user
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
 
 @router.get('/discord/user/update', response_model=schemas.User)
 async def user_update(request: Request):
