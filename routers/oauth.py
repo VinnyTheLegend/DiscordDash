@@ -66,8 +66,8 @@ async def callback(request: Request, code: str = None, state: str = None):
     if code is None or state is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Code or state not provided")
     
-    print('provided state: ', state)
-    print('session state: ', request.session.get('oauth2_state'))
+    # print('provided state: ', state)
+    # print('session state: ', request.session.get('oauth2_state'))
 
     client = AsyncOAuth2Client(
         client_id=OAUTH2_CLIENT_ID,
@@ -85,7 +85,7 @@ async def callback(request: Request, code: str = None, state: str = None):
     response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='none', secure=True, domain="localhost")
     response.set_cookie(key="state", value=request.session.get('oauth2_state'), httponly=True, samesite='none', secure=True, domain="localhost")
 
-    await FetchDiscordProfile(request)
+    await FetchDiscordProfile(state, token)
 
     return response
 
@@ -97,9 +97,11 @@ async def read_cookie(request: Request):
     return {"state": state, "token": token}
 
 
-async def FetchDiscordProfile(request):
-    state, token = getCookies(request)
+async def FetchDiscordProfile(state, token):
+    print('provided state: ', state)
+    print('provided token: ', token)
     if not state or not token:
+        print('fetch failed, state or token missing')
         return {'error': 'state or token missing'}, False
     client = AsyncOAuth2Client(
         client_id=OAUTH2_CLIENT_ID,
@@ -180,7 +182,7 @@ async def user_update(request: Request):
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
 
-    data, new_token = await FetchDiscordProfile(request)
+    data, new_token = await FetchDiscordProfile(state, token)
     user_data = schemas.User(**data).model_dump_json()
 
     if not new_token:
