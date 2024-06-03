@@ -13,8 +13,8 @@ class User(Base):
     avatar = Column(String)
 
     access_token = Column(String, index=True)
+    token_identifier = Column(String, index=True)
     expires_in = Column(Integer)
-    refresh_token = Column(String)
     expires_at = Column(Integer)
 
     member = Column(Boolean)

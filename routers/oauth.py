@@ -143,7 +143,6 @@ async def FetchDiscordProfile(state, token):
         'avatar': user['avatar'],
         'access_token': token['access_token'],
         'expires_in': token['expires_in'],
-        'refresh_token': token['refresh_token'],
         'expires_at': token['expires_at'],
         'member': member,
         'admin': isadmin,
@@ -167,7 +166,6 @@ async def user(request: Request):
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
 
-    print(token['access_token'])
     db = SessionLocal()
     db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
     db.close()
