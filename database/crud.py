@@ -9,15 +9,12 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_token(token: str) -> str:
-    """Hash the token using bcrypt."""
     return pwd_context.hash(token)
 
 def verify_token(token: str, hashed_token: str) -> bool:
-    """Verify the token against the hashed token."""
     return pwd_context.verify(token, hashed_token)
 
 def generate_token_identifier(token: str) -> str:
-    """Generate a unique identifier for the token using SHA-256."""
     return hashlib.sha256(token.encode()).hexdigest()
 
 
