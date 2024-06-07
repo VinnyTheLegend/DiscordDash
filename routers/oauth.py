@@ -12,6 +12,8 @@ from authlib.integrations.httpx_client import AsyncOAuth2Client
 from database import crud, models, schemas 
 from database.database import SessionLocal, engine
 
+from utils.limiter import limiter
+
 OAUTH2_CLIENT_ID = secret.OAUTH2_CLIENT_ID
 OAUTH2_CLIENT_SECRET = secret.OAUTH2_CLIENT_SECRET
 OAUTH2_REDIRECT_URI = secret.OAUTH2_REDIRECT_URI
@@ -62,6 +64,7 @@ async def index(request: Request):
 
 
 @router.get('/discord/callback')
+@limiter.limit("1/minute")
 async def callback(request: Request, code: str = None, state: str = None):
     if code is None or state is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Code or state not provided")
@@ -75,7 +78,10 @@ async def callback(request: Request, code: str = None, state: str = None):
         state=request.session.get('oauth2_state'),
         redirect_uri=OAUTH2_REDIRECT_URI)
 
-    token = await client.fetch_token(TOKEN_URL, authorization_response=str(request.url))
+    try:
+        token = await client.fetch_token(TOKEN_URL, authorization_response=str(request.url))
+    except Exception as e:
+        return "Not Authorized"
     request.session['oauth2_token'] = token
 
     external_url = URL(FRONT_URI)

@@ -16,6 +16,10 @@ import logging
 
 import secret
 
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from utils.limiter import limiter
+
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 discord.utils.setup_logging(level=logging.INFO, root=False)
@@ -48,6 +52,9 @@ app.add_middleware(CORSMiddleware,
     allow_methods=["GET", "POST", "HEAD", "OPTIONS"],
     allow_headers=["Access-Control-Allow-Headers", "Content-Type", "Authorization", "Access-Control-Allow-Origin", "Set-Cookie"],
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(oauth.router)
 
