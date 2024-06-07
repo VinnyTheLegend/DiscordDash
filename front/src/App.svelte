@@ -1,6 +1,6 @@
 <script lang="ts">
   import NavBar from "./components/NavBar.svelte";
-  import {URLS, ROLES_DICT} from './utils'
+  import {URLS} from './utils'
 
   let USER: User = {
     get: function(this: User) {
@@ -56,10 +56,26 @@
     }
   }
 
+  let auth
+  document.cookie === '' ? auth = false : auth = true 
+  if (auth) {USER.get()}
+
 </script>
 
-<main>
+<main class="h-full">
+{#if auth}
   <NavBar {USER} />
+{:else}
+  <div class="flex h-full justify-center items-center">
+    <button
+      on:click={() => {
+          window.location.href = URLS.AUTH_URL;
+      }}
+      >
+      Authenticate
+    </button>
+  </div>
+{/if}
 </main>
 
 <style>

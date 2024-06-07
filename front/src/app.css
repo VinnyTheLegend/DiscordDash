@@ -17,6 +17,7 @@
 
 #app {
   border: white 2px solid;
+  height: 100vh;
 }
 
 button {

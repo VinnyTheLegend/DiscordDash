@@ -52,5 +52,28 @@ class TestRoute(commands.Cog):
                 return {"message": "sent"}
             return {"message": "not admin"}
         
+        @self.router.get('/api/guild/members')
+        async def test(request: Request, db: Session = Depends(get_db)):
+            guild = self.bot.get_guild(591684990811635724)
+            members = []
+            for member in guild.members:
+
+                roles = []
+                for role in member.roles:
+                    role_new = {
+                        'id': role.id,
+                        'name': role.name
+                    }
+                    roles.append(role_new)
+
+                member_new = {
+                     'global_name': member.global_name,
+                     'roles': roles
+                }
+                members.append(member_new)
+
+
+            return members
+        
 async def setup(bot):
 	await bot.add_cog(TestRoute(bot))

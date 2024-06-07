@@ -183,10 +183,11 @@ async def user_update(request: Request):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
 
     data, new_token = await FetchDiscordProfile(state, token)
-    user_data = schemas.User(**data).model_dump_json()
 
     if not new_token:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=user_data)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data)
+
+    user_data = schemas.User(**data).model_dump_json()
 
     response = JSONResponse(content=json.loads(user_data))
     if new_token:

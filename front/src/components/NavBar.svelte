@@ -1,23 +1,16 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import {echo, URLS, ROLES_DICT} from '../utils'
-    const dispatch = createEventDispatcher();
+    import { echo, URLS, ROLES_DICT } from "../utils";
 
     export let USER: User;
-
-
-    function userUpdate() {
-        USER.get()
-        console.log(USER)
-        // dispatch("userUpdate");
-    }
 
     function echoSubmit(e: SubmitEvent) {
         const target = e.target as HTMLFormElement;
         const formData = new FormData(target);
         const message = formData.get("message");
         target.reset();
-        if (typeof message === 'string' && message != '') { echo(message) }
+        if (typeof message === "string" && message != "") {
+            echo(message);
+        }
     }
 </script>
 
@@ -31,7 +24,9 @@
             >
                 Authenticate
             </button>
-            <button on:click={userUpdate}> Discord Info </button>
+            <button on:click={() => {USER.get()}}> Discord Get </button>
+            <button on:click={() => {USER.update()}}> Discord Update </button>
+
         </div>
         {#if USER.member}
             <div class="flex p-2">
@@ -39,12 +34,18 @@
                 <h1>Admin: {USER.admin}</h1>
             </div>
 
-            <button on:click={() => {echo("test")}}> test </button>
+            <button
+                on:click={() => {
+                    echo("test");
+                }}
+            >
+                test
+            </button>
 
             <ul class="flex justify-around px-5">
                 {#if USER.roles}
                     {#each USER.roles as role}
-                        <span class="p-2 border-2 border-purple-500"
+                        <span class="p-2 border-2 border-purple-500 mx-0.5"
                             >{ROLES_DICT[role]}</span
                         >
                     {/each}
