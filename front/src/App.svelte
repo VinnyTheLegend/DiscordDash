@@ -63,8 +63,12 @@
 </script>
 
 <main class="h-full">
-{#if auth}
+{#if auth && USER.member}
   <NavBar {USER} />
+{:else if auth}
+  <div class="flex h-full justify-center items-center">
+    <div>Not a member</div>
+  </div>
 {:else}
   <div class="flex h-full justify-center items-center">
     <button
