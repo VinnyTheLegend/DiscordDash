@@ -187,9 +187,14 @@ async def user_update(request: Request):
     state, token = getCookies(request)
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
-
+    
+    db = SessionLocal()
+    db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
+    db.close()
+    if not db_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
+    
     data, new_token = await FetchDiscordProfile(state, token)
-
     if not new_token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data)
 
