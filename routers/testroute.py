@@ -109,6 +109,20 @@ class TestRoute(commands.Cog):
             if db_user.member == True:
                 return FileResponse(logger.path)
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+        
+        @self.router.get('/api/logs/10')
+        async def logs(request: Request, db: Session = Depends(get_db)):
+            state, token = getCookies(request)
+            if not token or not state:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
+            db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
+            if not db_user:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
+
+            if db_user.member == True:
+                return logger.last_10
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+
 
         
 async def setup(bot):

@@ -31,3 +31,4 @@ secret.py
 __pycache__
 env
 /utils/*.txt
+/utils/logs/*.txt

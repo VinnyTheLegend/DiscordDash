@@ -21,10 +21,10 @@ class Greetings(commands.Cog):
         else:
             if after.channel != before.channel:
                 log = member.name + ' disconnected from ' + before.channel.name
+                print(logger.new(log))
                 if after.channel: 
                     log = member.name + ' connected to ' + after.channel.name
-        if log != '':
-            print(logger.new(log))
+                    print(logger.new(log))
 
     @commands.hybrid_command(name='voicelogs', with_app_command=True)
     async def voicelogs(self, ctx):
@@ -35,7 +35,7 @@ class Greetings(commands.Cog):
                 log = '-' + log
             if 'connected' in log and 'disconnected' not in log:
                 log = '+' + log
-            logs = logs + log
+            logs = logs + log + '\n'
         logs = logs + "```"
         await ctx.send(logs)
 
@@ -43,10 +43,13 @@ class Greetings(commands.Cog):
     @commands.hybrid_command(name='sync', with_app_command=True)
     async def sync(self, ctx):
         """Sync app commands (usually requires discord client restart)"""
-        member = ctx.author
+        member: discord.Member = ctx.author
         if member.name == 'vinnyprime':
             sync = await self.bot.tree.sync()
-            await ctx.send(f"Synced {len(sync)} command(s)")
+            await ctx.reply(f"Synced {len(sync)} command(s)", ephemeral=True)
+        else:
+            await ctx.reply("Only Vinny is allowed to do that.", ephemeral=True)
+
 
     @commands.hybrid_command(name='hello', with_app_command=True)
     @discord.app_commands.describe(member='who to say hello to')
