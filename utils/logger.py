@@ -12,14 +12,13 @@ with open(path) as file:
         last_10.append(line)
 
 def logWrite(new_log: str):
-    print(new_log)
     f = open(path, "a")
     f.write(new_log)
     f.close()
 
 def new(new_log: str):
     now = datetime.datetime.now()
-    new_string = f"{now.strftime('%Y/%m/%d %I:%M:%S%p')}: {new_log}\n"
+    new_string = f"{now.strftime('%Y/%m/%d %I:%M:%S%p')} {new_log}\n"
 
     last_10.append(new_string)
     if len(last_10) > 10:

@@ -24,9 +24,20 @@ class Greetings(commands.Cog):
                 if after.channel: 
                     log = member.name + ' connected to ' + after.channel.name
         if log != '':
-            new_log = logger.new(log)
-            await self.bot.get_channel(1040851566736986193).send(new_log)
+            print(logger.new(log))
 
+    @commands.hybrid_command(name='voicelogs', with_app_command=True)
+    async def voicelogs(self, ctx):
+        """Show last 10 voice events"""
+        logs = "## Last 10 Events\n```diff\n"
+        for log in logger.last_10:
+            if 'disconnected' in log:
+                log = '-' + log
+            if 'connected' in log and 'disconnected' not in log:
+                log = '+' + log
+            logs = logs + log
+        logs = logs + "```"
+        await ctx.send(logs)
 
 
     @commands.hybrid_command(name='sync', with_app_command=True)
