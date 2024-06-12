@@ -30,3 +30,4 @@ secret.py
 *.db
 __pycache__
 env
+/utils/*.txt

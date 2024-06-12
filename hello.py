@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils import logger
 
 class Greetings(commands.Cog):
     def __init__(self, bot):
@@ -14,29 +15,30 @@ class Greetings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        print(member.name)
-        print(before)
-        print(after)
         log = ''
         if before.channel == None:
             log = member.name + ' connected to ' + after.channel.name
-            await self.bot.get_channel(1040851566736986193).send(log)
         else:
             if after.channel != before.channel:
                 log = member.name + ' disconnected from ' + before.channel.name
-                await self.bot.get_channel(1040851566736986193).send(log)
                 if after.channel: 
                     log = member.name + ' connected to ' + after.channel.name
-                    await self.bot.get_channel(1040851566736986193).send(log)
+        if log != '':
+            new_log = logger.new(log)
+            await self.bot.get_channel(1040851566736986193).send(new_log)
+
+
 
     @commands.hybrid_command(name='sync', with_app_command=True)
     async def sync(self, ctx):
+        """Sync app commands (usually requires discord client restart)"""
         member = ctx.author
         if member.name == 'vinnyprime':
-            await self.bot.tree.sync()
-            await ctx.send('synced')
+            sync = await self.bot.tree.sync()
+            await ctx.send(f"Synced {len(sync)} command(s)")
 
     @commands.hybrid_command(name='hello', with_app_command=True)
+    @discord.app_commands.describe(member='who to say hello to')
     async def hello(self, ctx, *, member: discord.Member = None):
         """Says hello"""
         member = member or ctx.author
