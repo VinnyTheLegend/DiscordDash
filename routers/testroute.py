@@ -120,7 +120,7 @@ class TestRoute(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
 
             if db_user.member == True:
-                return logger.last_10
+                return logger.last_25
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
 
 

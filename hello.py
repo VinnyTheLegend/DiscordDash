@@ -28,9 +28,9 @@ class Greetings(commands.Cog):
 
     @commands.hybrid_command(name='voicelogs', with_app_command=True)
     async def voicelogs(self, ctx):
-        """Show last 10 voice events"""
-        logs = "## Last 10 Events\n```diff\n"
-        for log in logger.last_10:
+        """Show last 25 voice events"""
+        logs = "## Last 25 Events\n```diff\n"
+        for log in logger.last_25:
             if 'disconnected' in log:
                 log = '-' + log
             if 'connected' in log and 'disconnected' not in log:
