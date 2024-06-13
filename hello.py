@@ -1,7 +1,11 @@
 import discord
 from discord.ext import commands
-from utils import logger
+from utils import logger, member_utils
 from datetime import datetime
+
+from sqlalchemy.orm import Session
+from database.database import SessionLocal
+from database import crud
 
 connected = {}
 
@@ -32,6 +36,17 @@ class Greetings(commands.Cog):
                     del connected[member.id]
                 else:
                     connected_minutes = 0
+
+                db = SessionLocal()
+                db_user = crud.get_user(db=db, user_id=member.id)
+                if db_user:
+                    crud.update_user_connection_time(db=db, user_id=member.id, time=connected_minutes)
+                else:
+                    new_user = member_utils.create_user_from_member(member)
+                    new_user['connection_time'] = connected_minutes
+                    crud.create_user(db=db, user=new_user)
+                db.close()
+
                 log = member.name + ' disconnected from ' + before.channel.name + f" ({connected_minutes}mins)"
                 print(logger.new(log))
                 if after.channel: 

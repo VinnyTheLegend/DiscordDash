@@ -36,14 +36,18 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    token_identifier = generate_token_identifier(user.access_token)
-    hashed_token = hash_token(user.access_token)
+    if 'access_token' in user:
+        token_identifier = generate_token_identifier(user.access_token)
+        hashed_token = hash_token(user.access_token)
 
-    user_data = user.model_dump()
-    user_data['access_token'] = hashed_token
-    user_data['token_identifier'] = token_identifier
-    
-    db_user = models.User(**user_data)
+        user_data = user.model_dump()
+        user_data['access_token'] = hashed_token
+        user_data['token_identifier'] = token_identifier
+        
+        db_user = models.User(**user_data)
+    else:
+        db_user = models.User(**user)
+
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -60,6 +64,15 @@ def update_user(db: Session, user_id: int, user: schemas.UserCreate):
         updated_user_data['token_identifier'] = token_identifier
 
         db.query(models.User).filter(models.User.id == user_id).update(updated_user_data)
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    return None
+
+def update_user_connection_time(db: Session, user_id: int, time: int):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user:
+        db_user.connection_time = db_user.connection_time + time
         db.commit()
         db.refresh(db_user)
         return db_user

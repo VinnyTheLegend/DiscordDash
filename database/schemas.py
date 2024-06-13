@@ -15,12 +15,13 @@ class User(BaseModel):
     nickname: Optional[str]
     joined_at: Optional[datetime]
     roles: Optional[list[int]]
+    connection_time: Optional[int]
 
     class Config:
         orm_mode = True
 
 class UserCreate(User):
-    access_token: str
-    expires_in: int
-    expires_at: int
+    access_token: Optional[str]
+    expires_in: Optional[int]
+    expires_at: Optional[int]
 
