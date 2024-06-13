@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
 from utils import logger
+from datetime import datetime
+
+connected = {}
 
 class Greetings(commands.Cog):
     def __init__(self, bot):
@@ -17,15 +20,25 @@ class Greetings(commands.Cog):
     async def on_voice_state_update(self, member, before, after):
         log = ''
         if before.channel == None:
+            connected[member.id] = datetime.now()
             log = member.name + ' connected to ' + after.channel.name
             print(logger.new(log))
         else:
             if after.channel != before.channel:
-                log = member.name + ' disconnected from ' + before.channel.name
+                if member.id in connected:
+                    connected_time = datetime.now() - connected[member.id]
+                    connected_seconds = connected_time.total_seconds()
+                    connected_minutes = round(connected_seconds / 60, 1)
+                    del connected[member.id]
+                else:
+                    connected_minutes = 0
+                log = member.name + ' disconnected from ' + before.channel.name + f" ({connected_minutes}mins)"
                 print(logger.new(log))
                 if after.channel: 
+                    connected[member.id] = datetime.now()
                     log = member.name + ' connected to ' + after.channel.name
                     print(logger.new(log))
+
 
     @commands.hybrid_command(name='voicelogs', with_app_command=True)
     async def voicelogs(self, ctx):
