@@ -18,6 +18,7 @@ class Greetings(commands.Cog):
         log = ''
         if before.channel == None:
             log = member.name + ' connected to ' + after.channel.name
+            print(logger.new(log))
         else:
             if after.channel != before.channel:
                 log = member.name + ' disconnected from ' + before.channel.name
