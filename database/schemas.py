@@ -15,7 +15,7 @@ class User(BaseModel):
     nickname: Optional[str]
     joined_at: Optional[datetime]
     roles: Optional[list[int]]
-    connection_time: Optional[int]
+    connection_time: float
 
     class Config:
         orm_mode = True

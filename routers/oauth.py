@@ -161,8 +161,10 @@ async def FetchDiscordProfile(state, token):
     
     db_user_old = crud.get_user(db=db, user_id=user['id'])
     if db_user_old:
+        db_user['connection_time'] = db_user_old.connection_time
         crud.update_user(db=db, user_id=user['id'], user=schemas.UserCreate(**db_user))
     else:
+        db_user['connection_time'] = 0
         crud.create_user(db=db, user=schemas.UserCreate(**db_user))
 
     db.close()

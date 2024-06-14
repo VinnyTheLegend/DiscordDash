@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, PickleType
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, PickleType, Float
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -22,4 +22,4 @@ class User(Base):
     nickname = Column(String, index=True, nullable=True)
     joined_at = Column(DateTime(timezone=True), nullable=True)
     roles = Column(PickleType, nullable=True)
-    connection_time = Column(Integer, nullable=True)
+    connection_time = Column(Float)
