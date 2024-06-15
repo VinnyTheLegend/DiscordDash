@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Request, status, Response, Body, Depends
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from .oauth import getCookies
+from routers.oauth import getCookies
 
+import discord
 from discord.ext import commands
 
 from sqlalchemy.orm import Session
@@ -11,7 +11,6 @@ from database.database import SessionLocal
 from database import crud, models, schemas
 
 import secret
-from utils import logger
 
 def get_db():
     db = SessionLocal()
@@ -23,15 +22,11 @@ def get_db():
 class Message(BaseModel):
     message: str
 
-class TestRoute(commands.Cog):
+class TestCog(commands.Cog):
     def __init__(self, bot):
         print("starting testroute")
         self.bot = bot
-        self._last_member = None
         self.router = APIRouter()   
-
-        async def get_router(self):
-            return self.router
 
         @self.router.get('/api/test')
         async def test(request: Request, db: Session = Depends(get_db)):
@@ -93,37 +88,39 @@ class TestRoute(commands.Cog):
                      'roles': roles
                 }
                 members.append(member_new)
-
-
             return members
+
+    @commands.hybrid_command(name='ping', with_app_command=True)
+    async def ping(self, ctx):
+        """asd"""
+        await ctx.reply("Pong")
+
+    @commands.hybrid_command(name='sync', with_app_command=True)
+    async def sync(self, ctx):
+        """Sync app commands (usually requires discord client restart)"""
+        member: discord.Member = ctx.author
+        if member.name == 'vinnyprime':
+            sync = await self.bot.tree.sync()
+            await ctx.reply(f"Synced {len(sync)} command(s)", ephemeral=True)
+        else:
+            await ctx.reply("Only Vinny is allowed to do that.", ephemeral=True)
+
+    @commands.hybrid_command(name='hello', with_app_command=True)
+    @discord.app_commands.describe(member='who to say hello to')
+    async def hello(self, ctx, *, member: discord.Member = None):
+        """Says hello"""
+        member = member or ctx.author
+        if self._last_member is None or self._last_member.id != member.id:
+            await ctx.send(f'Hello {member.name}~')
+        else:
+            await ctx.send(f'Hello {member.name}... This feels familiar.')
         
-        @self.router.get('/api/logs')
-        async def logs(request: Request, db: Session = Depends(get_db)):
-            state, token = getCookies(request)
-            if not token or not state:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
-            db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
-            if not db_user:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
-
-            if db_user.member == True:
-                return FileResponse(logger.path)
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+        await ctx.reply("Ephemeral test", ephemeral=True)
         
-        @self.router.get('/api/logs/10')
-        async def logs(request: Request, db: Session = Depends(get_db)):
-            state, token = getCookies(request)
-            if not token or not state:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
-            db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
-            if not db_user:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
+        self._last_member = member
 
-            if db_user.member == True:
-                return logger.last_25
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
-
-
-        
+    async def test(self):
+         await self.bot.get_channel(1040851566736986193).send("cog triggered")
+    
 async def setup(bot):
-	await bot.add_cog(TestRoute(bot))
+	await bot.add_cog(TestCog(bot))

@@ -28,15 +28,12 @@ discord.utils.setup_logging(level=logging.INFO, root=False)
 async def lifespan(app: FastAPI):
     # on startup
     print("starting discord bot")
-    await bot.load_extension("hello")
-    await bot.load_extension("routers.testroute")
+    await bot.load_extension("cogs.testcog")
+    await bot.load_extension("cogs.discordlogs")
     asyncio.create_task(bot.start(secret.BOT_TOKEN))
-    
-    global greetings
-    greetings = bot.get_cog("Greetings")
 
     global test
-    test = bot.get_cog("TestRoute")
+    test = bot.get_cog("TestCog")
     app.include_router(test.router)
 
     yield
@@ -53,7 +50,7 @@ app.add_middleware(CORSMiddleware,
     allow_headers=["Access-Control-Allow-Headers", "Content-Type", "Authorization", "Access-Control-Allow-Origin", "Set-Cookie"],
 )
 
-app.state.limiter = limiter
+app.state.limiter = Limiter.limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(oauth.router)
