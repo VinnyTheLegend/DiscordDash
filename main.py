@@ -36,6 +36,8 @@ async def lifespan(app: FastAPI):
     test = bot.get_cog("TestCog")
     app.include_router(test.router)
 
+    app.include_router(bot.get_cog("DiscordLogs").router)
+
     yield
     # on shutdown
 
