@@ -16,7 +16,7 @@ import logging
 
 import secret
 
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from utils.limiter import limiter
 
@@ -52,7 +52,7 @@ app.add_middleware(CORSMiddleware,
     allow_headers=["Access-Control-Allow-Headers", "Content-Type", "Authorization", "Access-Control-Allow-Origin", "Set-Cookie"],
 )
 
-app.state.limiter = Limiter.limiter
+app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(oauth.router)
