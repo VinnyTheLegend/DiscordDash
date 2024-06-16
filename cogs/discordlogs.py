@@ -1,10 +1,10 @@
 
 from fastapi import APIRouter, HTTPException, Request, status, Response, Body, Depends
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
 
 from routers.oauth import getCookies
 
+import discord
 from discord.ext import commands
 
 from sqlalchemy.orm import Session
@@ -24,7 +24,7 @@ def get_db():
 
 class DiscordLogs(commands.Cog):
     def __init__(self, bot):
-        print("starting testroute")
+        print("starting discordlogs")
         self.bot = bot
         self.connected = {}
         self.router = APIRouter()   
@@ -62,7 +62,7 @@ class DiscordLogs(commands.Cog):
             await channel.send(f'Welcome {member.mention}.')
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member, before, after):
+    async def on_voice_state_update(self, member: discord.Member, before, after):
         log = ''
         if before.channel == None:
             self.connected[member.id] = datetime.now()

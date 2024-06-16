@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request, status, Response, Body, Depends
+from fastapi import APIRouter, HTTPException, Request, status, Depends
 from pydantic import BaseModel
 
 from routers.oauth import getCookies
@@ -8,7 +8,7 @@ from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
-from database import crud, models, schemas
+from database import crud
 
 import secret
 

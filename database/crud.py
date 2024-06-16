@@ -69,7 +69,7 @@ def update_user(db: Session, user_id: int, user: schemas.UserCreate):
         return db_user
     return None
 
-def update_user_connection_time(db: Session, user_id: int, time: int):
+def update_user_connection_time(db: Session, user_id: int, time: float):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
         db_user.connection_time = db_user.connection_time + time
