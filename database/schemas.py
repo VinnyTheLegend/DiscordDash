@@ -24,4 +24,3 @@ class UserCreate(User):
     access_token: Optional[str]
     expires_in: Optional[int]
     expires_at: Optional[int]
-

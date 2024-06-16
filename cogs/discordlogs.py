@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, HTTPException, Request, status, Response, Body, Depends
+from fastapi import APIRouter, HTTPException, Request, status, Depends
 from fastapi.responses import FileResponse
 
 from routers.oauth import getCookies
@@ -9,9 +9,8 @@ from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
-from database import crud, models, schemas
+from database import crud
 
-import secret
 from utils import logger, member_utils
 from datetime import datetime
 
@@ -29,7 +28,7 @@ class DiscordLogs(commands.Cog):
         self.connected = {}
         self.router = APIRouter()   
 
-        @self.router.get('/api/logs')
+        @self.router.get('/api/logs', response_model=list[str])
         async def logs(request: Request, db: Session = Depends(get_db)):
             state, token = getCookies(request)
             if not token or not state:
@@ -42,7 +41,7 @@ class DiscordLogs(commands.Cog):
                 return FileResponse(logger.path)
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
         
-        @self.router.get('/api/logs/recent')
+        @self.router.get('/api/logs/recent', response_model=list[str])
         async def logs(request: Request, db: Session = Depends(get_db)):
             state, token = getCookies(request)
             if not token or not state:
@@ -95,7 +94,6 @@ class DiscordLogs(commands.Cog):
                     log = member.name + ' connected to ' + after.channel.name
                     print(logger.new(log))
 
-
     @commands.hybrid_command(name='voicelogs', with_app_command=True)
     async def voicelogs(self, ctx):
         """Show last 25 voice events"""
@@ -108,9 +106,7 @@ class DiscordLogs(commands.Cog):
             logs = logs + log + '\n'
         logs = logs + "```"
         await ctx.send(logs)
-        
 
 
-        
 async def setup(bot):
 	await bot.add_cog(DiscordLogs(bot))
