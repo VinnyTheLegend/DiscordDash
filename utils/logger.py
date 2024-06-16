@@ -4,7 +4,7 @@ import threading
 
 folder = os.path.dirname(__file__)
 now = datetime.datetime.now()
-path = os.path.join(folder, f"logs\\{now.strftime('%Y-%m-%d')}.txt")
+path = os.path.join(folder, f"logs\\{now.strftime('%Y-%m')}.txt")
 
 last_25 = []
 if os.path.exists(path):
@@ -15,7 +15,7 @@ if os.path.exists(path):
 
 def logWrite(new_log: str):
     now = datetime.datetime.now()
-    path = os.path.join(folder, f"logs\\{now.strftime('%Y-%m-%d')}.txt")
+    path = os.path.join(folder, f"logs\\{now.strftime('%Y-%m')}.txt")
     f = open(path, "a")
     f.write(new_log)
     f.close()
