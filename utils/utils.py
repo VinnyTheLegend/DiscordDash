@@ -1,8 +1,8 @@
 import discord
+import json
 from database import schemas
 
 def create_user_from_member(member: discord.Member):
-
     roles = []
     admin = False
     for role in member.roles:
@@ -24,3 +24,17 @@ def create_user_from_member(member: discord.Member):
     }
 
     return db_user
+
+def getCookies(request):
+    state = request.cookies.get('state')
+    token = request.cookies.get('token')
+
+    if state is None:
+        state = False
+
+    if token is None:
+        token = False
+    else:
+        token = json.loads(token)
+    
+    return state, token

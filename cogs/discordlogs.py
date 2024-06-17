@@ -1,8 +1,5 @@
-
 from fastapi import APIRouter, HTTPException, Request, status, Depends
 from fastapi.responses import FileResponse
-
-from routers.oauth import getCookies
 
 import discord
 from discord.ext import commands
@@ -11,7 +8,7 @@ from sqlalchemy.orm import Session
 from database.database import SessionLocal
 from database import crud
 
-from utils import logger, member_utils
+from utils import logger, utils
 from datetime import datetime
 
 def get_db():
@@ -30,7 +27,7 @@ class DiscordLogs(commands.Cog):
 
         @self.router.get('/api/logs', response_model=list[str])
         async def logs(request: Request, db: Session = Depends(get_db)):
-            state, token = getCookies(request)
+            state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
@@ -43,7 +40,7 @@ class DiscordLogs(commands.Cog):
         
         @self.router.get('/api/logs/recent', response_model=list[str])
         async def logs(request: Request, db: Session = Depends(get_db)):
-            state, token = getCookies(request)
+            state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
@@ -82,7 +79,7 @@ class DiscordLogs(commands.Cog):
                 if db_user:
                     crud.update_user_connection_time(db=db, user_id=member.id, time=connected_minutes)
                 else:
-                    new_user = member_utils.create_user_from_member(member)
+                    new_user = utils.create_user_from_member(member)
                     new_user['connection_time'] = connected_minutes
                     crud.create_user(db=db, user=new_user)
                 db.close()

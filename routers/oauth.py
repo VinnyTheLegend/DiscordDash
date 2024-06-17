@@ -13,6 +13,7 @@ from database import crud, models, schemas
 from database.database import SessionLocal, engine
 
 from utils.limiter import limiter
+from utils import utils
 
 OAUTH2_CLIENT_ID = secret.OAUTH2_CLIENT_ID
 OAUTH2_CLIENT_SECRET = secret.OAUTH2_CLIENT_SECRET
@@ -33,20 +34,6 @@ if 'http://' in OAUTH2_REDIRECT_URI:
 models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
-
-def getCookies(request):
-    state = request.cookies.get('state')
-    token = request.cookies.get('token')
-
-    if state is None:
-        state = False
-
-    if token is None:
-        token = False
-    else:
-        token = json.loads(token)
-    
-    return state, token
 
 @router.get('/discord/authenticate')
 async def index(request: Request):
@@ -99,7 +86,7 @@ async def callback(request: Request, code: str = None, state: str = None):
 
 @router.get("/discord/read-cookie")
 async def read_cookie(request: Request):
-    state, token = getCookies(request)
+    state, token = utils.getCookies(request)
     if not token or not state:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
     return {"state": state, "token": token}
@@ -172,7 +159,7 @@ async def FetchDiscordProfile(state, token):
 
 @router.get('/discord/user', response_model=schemas.User)
 async def user(request: Request):
-    state, token = getCookies(request)
+    state, token = utils.getCookies(request)
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
 
@@ -186,7 +173,7 @@ async def user(request: Request):
 
 @router.get('/discord/user/update', response_model=schemas.User)
 async def user_update(request: Request):
-    state, token = getCookies(request)
+    state, token = utils.getCookies(request)
     if not state or not token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
     

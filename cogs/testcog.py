@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, Request, status, Depends
 from pydantic import BaseModel
 
-from routers.oauth import getCookies
-
 import discord
 from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
 from database import crud
+
+from utils import utils
 
 import secret
 
@@ -22,6 +22,17 @@ def get_db():
 class Message(BaseModel):
     message: str
 
+class RoleResponse(BaseModel):
+    id: int
+    name: str
+
+class MemberResponse(BaseModel):
+    id: int
+    name: str
+    nick: str | None
+    roles: list[RoleResponse]
+
+
 class TestCog(commands.Cog):
     def __init__(self, bot):
         print("starting testroute")
@@ -30,7 +41,7 @@ class TestCog(commands.Cog):
 
         @self.router.get('/api/test')
         async def test(request: Request, db: Session = Depends(get_db)):
-            state, token = getCookies(request)
+            state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
@@ -45,7 +56,7 @@ class TestCog(commands.Cog):
         
         @self.router.post('/api/echo')
         async def echo(request: Request, message: Message, db: Session = Depends(get_db)):
-            state, token = getCookies(request)
+            state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
@@ -59,9 +70,9 @@ class TestCog(commands.Cog):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not an admin")
 
         
-        @self.router.get('/api/guild/members')
+        @self.router.get('/api/guild/members', response_model=list[MemberResponse])
         async def test(request: Request, db: Session = Depends(get_db)):
-            state, token = getCookies(request)
+            state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
@@ -71,10 +82,9 @@ class TestCog(commands.Cog):
             if not db_user.member:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
 
-            guild = self.bot.get_guild(591684990811635724)
+            guild: discord.Guild = self.bot.get_guild(591684990811635724)
             members = []
             for member in guild.members:
-
                 roles = []
                 for role in member.roles:
                     role_new = {
@@ -84,10 +94,13 @@ class TestCog(commands.Cog):
                     roles.append(role_new)
 
                 member_new = {
-                     'global_name': member.global_name,
+                     'id': member.id,
+                     'name': member.name,
+                     'nick': member.nick,
                      'roles': roles
                 }
-                members.append(member_new)
+                print(member_new["name"])
+                members.append(MemberResponse(**member_new))
             return members
 
     @commands.hybrid_command(name='ping', with_app_command=True)
