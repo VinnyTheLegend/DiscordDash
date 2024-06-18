@@ -22,15 +22,7 @@ def get_db():
 class Message(BaseModel):
     message: str
 
-class RoleResponse(BaseModel):
-    id: int
-    name: str
 
-class MemberResponse(BaseModel):
-    id: int
-    name: str
-    nick: str | None
-    roles: list[RoleResponse]
 
 
 class TestCog(commands.Cog):
@@ -63,45 +55,10 @@ class TestCog(commands.Cog):
             if not db_user:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
 
-
             if db_user.admin == True:
                 await self.bot.get_channel(secret.BOT_SPAM_CHANNEL_ID).send(message.message)
                 return {"message": "sent"}
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not an admin")
-
-        
-        @self.router.get('/api/guild/members', response_model=list[MemberResponse])
-        async def test(request: Request, db: Session = Depends(get_db)):
-            state, token = utils.getCookies(request)
-            if not token or not state:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
-            db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
-            if not db_user:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
-            
-            if not db_user.member:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
-
-            guild: discord.Guild = self.bot.get_guild(591684990811635724)
-            members = []
-            for member in guild.members:
-                roles = []
-                for role in member.roles:
-                    role_new = {
-                        'id': role.id,
-                        'name': role.name
-                    }
-                    roles.append(role_new)
-
-                member_new = {
-                     'id': member.id,
-                     'name': member.name,
-                     'nick': member.nick,
-                     'roles': roles
-                }
-                print(member_new["name"])
-                members.append(MemberResponse(**member_new))
-            return members
 
     @commands.hybrid_command(name='ping', with_app_command=True)
     async def ping(self, ctx):

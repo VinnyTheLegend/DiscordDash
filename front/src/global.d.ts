@@ -8,6 +8,7 @@ interface UserData {
     nickname?: String | null,
     joined_at?: String | null,
     roles?: Array[Number] | null
+    connection_time?: Number
 }
 
 interface User extends UserData {

@@ -30,6 +30,7 @@ async def lifespan(app: FastAPI):
     print("starting discord bot")
     await bot.load_extension("cogs.testcog")
     await bot.load_extension("cogs.discordlogs")
+    await bot.load_extension("cogs.serverinfo")
     asyncio.create_task(bot.start(secret.BOT_TOKEN))
 
     global test
@@ -37,6 +38,7 @@ async def lifespan(app: FastAPI):
     app.include_router(test.router)
 
     app.include_router(bot.get_cog("DiscordLogs").router)
+    app.include_router(bot.get_cog("ServerInfo").router)
 
     yield
     # on shutdown
