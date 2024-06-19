@@ -132,7 +132,6 @@ class ServerInfo(commands.Cog):
         embeded.add_field(name="Voice Channels:", value=voice_channels, inline=True)
         embeded.add_field(name="Text Channels:", value=text_channels, inline=True)
 
-
         await ctx.reply(embed=embeded) 
     
 async def setup(bot):

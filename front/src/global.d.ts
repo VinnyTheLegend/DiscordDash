@@ -1,14 +1,14 @@
 interface UserData {
-    id?: String,
-    username?: String,
-    global_name?: String,
-    avatar?: String,
-    member?: Boolean,
-    admin?: Boolean,
-    nickname?: String | null,
-    joined_at?: String | null,
-    roles?: Array[Number] | null
-    connection_time?: Number
+    id: bigint,
+    username: string,
+    global_name: string,
+    avatar: string,
+    member: boolean,
+    admin: boolean,
+    nickname: string | null,
+    joined_at: string | null,
+    roles: Array[number] | null,
+    connection_time: number
 }
 
 interface User extends UserData {
