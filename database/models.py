@@ -10,7 +10,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True, index=True)
     global_name = Column(String, index=True)
-    avatar = Column(String)
+    avatar = Column(String, nullable=True)
 
     access_token = Column(String, index=True, nullable=True)
     token_identifier = Column(String, index=True, nullable=True)

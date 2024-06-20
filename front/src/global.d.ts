@@ -2,7 +2,7 @@ interface UserData {
     id: bigint,
     username: string,
     global_name: string,
-    avatar: string,
+    avatar: string | null,
     member: boolean,
     admin: boolean,
     nickname: string | null,

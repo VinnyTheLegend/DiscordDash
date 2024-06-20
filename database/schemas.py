@@ -8,7 +8,7 @@ class User(BaseModel):
     id: int
     username: str
     global_name: str
-    avatar: str
+    avatar: Optional[str]
 
     member: bool
     admin: bool

@@ -1,12 +1,9 @@
 <script lang="ts">
     import sedicon from "../assets/sedicon.webp"
+    import * as Avatar from "$lib/components/ui/avatar/index.js";
 
     export let USER: User;
-    
-    function getAvatarUrl(id: bigint, avatar: string): string {
-        let url = `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`
-        return url
-    }
+
 </script>
 
 <main class="border-b-[1px] border-[#47003C] h-[10%]">
@@ -15,7 +12,10 @@
         <header class="seduction font-extrabold text-5xl">SEDUCTION</header>
         <div class="flex items-center justify-end w-[25%]">
             <span class="pr-4 font-bold">{USER.username}</span>
-            <img src="{getAvatarUrl(USER.id, USER.avatar)}" alt="" class="size-14 rounded-full">
+            <Avatar.Root>
+                <Avatar.Image src={`https://cdn.discordapp.com/avatars/${USER.id}/${USER.avatar}.png`} alt="@shadcn" />
+                <Avatar.Fallback>{USER.username[0].toUpperCase()}</Avatar.Fallback>
+            </Avatar.Root>
         </div>
     </div>
 </main>
