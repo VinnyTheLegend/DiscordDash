@@ -1,6 +1,7 @@
 <script lang="ts">
   import Header from "./components/Header.svelte";
   import { URLS } from "./utils";
+  import { Button } from "$lib/components/ui/button";
 
   let USER: User = {
     id: BigInt(0),
@@ -75,7 +76,7 @@
   }
 </script>
 
-<main class="h-full w-full">
+<main class="h-screen w-screen">
   {#if auth && USER.member}
     <Header {USER} />
   {:else if auth}
@@ -84,13 +85,7 @@
     </div>
   {:else}
     <div class="flex h-full justify-center items-center">
-      <button
-        on:click={() => {
-          window.location.href = URLS.AUTH_URL;
-        }}
-      >
-        Authenticate
-      </button>
+      <Button on:click={() => {window.location.href = URLS.AUTH_URL}}>Authenticate</Button>
     </div>
   {/if}
 </main>
