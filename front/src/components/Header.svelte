@@ -6,7 +6,7 @@
 
 </script>
 
-<main class="border-b-[1px] border-[#47003C] h-[10%]">
+<main class="border-b-[1px] border-[#47003C] h-[10%] bg-black">
     <div class="flex items-center h-full w-full justify-between px-4">
         <div class="w-[25%]"><img src="{sedicon}" alt="" class="size-14 rounded-full"></div>
         <header class="seduction font-extrabold text-5xl">SEDUCTION</header>

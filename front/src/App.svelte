@@ -1,5 +1,6 @@
 <script lang="ts">
   import Header from "./components/Header.svelte";
+  import SideBar from "./components/SideBar.svelte";
   import { URLS } from "./utils";
   import { Button } from "$lib/components/ui/button";
 
@@ -79,6 +80,9 @@
 <main class="h-screen w-screen">
   {#if auth && USER.member}
     <Header {USER} />
+    <div class="h-[90%] flex">
+      <SideBar />
+    </div>
   {:else if auth}
     <div class="flex h-full justify-center items-center">
       <div>Not a member</div>
