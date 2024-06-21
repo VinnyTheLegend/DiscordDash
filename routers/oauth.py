@@ -74,7 +74,7 @@ async def callback(request: Request, code: str = None, state: str = None):
     external_url = URL(FRONT_URI)
     #external_url = external_url.include_query_params(token=token['access_token'], state=request.session.get('oauth2_state'))
 
-    response = RedirectResponse(url=str(external_url))
+    response = RedirectResponse(url=str(external_url), status_code=301)
     response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='Lax', secure=True, domain=secret.DOMAIN)
     response.set_cookie(key="state", value=request.session.get('oauth2_state'), httponly=True, samesite='Lax', secure=True, domain=secret.DOMAIN)
     response.set_cookie(key="auth", value=True, httponly=False, samesite='Lax', secure=True, domain=secret.DOMAIN)
@@ -193,4 +193,13 @@ async def user_update(request: Request):
     if new_token:
         response.set_cookie(key="token", value=json.dumps(new_token), httponly=True, samesite='none', secure=True, domain="localhost")
     
+    return response
+
+@router.get('/logout', response_model=schemas.User)
+async def logout(request: Request):
+    external_url = URL(FRONT_URI)
+    response = RedirectResponse(url=str(external_url), status_code=301)
+    response.delete_cookie("token")
+    response.delete_cookie("state")
+    response.delete_cookie("auth")
     return response

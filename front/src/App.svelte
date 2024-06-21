@@ -78,6 +78,10 @@
   }
   
   let current_app: string = "home"
+  console.log(window.location.pathname)
+  if (window.location.pathname === '/test' || window.location.pathname === '/test/') {
+    current_app='test'
+  }
   function changeApp(event: CustomEvent<string>) {
     USER.get()
     current_app = event.detail;

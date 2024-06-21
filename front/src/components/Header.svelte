@@ -27,7 +27,7 @@
                     <DropdownMenu.Label>My Account</DropdownMenu.Label>
                     <DropdownMenu.Separator />
                     <DropdownMenu.Item>Role Selection</DropdownMenu.Item>
-                    <DropdownMenu.Item class="bg-destructive data-[highlighted]:bg-red-700">Sign Out</DropdownMenu.Item>
+                    <DropdownMenu.Item class="bg-destructive data-[highlighted]:bg-red-700" on:click={() => window.location.href=`${URLS.BASE_URL}/logout`}>Sign Out</DropdownMenu.Item>
                   </DropdownMenu.Group>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
