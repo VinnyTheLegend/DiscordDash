@@ -2,7 +2,6 @@
     import sedicon from "../assets/sedicon.webp"
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-    import { Button } from "$lib/components/ui/button";
 
     export let USER: User;
 

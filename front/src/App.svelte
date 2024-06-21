@@ -3,6 +3,7 @@
   import SideBar from "./components/SideBar.svelte";
   import { URLS } from "./utils";
   import { Button } from "$lib/components/ui/button";
+    import AppSwitch from "./components/AppSwitch.svelte";
 
   let USER: User = {
     id: BigInt(0),
@@ -75,13 +76,19 @@
   if (auth) {
     USER.get();
   }
+  
+  let current_app: string = "home"
+  function changeApp(event: CustomEvent<string>) {
+    current_app = event.detail;
+  }
 </script>
 
 <main class="h-screen w-screen">
   {#if auth && USER.member}
     <Header {USER} />
     <div class="h-[90%] flex">
-      <SideBar />
+      <SideBar  on:changeApp={changeApp}/>
+      <AppSwitch {current_app}/>
     </div>
   {:else if auth}
     <div class="flex h-full justify-center items-center">
