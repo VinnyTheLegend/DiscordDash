@@ -18,7 +18,7 @@
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
                     <Avatar.Root>
-                        <Avatar.Image src={`https://cdn.discordapp.com/avatars/${USER.id}/${USER.avatar}.png`} alt="@shadcn" />
+                        <Avatar.Image src={`https://cdn.discordapp.com/avatars/${USER.id}/${USER.avatar}.png`} alt="" />
                         <Avatar.Fallback>{USER.username[0].toUpperCase()}</Avatar.Fallback>
                     </Avatar.Root>
                 </DropdownMenu.Trigger>

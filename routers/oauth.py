@@ -80,7 +80,7 @@ async def callback(request: Request, code: str = None, state: str = None):
     response.set_cookie(key="auth", value=True, httponly=False, samesite='Lax', secure=True, domain=secret.DOMAIN)
 
 
-    await FetchDiscordProfile(state, token)
+    await utils.FetchDiscordProfile(state, token)
 
     return response
 
@@ -90,72 +90,6 @@ async def read_cookie(request: Request):
     if not token or not state:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
     return {"state": state, "token": token}
-
-
-async def FetchDiscordProfile(state, token):
-    print('provided state: ', state)
-    print('provided token: ', token)
-    if not state or not token:
-        print('fetch failed, state or token missing')
-        return {'error': 'state or token missing'}, False
-    client = AsyncOAuth2Client(
-        client_id=OAUTH2_CLIENT_ID,
-        client_secret=OAUTH2_CLIENT_SECRET,
-        redirect_uri=OAUTH2_REDIRECT_URI,
-        state=state,
-        token=token,
-        token_endpoint=TOKEN_URL)
-    
-    print("new_token: ", client.token)
-
-    user_response = await client.get(API_BASE_URL + '/users/@me')
-    seduction_response = await client.get(API_BASE_URL + '/users/@me/guilds/' + GUILD_ID + '/member')
-
-    print('user: ' + str(user_response.status_code))
-    print('seduction: ' + str(seduction_response.status_code))
-
-    user = user_response.json()
-    seduction = seduction_response.json()
-
-    isadmin = False
-    member = False
-
-    if user_response.status_code !=200:
-        return {'error': user}, False
-
-    if seduction_response.status_code == 200:
-        member = True
-        if "roles" in seduction:
-            if "591686220996935691" in seduction["roles"]:
-                isadmin = True
-        
-    db = SessionLocal()
-
-    db_user = {
-        'id': user['id'],
-        'username': user['username'],
-        'global_name': user['global_name'],
-        'avatar': user['avatar'],
-        'access_token': token['access_token'],
-        'expires_in': token['expires_in'],
-        'expires_at': token['expires_at'],
-        'member': member,
-        'admin': isadmin,
-        'nickname': seduction.get('nick', None),
-        'joined_at': seduction.get('joined_at', None),
-        'roles': seduction.get('roles', None)
-    }
-    
-    db_user_old = crud.get_user(db=db, user_id=user['id'])
-    if db_user_old:
-        db_user['connection_time'] = db_user_old.connection_time
-        crud.update_user(db=db, user_id=user['id'], user=schemas.UserCreate(**db_user))
-    else:
-        db_user['connection_time'] = 0
-        crud.create_user(db=db, user=schemas.UserCreate(**db_user))
-
-    db.close()
-    return db_user, client.token
 
 @router.get('/discord/user', response_model=schemas.User)
 async def user(request: Request):
@@ -183,13 +117,11 @@ async def user_update(request: Request):
     if not db_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
     
-    data, new_token = await FetchDiscordProfile(state, token)
+    data, new_token = await utils.FetchDiscordProfile(state, token)
     if not new_token:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data)
 
-    user_data = schemas.User(**data).model_dump_json()
-
-    response = JSONResponse(content=json.loads(user_data))
+    response = JSONResponse(content=json.loads(data.model_dump_json()))
     if new_token:
         response.set_cookie(key="token", value=json.dumps(new_token), httponly=True, samesite='none', secure=True, domain="localhost")
     
