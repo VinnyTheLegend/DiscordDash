@@ -1534,6 +1534,11 @@ svelte-preprocess@^5.1.0:
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
 
+svelte-radix@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-radix/-/svelte-radix-1.1.0.tgz#5fb0c8d37422ea4863649180f6277af2d8b70dd3"
+  integrity sha512-kyE9wZiJV937INGb+wiBkAjmGtQUUYRPkVL2Q+/gj+9Vog1Ewd2wNvNmpNMUd+c+euxoc5u5YZMuCUgky9EUPw==
+
 svelte@^4.2.11:
   version "4.2.11"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-4.2.11.tgz#b1a57a41d01686b4f7230611f89a5c25b23a1745"

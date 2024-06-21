@@ -1,6 +1,8 @@
 <script lang="ts">
     import sedicon from "../assets/sedicon.webp"
     import * as Avatar from "$lib/components/ui/avatar/index.js";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+    import { Button } from "$lib/components/ui/button";
 
     export let USER: User;
 
@@ -12,10 +14,22 @@
         <header class="seduction font-extrabold text-5xl">SEDUCTION</header>
         <div class="flex items-center justify-end w-[25%]">
             <span class="pr-4 font-bold">{USER.username}</span>
-            <Avatar.Root>
-                <Avatar.Image src={`https://cdn.discordapp.com/avatars/${USER.id}/${USER.avatar}.png`} alt="@shadcn" />
-                <Avatar.Fallback>{USER.username[0].toUpperCase()}</Avatar.Fallback>
-            </Avatar.Root>
+            <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                    <Avatar.Root>
+                        <Avatar.Image src={`https://cdn.discordapp.com/avatars/${USER.id}/${USER.avatar}.png`} alt="@shadcn" />
+                        <Avatar.Fallback>{USER.username[0].toUpperCase()}</Avatar.Fallback>
+                    </Avatar.Root>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content class="">
+                  <DropdownMenu.Group>
+                    <DropdownMenu.Label>My Account</DropdownMenu.Label>
+                    <DropdownMenu.Separator />
+                    <DropdownMenu.Item>Role Selection</DropdownMenu.Item>
+                    <DropdownMenu.Item class="bg-destructive data-[highlighted]:bg-red-700">Sign Out</DropdownMenu.Item>
+                  </DropdownMenu.Group>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
         </div>
     </div>
 </main>
