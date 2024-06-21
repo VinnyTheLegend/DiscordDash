@@ -127,7 +127,7 @@ async def user_update(request: Request):
     
     return response
 
-@router.get('/logout', response_model=schemas.User)
+@router.get('/logout')
 async def logout(request: Request):
     external_url = URL(FRONT_URI)
     response = RedirectResponse(url=str(external_url), status_code=301)

@@ -62,7 +62,7 @@ async def FetchDiscordProfile(state, token):
     print("new_token: ", client.token)
 
     user_response = await client.get('https://discord.com/api' + '/users/@me')
-    seduction_response = await client.get('https://discord.com/api' + '/users/@me/guilds/' + secret.GUILD_ID + '/member')
+    seduction_response = await client.get('https://discord.com/api' + '/users/@me/guilds/' + str(secret.GUILD_ID) + '/member')
 
     print('user: ' + str(user_response.status_code))
     print('seduction: ' + str(seduction_response.status_code))

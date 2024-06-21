@@ -11,6 +11,7 @@ from database.database import SessionLocal
 from database import crud
 
 from utils import utils
+import secret
 
 class RoleResponse(BaseModel):
     id: int
@@ -91,7 +92,7 @@ class ServerInfo(commands.Cog):
             if not db_user.member:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
 
-            guild: discord.Guild = self.bot.get_guild(591684990811635724)
+            guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
 
             guild_response = {
                 'id': guild.id,
