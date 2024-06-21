@@ -3,7 +3,7 @@
     export let current_app: string
 </script>
 
-<main class="w-[85%]">
+<main class="flex flex-grow">
 {#if current_app === "home"}
     <div class="size-full border-2 border-red-500">
 

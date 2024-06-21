@@ -12,8 +12,8 @@
 
 </script>
 
-<main class="border-r-[1px] border-[#47003C] w-[15%] bg-[#150013] text-center py-4">
-    <Button class="w-40" on:click={() => {changeApp("test")}}>Test</Button>
+<main class="border-r-[1px] border-[#47003C] w-40 bg-[#150013] text-center py-4">
+    <Button class="w-32" on:click={() => {changeApp("test")}}>Test</Button>
 </main>
 
 <style>

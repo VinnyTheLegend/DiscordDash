@@ -79,6 +79,7 @@
   
   let current_app: string = "home"
   function changeApp(event: CustomEvent<string>) {
+    USER.get()
     current_app = event.detail;
   }
 </script>
@@ -87,7 +88,7 @@
   {#if auth && USER.member}
     <Header {USER} />
     <div class="h-[90%] flex">
-      <SideBar  on:changeApp={changeApp}/>
+      <SideBar on:changeApp={changeApp}/>
       <AppSwitch {current_app}/>
     </div>
   {:else if auth}
