@@ -4,6 +4,7 @@ export const URLS = {
     BASE_URL: BASE_URL,
     AUTH_URL: BASE_URL + "/discord/authenticate",
     USER_URL: BASE_URL + "/discord/user",
+    FRONT_URL: "https://localhost:5173"
 }
 
 export const ROLES_DICT: { [key: number]: string } = {
