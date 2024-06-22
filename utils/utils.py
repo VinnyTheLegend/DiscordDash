@@ -26,7 +26,8 @@ def create_user_from_member(member: discord.Member):
         'admin': admin,
         'nickname': member.display_name,
         'joined_at': member.joined_at,
-        'roles': roles
+        'roles': roles,
+        'connection_time': 0
     }
 
     return db_user

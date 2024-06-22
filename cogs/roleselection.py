@@ -74,15 +74,32 @@ class RoleSelection(commands.Cog):
     ])
     async def role(self, ctx: commands.Context, *, operation: str, role: str):
         """Add/Remove optional roles."""
+        db = SessionLocal()
+        db_user = crud.get_user(db=db, user_id=ctx.author.id)
         guild = self.bot.get_guild(secret.GUILD_ID)
-        role = guild.get_role(int(role))
+        role: discord.Role = guild.get_role(int(role))
         if operation == "add":
-           await ctx.author.add_roles(role)
-           await ctx.reply(f"Added {role}", ephemeral=True)
+            await ctx.author.add_roles(role)
+
+            if db_user:
+                crud.user_add_role(db=db, user_id=ctx.author.id, role_id=role.id)
+            else:
+                new_user = utils.create_user_from_member(ctx.author)
+                crud.create_user(db=db, user=new_user)
+
+            await ctx.reply(f"Added {role}", ephemeral=True)
         else:
             await ctx.author.remove_roles(role)
+            
+            if db_user:
+                crud.user_remove_role(db=db, user_id=ctx.author.id, role_id=role.id)
+            else:
+                new_user = utils.create_user_from_member(ctx.author)
+                crud.create_user(db=db, user=new_user)
+
             await ctx.reply(f"Removed {role}", ephemeral=True)
 
+        db.close()
         
 
     
