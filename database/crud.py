@@ -77,3 +77,31 @@ def update_user_connection_time(db: Session, user_id: int, time: float):
         db.refresh(db_user)
         return db_user
     return None
+
+def user_add_role(db: Session, user_id: int, role_id: int):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user:
+        roles = list(db_user.roles)
+        print("adding role")
+        print(type(roles), roles)
+        roles.append(role_id)
+        print(type(roles), roles)
+        db_user.roles = roles
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    return None
+
+def user_remove_role(db: Session, user_id: int, role_id: int):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user:
+        roles = list(db_user.roles)
+        print("removing role")
+        print(type(roles), roles)
+        roles.remove(role_id)
+        print(type(roles), roles)
+        db_user.roles = roles
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    return None

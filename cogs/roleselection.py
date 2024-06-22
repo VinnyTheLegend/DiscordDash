@@ -49,10 +49,12 @@ class RoleSelection(commands.Cog):
             member = guild.get_member(int(user_data.id))
             if operation == "add":
                 await member.add_roles(role)
-                return {operation: str(role)}
+                new_user = crud.user_add_role(db, user_data.id, role.id)
+                return new_user
             elif operation == "remove":
                 await member.remove_roles(role)
-                return {operation: str(role)}
+                new_user = crud.user_remove_role(db, user_data.id, role.id)
+                return new_user
             else:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="bad operation")
 
