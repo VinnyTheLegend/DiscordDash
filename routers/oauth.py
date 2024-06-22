@@ -84,13 +84,6 @@ async def callback(request: Request, code: str = None, state: str = None):
 
     return response
 
-@router.get("/discord/read-cookie")
-async def read_cookie(request: Request):
-    state, token = utils.getCookies(request)
-    if not token or not state:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
-    return {"state": state, "token": token}
-
 @router.get('/discord/user', response_model=schemas.User)
 async def user(request: Request):
     state, token = utils.getCookies(request)

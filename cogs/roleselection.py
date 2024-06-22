@@ -20,12 +20,12 @@ def get_db():
 
 class RoleSelection(commands.Cog):
     def __init__(self, bot):
-        print("starting testroute")
+        print("starting roleselection")
         self.bot: commands.Bot = bot
         self.router = APIRouter()
 
         @self.router.get('/api/roles/add')
-        async def rolesadd(request: Request, db: Session = Depends(get_db)):
+        async def role(request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
@@ -48,11 +48,10 @@ class RoleSelection(commands.Cog):
         discord.app_commands.Choice(name="Twitch Notifications", value="1222684351054221312"),
         discord.app_commands.Choice(name="Drops", value="850013094758842400")
     ])
-    async def ping(self, ctx: commands.Context, *, operation: str, role: str):
+    async def role(self, ctx: commands.Context, *, operation: str, role: str):
         """Add/Remove optional roles."""
-        guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
+        guild = self.bot.get_guild(secret.GUILD_ID)
         role = guild.get_role(int(role))
-        print(operation)
         if operation == "add":
            await ctx.author.add_roles(role)
            await ctx.reply(f"Added {role}", ephemeral=True)
