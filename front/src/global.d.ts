@@ -7,7 +7,7 @@ interface UserData {
     admin: boolean,
     nickname: string | null,
     joined_at: string | null,
-    roles: Array[number] | null,
+    roles: number[] | null,
     connection_time: number
 }
 
