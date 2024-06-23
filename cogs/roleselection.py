@@ -47,9 +47,8 @@ class RoleSelection(commands.Cog):
             role = request.query_params['role']
             if int(role) not in self.optional_role_ids:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
-            guild = self.bot.get_guild(secret.GUILD_ID)
-            role = guild.get_role(int(role))
-            member = guild.get_member(int(user_data.id))
+            role = self.guild.get_role(int(role))
+            member = self.guild.get_member(int(user_data.id))
             if operation == "add":
                 await member.add_roles(role)
                 new_user = crud.user_add_role(db, user_data.id, role.id)
@@ -82,29 +81,24 @@ class RoleSelection(commands.Cog):
         """Add/Remove optional roles."""
         db = SessionLocal()
         db_user = crud.get_user(db=db, user_id=ctx.author.id)
-        guild = self.bot.get_guild(secret.GUILD_ID)
-        role: discord.Role = guild.get_role(int(role))
+        role: discord.Role = self.guild.get_role(int(role))
         if operation == "add":
             await ctx.author.add_roles(role)
-
             if db_user:
                 crud.user_add_role(db=db, user_id=ctx.author.id, role_id=role.id)
             else:
                 new_user = utils.create_user_from_member(ctx.author)
                 new_user.roles.append(role.id)
                 crud.create_user(db=db, user=new_user)
-
             await ctx.reply(f"Added {role}", ephemeral=True)
         else:
             await ctx.author.remove_roles(role)
-            
             if db_user:
                 crud.user_remove_role(db=db, user_id=ctx.author.id, role_id=role.id)
             else:
                 new_user = utils.create_user_from_member(ctx.author)
                 new_user.roles.remove(role.id)
                 crud.create_user(db=db, user=new_user)
-
             await ctx.reply(f"Removed {role}", ephemeral=True)
         db.close()
         
