@@ -29,7 +29,8 @@ class TestCog(commands.Cog):
     def __init__(self, bot):
         print("starting testroute")
         self.bot = bot
-        self.router = APIRouter()   
+        self.router = APIRouter()
+        self._last_member = None
 
         @self.router.get('/api/test')
         async def test(request: Request, db: Session = Depends(get_db)):

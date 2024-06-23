@@ -18,13 +18,16 @@ def get_db():
     finally:
         db.close()
 
+ROLE_CHOICES = []
+
 class RoleSelection(commands.Cog):
     def __init__(self, bot):
         print("starting roleselection")
         self.bot: commands.Bot = bot
         self.router = APIRouter()
 
-        self.optional_roles = [1222684351054221312, 850013094758842400]
+        self.optional_role_ids = [1222684351054221312, 850013094758842400]
+        self.optional_roles = []
 
         @self.router.get('/discord/user/roles')
         async def role(request: Request, db: Session = Depends(get_db)):
@@ -42,7 +45,7 @@ class RoleSelection(commands.Cog):
             
             operation = request.query_params['operation']
             role = request.query_params['role']
-            if int(role) not in self.optional_roles:
+            if int(role) not in self.optional_role_ids:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
             guild = self.bot.get_guild(secret.GUILD_ID)
             role = guild.get_role(int(role))
@@ -59,8 +62,14 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="bad operation")
 
 
-            
-
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.guild = self.bot.get_guild(secret.GUILD_ID)
+        for role_id in self.optional_role_ids:
+           role = self.guild.get_role(role_id)
+           self.optional_roles.append(role)
+           ROLE_CHOICES.append(discord.app_commands.Choice(name=str(role.name), value=str(role.id)))
+    
 
     @commands.hybrid_command(name='role', with_app_command=True)
     @discord.app_commands.describe(operation="Add or remove roles?", role="Which role?")
@@ -68,10 +77,7 @@ class RoleSelection(commands.Cog):
         discord.app_commands.Choice(name="add", value="add"),
         discord.app_commands.Choice(name="remove", value="remove")
     ])
-    @discord.app_commands.choices(role=[
-        discord.app_commands.Choice(name="Twitch Notifications", value="1222684351054221312"),
-        discord.app_commands.Choice(name="Drops", value="850013094758842400")
-    ])
+    @discord.app_commands.choices(role=ROLE_CHOICES)
     async def role(self, ctx: commands.Context, *, operation: str, role: str):
         """Add/Remove optional roles."""
         db = SessionLocal()
