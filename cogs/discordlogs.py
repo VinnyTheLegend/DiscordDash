@@ -9,7 +9,7 @@ from database.database import SessionLocal
 from database import crud, schemas
 
 from utils import logger, utils
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def get_db():
     db = SessionLocal()
@@ -58,7 +58,7 @@ class DiscordLogs(commands.Cog):
             await channel.send(f'Welcome {member.mention}.')
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member: discord.Member, before, after):
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         log = ''
         if before.channel == None:
             self.connected[member.id] = datetime.now()
@@ -67,7 +67,7 @@ class DiscordLogs(commands.Cog):
         else:
             if after.channel != before.channel:
                 if member.id in self.connected:
-                    connected_time = datetime.now() - self.connected[member.id]
+                    connected_time: timedelta = datetime.now() - self.connected[member.id]
                     connected_seconds = connected_time.total_seconds()
                     connected_minutes = round(connected_seconds / 60, 1)
                     del self.connected[member.id]
