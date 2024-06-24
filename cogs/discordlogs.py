@@ -78,7 +78,7 @@ class DiscordLogs(commands.Cog):
                 db_user = crud.get_user(db=db, user_id=member.id)
                 new_user = utils.create_user_from_member(member)
                 if db_user:
-                    new_user['connection_time'] = connected_minutes
+                    new_user['connection_time'] = db_user.connection_time + connected_minutes
                     crud.update_user(db=db, user_id=new_user['id'], user=schemas.UserCreate(**new_user))
                 else:
                     new_user['connection_time'] = connected_minutes
