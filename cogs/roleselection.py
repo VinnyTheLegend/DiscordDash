@@ -88,7 +88,7 @@ class RoleSelection(commands.Cog):
                 crud.user_add_role(db=db, user_id=ctx.author.id, role_id=role.id)
             else:
                 new_user = utils.create_user_from_member(ctx.author)
-                new_user.roles.append(role.id)
+                new_user['roles'].append(role.id)
                 crud.create_user(db=db, user=new_user)
             await ctx.reply(f"Added {role}", ephemeral=True)
         else:
@@ -97,7 +97,7 @@ class RoleSelection(commands.Cog):
                 crud.user_remove_role(db=db, user_id=ctx.author.id, role_id=role.id)
             else:
                 new_user = utils.create_user_from_member(ctx.author)
-                new_user.roles.remove(role.id)
+                new_user['roles'].remove(role.id)
                 crud.create_user(db=db, user=new_user)
             await ctx.reply(f"Removed {role}", ephemeral=True)
         db.close()

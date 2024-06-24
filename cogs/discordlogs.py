@@ -39,7 +39,7 @@ class DiscordLogs(commands.Cog):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
         
         @self.router.get('/api/logs/recent', response_model=list[str])
-        async def logs(request: Request, db: Session = Depends(get_db)):
+        async def logsrecent(request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
