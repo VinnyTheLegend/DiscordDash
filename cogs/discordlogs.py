@@ -34,7 +34,7 @@ class DiscordLogs(commands.Cog):
             if not db_user:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
 
-            if db_user.member == True:
+            if db_user.member == True: #type: ignore
                 return FileResponse(logger.path)
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
         
@@ -47,7 +47,7 @@ class DiscordLogs(commands.Cog):
             if not db_user:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
 
-            if db_user.member == True:
+            if db_user.member == True: #type: ignore
                 return logger.last_25
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
         
