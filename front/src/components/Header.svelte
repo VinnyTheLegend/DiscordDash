@@ -12,7 +12,6 @@
     export let USER: User;
 
     let optional_roles = [{id: 1222684351054221312, name: 'Twitch Notifications', checked: false}, {id: 850013094758842400, name: 'Drops', checked: false}]
-    console.log('checking optional roles')
     if (USER.roles != null) {
         optional_roles.forEach(role => {
             if (USER.roles?.includes(role.id)){
