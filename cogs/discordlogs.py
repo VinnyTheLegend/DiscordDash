@@ -6,7 +6,7 @@ from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
-from database import crud
+from database import crud, schemas
 
 from utils import logger, utils
 from datetime import datetime
@@ -76,12 +76,13 @@ class DiscordLogs(commands.Cog):
 
                 db = SessionLocal()
                 db_user = crud.get_user(db=db, user_id=member.id)
+                new_user = utils.create_user_from_member(member)
                 if db_user:
-                    crud.update_user_connection_time(db=db, user_id=member.id, time=connected_minutes)
-                else:
-                    new_user = utils.create_user_from_member(member)
                     new_user['connection_time'] = connected_minutes
-                    crud.create_user(db=db, user=new_user)
+                    crud.update_user(db=db, user_id=new_user['id'], user=schemas.UserCreate(**new_user))
+                else:
+                    new_user['connection_time'] = connected_minutes
+                    crud.create_user(db=db, user=schemas.UserCreate(**new_user))
                 db.close()
 
                 log = member.name + ' disconnected from ' + before.channel.name + f" ({connected_minutes}mins)"

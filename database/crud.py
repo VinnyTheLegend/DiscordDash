@@ -56,13 +56,19 @@ def create_user(db: Session, user: schemas.UserCreate):
 def update_user(db: Session, user_id: int, user: schemas.UserCreate):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
-        token_identifier = generate_token_identifier(user.access_token)
-        hashed_token = hash_token(user.access_token)
-
-        updated_user_data = user.model_dump()
-        updated_user_data['access_token'] = hashed_token
-        updated_user_data['token_identifier'] = token_identifier
-
+        if user.access_token:
+            token_identifier = generate_token_identifier(user.access_token)
+            hashed_token = hash_token(user.access_token)
+            updated_user_data = user.model_dump()
+            updated_user_data['access_token'] = hashed_token
+            updated_user_data['token_identifier'] = token_identifier
+        else:
+            updated_user_data = user.model_dump()
+            updated_user_data['access_token'] = db_user.access_token
+            updated_user_data['token_identifier'] = db_user.token_identifier
+            updated_user_data['expires_in'] = db_user.expires_in
+            updated_user_data['expires_at'] = db_user.expires_at
+            
         db.query(models.User).filter(models.User.id == user_id).update(updated_user_data)
         db.commit()
         db.refresh(db_user)

@@ -17,7 +17,7 @@ def create_user_from_member(member: discord.Member):
             admin = True
         roles.append(role_new)
 
-    db_user: schemas.UserCreate = {
+    db_user = {
         'id': member.id,
         'username': member.name,
         'global_name': member.global_name,
@@ -27,7 +27,10 @@ def create_user_from_member(member: discord.Member):
         'nickname': member.display_name,
         'joined_at': member.joined_at,
         'roles': roles,
-        'connection_time': 0
+        'connection_time': 0,
+        'access_token': None,
+        'expires_in': None,
+        'expires_at': None
     }
 
     return db_user
