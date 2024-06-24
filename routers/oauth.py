@@ -75,9 +75,9 @@ async def callback(request: Request, code: str = None, state: str = None):
     #external_url = external_url.include_query_params(token=token['access_token'], state=request.session.get('oauth2_state'))
 
     response = RedirectResponse(url=str(external_url), status_code=301)
-    response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='Lax', secure=True, domain=secret.DOMAIN)
-    response.set_cookie(key="state", value=request.session.get('oauth2_state'), httponly=True, samesite='Lax', secure=True, domain=secret.DOMAIN)
-    response.set_cookie(key="auth", value=True, httponly=False, samesite='Lax', secure=True, domain=secret.DOMAIN)
+    response.set_cookie(key="token", value=json.dumps(token), httponly=True, samesite='lax', secure=True, domain=secret.DOMAIN)
+    response.set_cookie(key="state", value=str(request.session.get('oauth2_state')), httponly=True, samesite='lax', secure=True, domain=secret.DOMAIN)
+    response.set_cookie(key="auth", value="True", httponly=False, samesite='lax', secure=True, domain=secret.DOMAIN)
 
 
     await utils.FetchDiscordProfile(state, token)
