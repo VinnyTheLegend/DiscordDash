@@ -12,13 +12,13 @@ def create_user_from_member(member: discord.Member):
     roles = []
     admin = False
     for role in member.roles:
-        role_new = role.id
+        role_new = str(role.id)
         if role.name == 'General' or role.name == 'Warlord':
             admin = True
         roles.append(role_new)
 
     db_user = {
-        'id': member.id,
+        'id': str(member.id),
         'username': member.name,
         'global_name': member.global_name,
         'avatar': member.avatar.key,

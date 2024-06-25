@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 class User(BaseModel):
-    id: int
+    id: str
     username: str
     global_name: str
     avatar: Optional[str]
@@ -14,7 +14,7 @@ class User(BaseModel):
     admin: bool
     nickname: Optional[str]
     joined_at: Optional[datetime]
-    roles: Optional[list[int]]
+    roles: Optional[list[str]]
     connection_time: float
 
     class Config:

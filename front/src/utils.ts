@@ -7,11 +7,11 @@ export const URLS = {
     FRONT_URL: "https://localhost:5173"
 }
 
-export const ROLES_DICT: { [key: number]: string } = {
-    591686220996935691: "Warlord",
-    591686523142012948: "General",
-    591687458819932172: "Veteran",
-    591687038902992928: "Member",
+export const ROLES_DICT: { [key: string]: string } = {
+    "591686220996935691": "Warlord",
+    "591686523142012948": "General",
+    "591687458819932172": "Veteran",
+    "591687038902992928": "Member",
 }
 
 export function echo(message: string) {

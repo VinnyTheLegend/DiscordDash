@@ -1,5 +1,5 @@
 interface UserData {
-    id: bigint,
+    id: str,
     username: string,
     global_name: string,
     avatar: string | null,
@@ -7,7 +7,7 @@ interface UserData {
     admin: boolean,
     nickname: string | null,
     joined_at: string | null,
-    roles: number[] | null,
+    roles: string[] | null,
     connection_time: number
 }
 

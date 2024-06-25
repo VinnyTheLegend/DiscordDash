@@ -11,7 +11,7 @@
 
     export let USER: User;
 
-    let optional_roles = [{id: 1222684351054221312, name: 'Twitch Notifications', checked: false}, {id: 850013094758842400, name: 'Drops', checked: false}]
+    let optional_roles = [{id: "1222684351054221312", name: 'Twitch Notifications', checked: false}, {id: "850013094758842400", name: 'Drops', checked: false}]
     if (USER.roles != null) {
         optional_roles.forEach(role => {
             if (USER.roles?.includes(role.id)){
@@ -21,8 +21,29 @@
         })
     }
 
+    const url = new URL(`${URLS.USER_URL}/roles`)
     function roleChange(role: {id: number, name: string, checked: boolean}) {
-        console.log(`${role.name}: ${!role.checked}`)
+        let operation
+        role.checked ? operation = 'remove' : operation = 'add'
+        url.searchParams.delete('operation')
+        url.searchParams.delete('role_id')
+        url.searchParams.append('operation', operation)
+        url.searchParams.append('role_id', role.id)
+        console.log(url)
+        fetch(url, { mode: "cors", credentials: "include" })
+        .then((response) => {
+          if (response.status === 400) {
+            return response.json().then((data) => {
+              throw new Error(data.detail || "Bad request");
+            });
+          }
+          return response.json();
+        })
+        .catch((error) => {
+          console.log(error);
+          // AuthRedirect()
+          return [];
+        });
     }
 
 </script>

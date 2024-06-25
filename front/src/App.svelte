@@ -3,7 +3,7 @@
   import SideBar from "./components/SideBar.svelte";
   import { URLS } from "./utils";
   import { Button } from "$lib/components/ui/button";
-    import AppSwitch from "./components/AppSwitch.svelte";
+  import AppSwitch from "./components/AppSwitch.svelte";
 
   let USER: User = {
     id: BigInt(0),
@@ -30,7 +30,6 @@
           if ("error" in data) {
             console.log(data);
           } else {
-            data.id = BigInt(data.id)
             console.log(data);
             Object.assign(this, data);
             USER = USER;
@@ -57,7 +56,6 @@
           if ("error" in data) {
             console.log(data);
           } else {
-            data.id = BigInt(data.id)
             console.log(data);
             Object.assign(this, data);
             USER = USER;

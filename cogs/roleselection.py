@@ -30,7 +30,7 @@ class RoleSelection(commands.Cog):
         self.optional_roles = []
 
         @self.router.get('/discord/user/roles')
-        async def role(request: Request, db: Session = Depends(get_db)):
+        async def roleaddremove(request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
@@ -39,23 +39,25 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
             if not db_user.member:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
-            user_data, new_token = await utils.FetchDiscordProfile(state, token)
-            if not user_data.member or (591687038902992928 not in user_data.roles and not user_data.admin):
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+            # user_data, new_token = await utils.FetchDiscordProfile(state, token)
+            # if not user_data.member or (591687038902992928 not in user_data.roles and not user_data.admin):
+            #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+            print('authorized')
             
             operation = request.query_params['operation']
-            role = request.query_params['role']
+            role = request.query_params['role_id']
+            print(role, operation)
             if int(role) not in self.optional_role_ids:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
             role = self.guild.get_role(int(role))
-            member = self.guild.get_member(int(user_data.id))
+            member = self.guild.get_member(int(db_user.id))
             if operation == "add":
                 await member.add_roles(role)
-                new_user = crud.user_add_role(db, user_data.id, role.id)
+                new_user = crud.user_add_role(db, db_user.id, role.id)
                 return new_user
             elif operation == "remove":
                 await member.remove_roles(role)
-                new_user = crud.user_remove_role(db, user_data.id, role.id)
+                new_user = crud.user_remove_role(db, db_user.id, role.id)
                 return new_user
             else:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="bad operation")
