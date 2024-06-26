@@ -41,12 +41,8 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             
             member = self.guild.get_member(int(db_user.id))
-            member_role = 591687038902992928
-            veteran_role = 591687458819932172
-            general_role = 591686523142012948
-            warlord_role = 591686220996935691
-            has_admin_role = not (not member.get_role(general_role) and not member.get_role(warlord_role))
-            if not member or (not member.get_role(member_role) and not member.get_role(veteran_role) and not has_admin_role):
+            has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
+            if not member or (not member.get_role(secret.member_id) and not member.get_role(secret.veteran_id) and not has_admin_role):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             print('authorized')
             
@@ -58,6 +54,8 @@ class RoleSelection(commands.Cog):
             role = self.guild.get_role(int(role))
             member = self.guild.get_member(int(db_user.id))
             if operation == "add":
+                if role in member.roles:
+                    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
                 await member.add_roles(role)
                 new_user = crud.user_add_role(db, db_user.id, str(role.id))
                 return new_user

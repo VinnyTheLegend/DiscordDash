@@ -29,6 +29,7 @@
         url.searchParams.delete('role_id')
         url.searchParams.append('operation', operation)
         url.searchParams.append('role_id', role.id)
+        console.log(url)
         fetch(url, { mode: "cors", credentials: "include" })
         .then((response) => {
           if (response.status === 400) {
@@ -36,16 +37,20 @@
               throw new Error(data.detail || "Bad request");
             });
           }
-          USER.get()
-          optional_roles.forEach(role => {
+          return response.json();
+        })
+        .then((data) => {
+            Object.assign(USER, data);
+            USER = USER;
+            optional_roles.forEach((role, i) => {
                 if (USER.roles?.includes(role.id)){
-                    role.checked = true
+                    optional_roles[i].checked = true
                 } else {
-                    role.checked = false
+                    optional_roles[i].checked = false
+                    
                 }
                 console.log(`${role.name}: ${role.checked}`)
             })
-          return response.json();
         })
         .catch((error) => {
             optional_roles.forEach(role => {
