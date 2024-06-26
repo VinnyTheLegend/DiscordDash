@@ -29,7 +29,6 @@
         url.searchParams.delete('role_id')
         url.searchParams.append('operation', operation)
         url.searchParams.append('role_id', role.id)
-        console.log(url)
         fetch(url, { mode: "cors", credentials: "include" })
         .then((response) => {
           if (response.status === 400) {
@@ -38,6 +37,14 @@
             });
           }
           USER.get()
+          optional_roles.forEach(role => {
+                if (USER.roles?.includes(role.id)){
+                    role.checked = true
+                } else {
+                    role.checked = false
+                }
+                console.log(`${role.name}: ${role.checked}`)
+            })
           return response.json();
         })
         .catch((error) => {
