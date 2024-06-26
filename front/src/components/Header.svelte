@@ -40,9 +40,16 @@
           return response.json();
         })
         .catch((error) => {
-          console.log(error);
-          // AuthRedirect()
-          return [];
+            console.log('here')
+            optional_roles.forEach(role => {
+                if (USER.roles?.includes(role.id)){
+                    role.checked = true
+                }
+                console.log(`${role.name}: ${role.checked}`)
+            })
+            optional_roles = optional_roles
+            console.log(error);
+            return [];
         });
     }
 
@@ -66,7 +73,7 @@
                         <DropdownMenu.Group>
                             <DropdownMenu.Label>My Account</DropdownMenu.Label>
                             <DropdownMenu.Separator />
-                            <Dialog.Trigger><DropdownMenu.Item>Role Selection</DropdownMenu.Item></Dialog.Trigger>
+                            <Dialog.Trigger class="w-full"><DropdownMenu.Item>Role Selection</DropdownMenu.Item></Dialog.Trigger>
                             <DropdownMenu.Item class="bg-destructive data-[highlighted]:bg-red-700" on:click={() => window.location.href=`${URLS.BASE_URL}/logout`}>Sign Out</DropdownMenu.Item>
                         </DropdownMenu.Group>
                     </DropdownMenu.Content>
@@ -89,9 +96,6 @@
                             </div>
                         {/each}
                     </div>
-                    <Dialog.Footer>
-                        <Button type="submit">Save changes</Button>
-                    </Dialog.Footer>
                 </Dialog.Content>
             </Dialog.Root>
         </div>
