@@ -41,10 +41,11 @@
           return response.json();
         })
         .catch((error) => {
-            console.log('here')
             optional_roles.forEach(role => {
                 if (USER.roles?.includes(role.id)){
                     role.checked = true
+                } else {
+                    role.checked = false
                 }
                 console.log(`${role.name}: ${role.checked}`)
             })

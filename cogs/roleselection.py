@@ -39,9 +39,15 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
             if not db_user.member:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
-            # user_data, new_token = await utils.FetchDiscordProfile(state, token)
-            # if not user_data.member or (591687038902992928 not in user_data.roles and not user_data.admin):
-            #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+            
+            member = self.guild.get_member(int(db_user.id))
+            member_role = 591687038902992928
+            veteran_role = 591687458819932172
+            general_role = 591686523142012948
+            warlord_role = 591686220996935691
+            has_admin_role = not (not member.get_role(general_role) and not member.get_role(warlord_role))
+            if not member or (not member.get_role(member_role) and not member.get_role(veteran_role) and not has_admin_role):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             print('authorized')
             
             operation = request.query_params['operation']
