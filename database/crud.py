@@ -84,7 +84,7 @@ def update_user_connection_time(db: Session, user_id: int, time: float):
         return db_user
     return None
 
-def user_add_role(db: Session, user_id: int, role_id: int):
+def user_add_role(db: Session, user_id: int, role_id: str):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
         roles = list(db_user.roles)

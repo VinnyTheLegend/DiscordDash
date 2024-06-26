@@ -22,7 +22,7 @@
     }
 
     const url = new URL(`${URLS.USER_URL}/roles`)
-    function roleChange(role: {id: number, name: string, checked: boolean}) {
+    function roleChange(role: {id: string, name: string, checked: boolean}) {
         let operation
         role.checked ? operation = 'remove' : operation = 'add'
         url.searchParams.delete('operation')
@@ -37,6 +37,7 @@
               throw new Error(data.detail || "Bad request");
             });
           }
+          USER.get()
           return response.json();
         })
         .catch((error) => {
