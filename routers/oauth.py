@@ -95,8 +95,6 @@ async def user(request: Request):
     db.close()
 
     if db_user:
-        for role in db_user.roles:
-            print(type(role), role)
         return db_user
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
 
