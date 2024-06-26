@@ -75,7 +75,7 @@ class DiscordLogs(commands.Cog):
                     connected_minutes = 0
 
                 db = SessionLocal()
-                db_user = crud.get_user(db=db, user_id=member.id)
+                db_user = crud.get_user(db=db, user_id=str(member.id))
                 new_user = utils.create_user_from_member(member)
                 if db_user:
                     new_user['connection_time'] = db_user.connection_time + connected_minutes

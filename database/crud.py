@@ -75,7 +75,7 @@ def update_user(db: Session, user_id: int, user: schemas.UserCreate):
         return db_user
     return None
 
-def update_user_connection_time(db: Session, user_id: int, time: float):
+def update_user_connection_time(db: Session, user_id: str, time: float):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
         db_user.connection_time = db_user.connection_time + time
@@ -84,7 +84,7 @@ def update_user_connection_time(db: Session, user_id: int, time: float):
         return db_user
     return None
 
-def user_add_role(db: Session, user_id: int, role_id: str):
+def user_add_role(db: Session, user_id: str, role_id: str):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
         roles = list(db_user.roles)
@@ -95,7 +95,7 @@ def user_add_role(db: Session, user_id: int, role_id: str):
         return db_user
     return None
 
-def user_remove_role(db: Session, user_id: int, role_id: int):
+def user_remove_role(db: Session, user_id: str, role_id: str):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
         roles = list(db_user.roles)
