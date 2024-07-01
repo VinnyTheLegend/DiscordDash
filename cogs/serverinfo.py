@@ -116,7 +116,7 @@ class ServerInfo(commands.Cog):
     @commands.hybrid_command(name='serverinfo', with_app_command=True)
     async def hello(self, ctx):
         """Show server info"""
-        guild: discord.Guild = self.bot.get_guild(591684990811635724)
+        guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
 
         roles = str(len(guild.roles))
         emojis = str(len(guild.emojis))
