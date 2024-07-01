@@ -20,8 +20,8 @@ def create_user_from_member(member: discord.Member):
     db_user = {
         'id': str(member.id),
         'username': member.name,
-        'global_name': member.global_name,
-        'avatar': member.avatar.key,
+        'global_name': getattr(member, 'global_name', None) or None,
+        'avatar': getattr(member.avatar, 'key', None) or None,
         'member': True,
         'admin': admin,
         'nickname': member.display_name,

@@ -8,7 +8,7 @@ from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
-from database import crud
+from database import crud, schemas
 
 from utils import utils
 import secret
@@ -50,7 +50,7 @@ class ServerInfo(commands.Cog):
         self.bot = bot
         self.router = APIRouter()   
 
-        @self.router.get('/api/guild/members', response_model=list[MemberResponse])
+        @self.router.get('/api/guild/members', response_model=list[schemas.User])
         async def members(request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:
@@ -65,22 +65,13 @@ class ServerInfo(commands.Cog):
             guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
             members = []
             for member in guild.members:
-                roles = []
-                for role in member.roles:
-                    role_new = {
-                        'id': str(role.id),
-                        'name': role.name
-                    }
-                    roles.append(role_new)
-                member_new = {
-                     'id': str(member.id),
-                     'username': member.name,
-                     'global_name': getattr(member, 'global_name', '') or member.name,
-                     'nickname': member.display_name,
-                     'avatar': getattr(member.avatar, 'key', ''),
-                     'roles': roles
-                }
-                members.append(MemberResponse(**member_new))
+                db_member = crud.get_user(db, member.id)
+                new_member = schemas.UserCreate(**utils.create_user_from_member(member))
+                if db_member:
+                    crud.update_user(db, member.id, new_member)
+                else:
+                    crud.create_user(db, new_member)
+                members.append(new_member)
             return members
         
         @self.router.get('/api/guild', response_model=GuildResponse)

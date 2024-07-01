@@ -7,7 +7,7 @@ from datetime import datetime
 class User(BaseModel):
     id: str
     username: str
-    global_name: str
+    global_name: Optional[str]
     avatar: Optional[str]
 
     member: bool
