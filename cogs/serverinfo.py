@@ -114,7 +114,7 @@ class ServerInfo(commands.Cog):
             return GuildResponse(**guild_response)
 
     @commands.hybrid_command(name='serverinfo', with_app_command=True)
-    async def hello(self, ctx):
+    async def serverinfo(self, ctx):
         """Show server info"""
         guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
 
