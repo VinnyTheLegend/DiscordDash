@@ -90,7 +90,7 @@
     <Header {USER} />
     <div class="h-[90%] flex">
       <SideBar on:changeApp={changeApp}/>
-      <AppSwitch {current_app}/>
+      <AppSwitch {current_app} {USER}/>
     </div>
   {:else if auth}
     <div class="flex h-full justify-center items-center">

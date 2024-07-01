@@ -1,13 +1,13 @@
 <script lang="ts">
+    import Home from "./apps/home/Home.svelte";
 
+    export let USER: User
     export let current_app: string
 </script>
 
 <main class="flex flex-grow">
 {#if current_app === "home"}
-    <div class="size-full border-2 border-red-500">
-
-    </div>
+    <Home {USER}/>
 {:else if current_app === "test"}
     <div class="size-full border-2 border-green-500">
 

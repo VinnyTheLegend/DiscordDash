@@ -22,7 +22,7 @@ def logWrite(new_log: str):
 
 def new(new_log: str):
     now = datetime.datetime.now()
-    new_string = f"{now.strftime('%Y/%m/%d %I:%M:%S%p')} {new_log}\n"
+    new_string = f"{now.strftime('%m/%d/%Y %I:%M:%S%p')} {new_log}\n"
     last_25.append(new_string[:-1])
 
     if len(last_25) > 25:

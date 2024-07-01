@@ -24,7 +24,7 @@ class MemberResponse(BaseModel):
     roles: list[RoleResponse]
 
 class GuildResponse(BaseModel):
-    id: int
+    id: str
     name: str
     created_at: datetime
     member_count: int
@@ -95,7 +95,7 @@ class ServerInfo(commands.Cog):
             guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
 
             guild_response = {
-                'id': guild.id,
+                'id': str(guild.id),
                 'name': guild.name,
                 'created_at': guild.created_at,
                 "member_count": guild.member_count,
