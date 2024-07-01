@@ -14,13 +14,15 @@ from utils import utils
 import secret
 
 class RoleResponse(BaseModel):
-    id: int
+    id: str
     name: str
 
 class MemberResponse(BaseModel):
-    id: int
-    name: str
-    nick: str | None
+    id: str
+    username: str
+    global_name: str
+    nickname: str
+    avatar: str
     roles: list[RoleResponse]
 
 class GuildResponse(BaseModel):
@@ -66,18 +68,18 @@ class ServerInfo(commands.Cog):
                 roles = []
                 for role in member.roles:
                     role_new = {
-                        'id': role.id,
+                        'id': str(role.id),
                         'name': role.name
                     }
                     roles.append(role_new)
-
                 member_new = {
-                     'id': member.id,
-                     'name': member.name,
-                     'nick': member.nick,
+                     'id': str(member.id),
+                     'username': member.name,
+                     'global_name': getattr(member, 'global_name', '') or member.name,
+                     'nickname': member.display_name,
+                     'avatar': getattr(member.avatar, 'key', ''),
                      'roles': roles
                 }
-                print(member_new["name"])
                 members.append(MemberResponse(**member_new))
             return members
         

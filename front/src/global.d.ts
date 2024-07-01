@@ -28,3 +28,13 @@ interface GuildInfo {
     verification_level: string,
     boosts: number
 }
+
+interface Member {
+    id: string,
+    username: string,
+    global_name: string,
+    nickname: string,
+    avatar: string,
+    connection_time: number
+    roles: {id: string, name: string}[]
+}
