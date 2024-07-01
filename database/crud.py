@@ -68,6 +68,9 @@ def update_user(db: Session, user_id: int, user: schemas.UserCreate):
             updated_user_data['token_identifier'] = db_user.token_identifier
             updated_user_data['expires_in'] = db_user.expires_in
             updated_user_data['expires_at'] = db_user.expires_at
+
+        if user.connection_time == 0 or user.connection_time == None:
+            updated_user_data['connection_time'] = db_user.connection_time
             
         db.query(models.User).filter(models.User.id == user_id).update(updated_user_data)
         db.commit()

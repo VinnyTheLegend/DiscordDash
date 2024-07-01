@@ -68,9 +68,9 @@ class ServerInfo(commands.Cog):
                 db_member = crud.get_user(db, member.id)
                 new_member = schemas.UserCreate(**utils.create_user_from_member(member))
                 if db_member:
-                    crud.update_user(db, member.id, new_member)
+                    new_member = crud.update_user(db, member.id, new_member)
                 else:
-                    crud.create_user(db, new_member)
+                    new_member = crud.create_user(db, new_member)
                 members.append(new_member)
             return members
         
