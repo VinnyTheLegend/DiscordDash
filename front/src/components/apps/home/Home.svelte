@@ -50,6 +50,10 @@
                     <h1 class="text-left w-1/2">Voice Channels:</h1>
                     <h1 class="text-right w-1/2">{guild_info?.voice_channel_count || ""}</h1>
                 </div>
+                <div class="w-full flex px-2">
+                    <h1 class="text-left w-1/2">Boosts:</h1>
+                    <h1 class="text-right w-1/2">{guild_info?.boosts || ""}</h1>
+                </div>
             </div>
             <div class="h-2/3"></div>
         </div>

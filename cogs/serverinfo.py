@@ -33,6 +33,7 @@ class GuildResponse(BaseModel):
     text_channel_count: int
     emoji_count: int
     verification_level: str
+    boosts: int
 
 def get_db():
     db = SessionLocal()
@@ -104,6 +105,7 @@ class ServerInfo(commands.Cog):
                 "text_channel_count": len(guild.text_channels),
                 "emoji_count": len(guild.emojis),
                 "verification_level": str(guild.verification_level),
+                "boosts": guild.premium_subscription_count
             }
 
 

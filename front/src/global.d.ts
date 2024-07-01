@@ -1,5 +1,5 @@
 interface UserData {
-    id: str,
+    id: string,
     username: string,
     global_name: string,
     avatar: string | null,
@@ -17,13 +17,14 @@ interface User extends UserData {
 }
 
 interface GuildInfo {
-    id: str,
-    name: str,
+    id: string,
+    name: string,
     created_at: Date,
     member_count: number,
     role_count: number,
     voice_channel_count: number,
     text_channel_count: number,
     emoji_count: number,
-    verification_level: str
+    verification_level: string,
+    boosts: number
 }

@@ -6,7 +6,7 @@
   import AppSwitch from "./components/AppSwitch.svelte";
 
   let USER: User = {
-    id: BigInt(0),
+    id: "",
     username: '',
     global_name: '',
     avatar: '',
