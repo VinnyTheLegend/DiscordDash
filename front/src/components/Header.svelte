@@ -41,7 +41,7 @@
         })
         .then((data) => {
             Object.assign(USER, data);
-            USER = USER;
+            USER.get()
             optional_roles.forEach((role, i) => {
                 if (USER.roles?.includes(role.id)){
                     optional_roles[i].checked = true
@@ -49,7 +49,7 @@
                     optional_roles[i].checked = false
                     
                 }
-                console.log(`${role.name}: ${role.checked}`)
+                console.log(USER.roles)
             })
         })
         .catch((error) => {
@@ -83,7 +83,7 @@
                             <Avatar.Fallback>{USER.username[0].toUpperCase()}</Avatar.Fallback>
                         </Avatar.Root>
                     </DropdownMenu.Trigger>
-                    <DropdownMenu.Content class="">
+                    <DropdownMenu.Content class="border-border">
                         <DropdownMenu.Group>
                             <DropdownMenu.Label>My Account</DropdownMenu.Label>
                             <DropdownMenu.Separator />
@@ -92,7 +92,7 @@
                         </DropdownMenu.Group>
                     </DropdownMenu.Content>
                     </DropdownMenu.Root>
-                <Dialog.Content>
+                <Dialog.Content class="border-border">
                     <Dialog.Header>
                         <Dialog.Title class="text-center">Role Selection</Dialog.Title>
                     </Dialog.Header>

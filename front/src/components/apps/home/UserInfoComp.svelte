@@ -26,7 +26,7 @@
     {#if USER.roles}      
         <div class="border-t border-border grow flex flex-col">
             <div class="flex flex-wrap grow justify-evenly p-2">
-                {#each USER.roles as role}
+                {#each USER.roles as role (role)}
                     {#if ROLES_DICT[role].name != "Everyone"}
                         <div class="bg-[{ROLES_DICT[role].color}] h-fit p-1.5 rounded-2xl border border-border">{ROLES_DICT[role].name}</div>
                     {/if}
