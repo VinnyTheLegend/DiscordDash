@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { URLS } from "../../utils";
+    import { URLS } from "../../../utils";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
 
 

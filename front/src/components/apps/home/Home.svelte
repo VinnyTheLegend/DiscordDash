@@ -1,5 +1,5 @@
 <script lang="ts">
-    import GuildInfoComp from "../GuildInfoComp.svelte";
+    import GuildInfoComp from "./GuildInfoComp.svelte";
 
     export let USER: User;
 
