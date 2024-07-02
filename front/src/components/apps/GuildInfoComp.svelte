@@ -1,7 +1,10 @@
 <script lang="ts">
     import { URLS } from "../../utils";
+    import * as Avatar from "$lib/components/ui/avatar/index.js";
+
 
     let guild_info: GuildInfo
+    let members: UserData[]
 
     fetch(URLS.BASE_URL+'/api/guild', { mode: "cors", credentials: "include" })
         .then((response) => {
@@ -22,9 +25,28 @@
             return [];
         });
 
+    fetch(URLS.BASE_URL+'/api/guild/members', { mode: "cors", credentials: "include" })
+        .then((response) => {
+          if (response.status === 400) {
+            return response.json().then((data) => {
+              throw new Error(data.detail || "Bad request");
+            });
+          }
+          return response.json();
+        })
+        .then((data: UserData[]) => {
+            let new_data = data
+            new_data.sort((a,b) => b.connection_time - a.connection_time)
+            members = new_data
+        })
+        .catch((error) => {
+            console.log(error);
+            return [];
+        });
+
 </script>
 
-<main class="w-[300px] h-[500px] border-2 border-border rounded">
+<main class="w-[325px] h-[500px] border-2 border-border rounded flex flex-col bg-background">
     <div class="border-b border-border">
         <div class="w-full flex px-2">
             <h1 class="text-left w-1/2">Creation Date:</h1>
@@ -51,8 +73,27 @@
             <h1 class="text-right w-1/2">{guild_info?.boosts || ""}</h1>
         </div>
     </div>
-    <div class="">
-        
+    <div class="overflow-auto grow">
+        <ol class="h-full p-1">
+            {#if members}
+                {#each members as member, i}
+                    <li class="w-full flex">
+                        <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center">
+                            <h1>{i}</h1>
+                            <Avatar.Root class="px-1">
+                                <Avatar.Image src={`https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png`} alt="" />
+                                <Avatar.Fallback>{member.username[0].toUpperCase()}</Avatar.Fallback>
+                            </Avatar.Root>
+                            <h1>{member.nickname}</h1>
+                        </div>
+                        <div class="text-right w-1/4 flex justify-end">
+                            <h1>{member.connection_time}mins</h1>
+                        </div>
+                    </li>
+                {/each}
+            
+            {/if}
+        </ol>
     </div>
 
 </main>
@@ -60,5 +101,23 @@
 <style>
 h1 {
     text-shadow: -1px -1px 0 #47003C, 1px -1px 0 #47003C, -1px 1px 0 #47003C, 1px 1px 0 #47003C;
+}
+
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar
+{
+	width: 12px;
+}
+
+::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: hsl(309 100% 14%);
 }
 </style>

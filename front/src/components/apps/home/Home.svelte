@@ -12,13 +12,13 @@
     </div>
     <div>
         <h1 class="text-center font-extrabold text-xl">Recent Logs</h1>    
-        <div class="w-[750px] h-[500px] border-2 border-border rounded">
+        <div class="w-[450px] h-[500px] border-2 border-border rounded">
         
         </div>
     </div>
     <div>
         <h1 class="text-center font-extrabold text-xl">{USER?.username || "User"}</h1>
-        <div class="w-[300px] h-[500px] border-2 border-border rounded">
+        <div class="w-[325px] h-[500px] border-2 border-border rounded">
         
         </div>
     </div>
