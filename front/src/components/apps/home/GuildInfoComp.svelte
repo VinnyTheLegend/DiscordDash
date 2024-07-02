@@ -76,11 +76,11 @@
     <div class="overflow-auto grow">
         <ol class="h-full p-1">
             {#if members}
-                {#each members as member, i}
+                {#each members as member, i (member.id)}
                     <li class="w-full flex">
                         <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center">
                             <h1>{i+1}</h1>
-                            <Avatar.Root class="px-1">
+                            <Avatar.Root class="mx-1 size-7">
                                 <Avatar.Image src={`https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png`} alt="" />
                                 <Avatar.Fallback>{member.username[0].toUpperCase()}</Avatar.Fallback>
                             </Avatar.Root>
