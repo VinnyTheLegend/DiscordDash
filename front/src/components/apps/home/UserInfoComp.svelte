@@ -25,7 +25,6 @@
     </div>
     {#if USER.roles}      
         <div class="border-t border-border grow flex flex-col">
-            <h1 class="text-center text-xl">Roles</h1>
             <div class="flex flex-wrap grow justify-evenly p-2">
                 {#each USER.roles as role}
                     {#if ROLES_DICT[role].name != "Everyone"}
