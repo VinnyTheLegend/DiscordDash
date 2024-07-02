@@ -1,5 +1,5 @@
 <script lang="ts">
-    import UserInfoComp from "../UserInfoComp.svelte";
+    import UserInfoComp from "./UserInfoComp.svelte";
     import GuildInfoComp from "./GuildInfoComp.svelte";
     import RecentLogsComp from "./RecentLogsComp.svelte";
 

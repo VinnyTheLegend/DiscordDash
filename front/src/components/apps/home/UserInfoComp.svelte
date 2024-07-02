@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ROLES_DICT } from "../../utils";
+    import { ROLES_DICT } from "../../../utils";
 
     export let USER: User;
 
