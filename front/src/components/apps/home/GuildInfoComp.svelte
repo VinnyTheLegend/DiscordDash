@@ -79,14 +79,14 @@
                 {#each members as member, i}
                     <li class="w-full flex">
                         <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center">
-                            <h1>{i}</h1>
+                            <h1>{i+1}</h1>
                             <Avatar.Root class="px-1">
                                 <Avatar.Image src={`https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png`} alt="" />
                                 <Avatar.Fallback>{member.username[0].toUpperCase()}</Avatar.Fallback>
                             </Avatar.Root>
                             <h1>{member.nickname}</h1>
                         </div>
-                        <div class="text-right w-1/4 flex justify-end">
+                        <div class="text-right w-1/4 flex justify-end items-center">
                             <h1>{member.connection_time}mins</h1>
                         </div>
                     </li>
