@@ -1,6 +1,7 @@
 <script lang="ts">
     import { URLS } from "../../../utils";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
+    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
 
     let guild_info: GuildInfo
@@ -80,11 +81,24 @@
                     <li class="w-full flex">
                         <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center">
                             <h1>{i+1}</h1>
-                            <Avatar.Root class="mx-1 size-7">
-                                <Avatar.Image src={`https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png`} alt="" />
-                                <Avatar.Fallback>{member.username[0].toUpperCase()}</Avatar.Fallback>
-                            </Avatar.Root>
-                            <h1>{member.nickname}</h1>
+                            <Tooltip.Root closeOnPointerDown={false}>
+                                <Tooltip.Trigger class="text-nowrap flex-nowrap flex items-center">
+                                    <Avatar.Root class="mx-1 size-7">
+                                        <Avatar.Image src={`https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png`} alt="" />
+                                        <Avatar.Fallback>{member.username[0].toUpperCase()}</Avatar.Fallback>
+                                    </Avatar.Root>
+                                    <h1>{member.nickname}</h1>
+                                </Tooltip.Trigger>
+                                <Tooltip.Content>
+                                    {#if member.admin}
+                                        <p>Admin</p>
+                                    {/if}
+                                  <p>Username: {member.username}</p>
+                                  {#if member.global_name}
+                                  <p>Global Nickname: {member.global_name}</p>
+                                  {/if}
+                                </Tooltip.Content>
+                              </Tooltip.Root>
                         </div>
                         <div class="text-right w-1/4 flex justify-end items-center">
                             <h1>{member.connection_time}mins</h1>

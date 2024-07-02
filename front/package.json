@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@types/node": "^20.11.24",
-    "bits-ui": "^0.21.10",
+    "bits-ui": "^0.21.11",
     "clsx": "^2.1.1",
     "shadcn-svelte": "^0.10.7",
     "svelte-radix": "^1.1.0",

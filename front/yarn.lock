@@ -471,10 +471,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-bits-ui@^0.21.10:
-  version "0.21.10"
-  resolved "https://registry.yarnpkg.com/bits-ui/-/bits-ui-0.21.10.tgz#187b268d02f8cf84af7783d61fb4b80339898939"
-  integrity sha512-KuweEOKO0Rr8XX87dQh46G9mG0bZSmTqNxj5qBazz4OTQC+oPKui04/wP/ISsCOSGFomaRydTULqh4p+nsyc2g==
+bits-ui@^0.21.11:
+  version "0.21.11"
+  resolved "https://registry.yarnpkg.com/bits-ui/-/bits-ui-0.21.11.tgz#3c7d8db900f2afc30c91eb2fb03308bf3cdab101"
+  integrity sha512-pFS/9z1qLaPZwb+9Tm0YS4iBp+ClsJBARMZWFOjv0lGCYpzAN7lx4eNk3SbSB5QMBUKwoVjr9Rai71ROq3RD1Q==
   dependencies:
     "@internationalized/date" "^3.5.1"
     "@melt-ui/svelte" "0.76.2"
