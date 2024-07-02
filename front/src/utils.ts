@@ -10,11 +10,10 @@ export const URLS = {
 export const ROLES_DICT: { [key: string]: {name: string, color: string} } = {
     "591686220996935691": {name: "Warlord", color: "red"},
     "591686523142012948": {name: "General", color: "green"},
-    "591687458819932172": {name: "Veteran", color: "yellow"},
+    "591687458819932172": {name: "Veteran", color: "darkorange"},
     "591687038902992928": {name: "Member", color: "blue"},
     "1222684351054221312":{name: "Twitch Notifications", color: "#47003C"},
-    "850013094758842400": {name: "Drops", color: "#47003C"},
-    "591684990811635724": {name: "Everyone", color: "#47003C"}
+    "850013094758842400": {name: "Drops", color: "#47003C"}
 
 }
 
