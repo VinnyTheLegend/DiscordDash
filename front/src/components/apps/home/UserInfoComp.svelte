@@ -25,10 +25,10 @@
     </div>
     {#if USER.roles}      
         <div class="border-t border-border grow flex flex-col">
-            <div class="flex flex-wrap grow justify-evenly p-2">
+            <div class="flex flex-wrap justify-evenly px-2">
                 {#each USER.roles as role (role)}
                     {#if role in ROLES_DICT}
-                        <div style="background-color: {ROLES_DICT[role].color}" class="h-fit p-1.5 rounded-2xl border border-border">{ROLES_DICT[role].name}</div>
+                        <div style="background-color: {ROLES_DICT[role].color}" class="my-2 h-fit p-1.5 rounded-2xl border border-border">{ROLES_DICT[role].name}</div>
                     {/if}
                 {/each}
             </div>
