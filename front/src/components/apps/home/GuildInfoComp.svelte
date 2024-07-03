@@ -93,10 +93,10 @@
                                     {#if member.admin}
                                         <p>Admin</p>
                                     {/if}
-                                  <p>Username: {member.username}</p>
-                                  {#if member.global_name}
-                                  <p>Global Nickname: {member.global_name}</p>
-                                  {/if}
+                                    <p>Username: {member.username}</p>
+                                    {#if member.global_name}
+                                        <p>Global Nickname: {member.global_name}</p>
+                                    {/if}
                                 </Tooltip.Content>
                               </Tooltip.Root>
                         </div>
