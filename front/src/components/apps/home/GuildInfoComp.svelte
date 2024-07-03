@@ -82,7 +82,7 @@
                         <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center">
                             <h1>{i+1}</h1>
                             <Tooltip.Root closeOnPointerDown={false}>
-                                <Tooltip.Trigger class="text-nowrap flex-nowrap flex items-center">
+                                <Tooltip.Trigger class="text-nowrap flex-nowrap flex items-center cursor-default">
                                     <Avatar.Root class="mx-1 size-7">
                                         <Avatar.Image src={`https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png`} alt="" />
                                         <Avatar.Fallback>{member.username[0].toUpperCase()}</Avatar.Fallback>
