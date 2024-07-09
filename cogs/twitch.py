@@ -36,9 +36,9 @@ async def auth():
                 print("Twitch Auth Status: " + str(response.status_code))
                 response_json = response.json()
                 twitch_token = response_json['access_token']
-    except Exception as e:
-        print('auth failed')
-        print(str(e))
+    except httpx.RequestError as exc:
+        print("Twitch Authentication Failure:")
+        print(exc)
 
 async def fetch(streamers: list[str]):
     global twitch_token
@@ -55,9 +55,9 @@ async def fetch(streamers: list[str]):
         async with httpx.AsyncClient() as client:
                 response = await client.get("https://api.twitch.tv/helix/streams", params=payload, headers=headers)
                 return (response.status_code, response.json())
-    except Exception as e:
-        print('webpage not found')
-        print(str(e))
+    except httpx.RequestError as exc:
+        print(f"An error occurred while requesting {exc.request.url!r}.")
+        print(exc)
 
 async def main(bot: commands.Bot):
     streamers = [
@@ -73,11 +73,11 @@ async def main(bot: commands.Bot):
     while True:
         response = await fetch(streamers)
         while not response:
-            print("no response retrying in 60s...")
+            print("Twitch: no response retrying in 60s...")
             await asyncio.sleep(60)
             response = await fetch(streamers)
         while response[0] != 200:
-            print("Retrying authentication in 60s...")
+            print("Twitch: Retrying authentication in 60s...")
             await asyncio.sleep(60)
             global twitch_token
             twitch_token = ''
