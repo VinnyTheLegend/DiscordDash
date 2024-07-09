@@ -32,6 +32,7 @@ async def lifespan(app: FastAPI):
     await bot.load_extension("cogs.discordlogs")
     await bot.load_extension("cogs.serverinfo")
     await bot.load_extension("cogs.roleselection")
+    await bot.load_extension("cogs.twitch")
     asyncio.create_task(bot.start(secret.BOT_TOKEN))
 
     global test
