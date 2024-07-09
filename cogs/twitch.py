@@ -40,9 +40,11 @@ async def auth():
         print('auth failed')
         print(str(e))
 
-async def fetch(name):
+async def fetch(streamers: list[str]):
     global twitch_token
-    payload = { 'user_login': name}
+    payload = []
+    for streamer in streamers:
+        payload.append(['user_login', streamer])
     if twitch_token == '':
         await auth()
     headers = {
@@ -62,36 +64,48 @@ async def main(bot: commands.Bot):
         'moonstreuxx',
         'fallenxov',
         'dwalllaxer',
-        'vinnythelegend'
+        'vinnythelegend',
+        'emiru',
+        'hutchmf'
     ]
     streamers_live = []
     channel = bot.get_channel(secret.BOT_SPAM_CHANNEL_ID)
     while True:
-        for name in streamers:
-            response = await fetch(name)
-            while not response:
-                print("no response retrying in 60s...")
-                await asyncio.sleep(60)
-                response = await fetch(name)
-            while response[0] != 200:
-                print("Retrying authentication in 60s...")
-                await asyncio.sleep(60)
-                global twitch_token
-                twitch_token = ''
-                response = await fetch(name)
-            response_json = response[1]
-            if response_json['data'] == []:
-                try:
-                    streamers_live.remove(name)
-                    print(name + ": Going offline.")
-                except:
-                    pass
-            else:
-                if name not in streamers_live:
-                    streamers_live.append(name)
-                    await channel.send(content=f"https://www.twitch.tv/{name}", allowed_mentions=discord.AllowedMentions(roles=True)) #<@&1222684351054221312>\n
-                    print(name + " live")
-            await asyncio.sleep(5)
+        response = await fetch(streamers)
+        while not response:
+            print("no response retrying in 60s...")
+            await asyncio.sleep(60)
+            response = await fetch(streamers)
+        while response[0] != 200:
+            print("Retrying authentication in 60s...")
+            await asyncio.sleep(60)
+            global twitch_token
+            twitch_token = ''
+            response = await fetch(streamers)
+        response_json = response[1]
+        if response_json['data'] == []:
+            try:
+                for streamer in streamers_live:
+                    print(streamer, " going offline")
+                streamers_live = []
+            except:
+                pass
+        else:
+            streamers_live_response = []
+            for stream in response_json['data']:
+                streamers_live_response.append(stream['user_login'])
+                if stream['user_login'] not in streamers_live:
+                    streamers_live.append(stream['user_login'])
+                    await channel.send(content=f"https://www.twitch.tv/{stream['user_login']}", allowed_mentions=discord.AllowedMentions(roles=True)) #<@&1222684351054221312>\n
+                    print(stream['user_login'] + " live")
+            for stream in streamers_live:
+                if stream not in streamers_live_response:
+                    try:
+                        streamers_live.remove(stream)
+                        print(stream + ": Going offline.")
+                    except:
+                        pass
+
         await asyncio.sleep(5)
 
 

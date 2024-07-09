@@ -23,6 +23,7 @@
 *.sln
 *.sw?
 .*
+*.rest
 
 # Backend
 ssl
