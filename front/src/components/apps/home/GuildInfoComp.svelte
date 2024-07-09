@@ -36,9 +36,8 @@
           return response.json();
         })
         .then((data: UserData[]) => {
-            let new_data = data
-            new_data.sort((a,b) => b.connection_time - a.connection_time)
-            members = new_data
+            members = data
+            console.log(members)
         })
         .catch((error) => {
             console.log(error);
@@ -77,7 +76,7 @@
     <div class="overflow-auto grow">
         <ol class="h-full p-1">
             {#if members}
-                {#each members as member, i (member.id)}
+                {#each members.sort((a,b) => b.connection_time - a.connection_time) as member, i (member.id)}
                     <li class="w-full flex">
                         <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center">
                             <h1>{i+1}</h1>
@@ -101,7 +100,7 @@
                               </Tooltip.Root>
                         </div>
                         <div class="text-right w-1/4 flex justify-end items-center">
-                            <h1>{member.connection_time}mins</h1>
+                            <h1>{member.connection_time.toFixed(1)}mins</h1>
                         </div>
                     </li>
                 {/each}
