@@ -90,23 +90,30 @@ class RoleSelection(commands.Cog):
         role: discord.Role = self.guild.get_role(int(role))
         if operation == "add":
             await ctx.author.add_roles(role)
-            if db_user:
-                crud.user_add_role(db=db, user_id=str(ctx.author.id), role_id=role.id)
+            if role not in ctx.author.roles:
+                if db_user:
+                    crud.user_add_role(db=db, user_id=str(ctx.author.id), role_id=role.id)
+                else:
+                    new_user = utils.create_user_from_member(ctx.author)
+                    new_user['roles'].append(role.id)
+                    crud.create_user(db=db, user=new_user)
+                await ctx.reply(f"Added {role}", ephemeral=True)
             else:
-                new_user = utils.create_user_from_member(ctx.author)
-                new_user['roles'].append(role.id)
-                crud.create_user(db=db, user=new_user)
-            await ctx.reply(f"Added {role}", ephemeral=True)
+                await ctx.reply("User already has selected role.", ephemeral=True)
         else:
             await ctx.author.remove_roles(role)
-            if db_user:
-                crud.user_remove_role(db=db, user_id=str(ctx.author.id), role_id=role.id)
+            if role in ctx.author.roles:
+                if db_user:
+                    crud.user_remove_role(db=db, user_id=str(ctx.author.id), role_id=role.id)
+                else:
+                    new_user = utils.create_user_from_member(ctx.author)
+                    new_user['roles'].remove(role.id)
+                    crud.create_user(db=db, user=new_user)
+                await ctx.reply(f"Removed {role}", ephemeral=True)
             else:
-                new_user = utils.create_user_from_member(ctx.author)
-                new_user['roles'].remove(role.id)
-                crud.create_user(db=db, user=new_user)
-            await ctx.reply(f"Removed {role}", ephemeral=True)
-        db.close()
+                await ctx.reply("User does not have selected role.", ephemeral=True)
+
+            db.close()
         
 
     
