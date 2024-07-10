@@ -56,8 +56,8 @@ async def fetch(streamers: list[str]):
                 response = await client.get("https://api.twitch.tv/helix/streams", params=payload, headers=headers)
                 return (response.status_code, response.json())
     except httpx.RequestError as exc:
-        print(f"An error occurred while requesting {exc.request.url!r}.")
-        print(exc)
+        print(f"Twitch helix stream request error:")
+        print(repr(exc))
 
 async def main(bot: commands.Bot):
     streamers = [
@@ -73,8 +73,8 @@ async def main(bot: commands.Bot):
     while True:
         response = await fetch(streamers)
         while not response:
-            print("Twitch: no response retrying in 60s...")
-            await asyncio.sleep(60)
+            print("Twitch: no response retrying in 5s...")
+            await asyncio.sleep(5)
             response = await fetch(streamers)
         while response[0] != 200:
             print("Twitch: Retrying authentication in 60s...")

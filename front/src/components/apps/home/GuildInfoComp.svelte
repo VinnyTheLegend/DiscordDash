@@ -78,17 +78,18 @@
             {#if members}
                 {#each members.sort((a,b) => b.connection_time - a.connection_time) as member, i (member.id)}
                     <li class="w-full flex">
-                        <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center">
+                        <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center justify-start overflow-ellipsis">
                             <h1>{i+1}</h1>
                             <Tooltip.Root closeOnPointerDown={false}>
-                                <Tooltip.Trigger class="text-nowrap flex-nowrap flex items-center cursor-default">
+                                <Tooltip.Trigger class="text-nowrap flex-nowrap flex items-center cursor-default w-full">
                                     <Avatar.Root class="mx-1 size-7">
                                         <Avatar.Image src={`https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png`} alt="" />
                                         <Avatar.Fallback>{member.username[0].toUpperCase()}</Avatar.Fallback>
                                     </Avatar.Root>
-                                    <h1>{member.nickname}</h1>
+                                    <h1 class="w-9/12 overflow-hidden overflow-ellipsis text-start">{member.nickname}</h1>
                                 </Tooltip.Trigger>
-                                <Tooltip.Content>
+                                <Tooltip.Content class="">
+                                    <p class="w-full text-center mb-1 font-extrabold">{member.nickname}</p>
                                     {#if member.admin}
                                         <p>Admin</p>
                                     {/if}
