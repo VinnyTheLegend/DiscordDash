@@ -8,7 +8,7 @@ from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
-from database import crud
+from database import crud, schemas
 
 from utils import utils
 
@@ -60,17 +60,12 @@ async def fetch(streamers: list[str]):
         print(repr(exc))
 
 async def main(bot: commands.Bot):
-    streamers = [
-        'moonstreuxx',
-        'fallenxov',
-        'dwalllaxer',
-        'vinnythelegend',
-        'emiru',
-        'hutchmf'
-    ]
     streamers_live = []
     channel = bot.get_channel(secret.BOT_SPAM_CHANNEL_ID)
     while True:
+        db = SessionLocal()
+        streamers = [stream.user_login for stream in crud.get_twitchstreams(db)]
+        db.close()
         response = await fetch(streamers)
         while not response:
             print("Twitch: no response retrying in 5s...")
@@ -116,9 +111,75 @@ class Twitch(commands.Cog):
         self.bot: commands.Bot = bot
         self.router = APIRouter()
 
+        @self.router.get('/api/twitchstreams', response_model=list[schemas.TwitchStream])
+        async def get_streams(request: Request, db: Session = Depends(get_db)):
+            state, token = utils.getCookies(request)
+            if not token or not state:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
+            db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
+            if not db_user:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
+
+            has_admin_role = not (not secret.general_id in db_user.roles and not secret.warlord_id in db_user.roles)
+            if not db_user.member or (secret.member_id in db_user.roles and not secret.veteran_id in db_user.roles and not has_admin_role):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not authorized")
+            
+            return crud.get_twitchstreams(db)
+        
+        @self.router.post('/api/twitchstreams/add')
+        async def add_stream(stream: str, *, request: Request, db: Session = Depends(get_db)):
+            state, token = utils.getCookies(request)
+            if not token or not state:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
+            db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
+            if not db_user:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
+            if not db_user.member:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+            
+            member = self.guild.get_member(int(db_user.id))
+            has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
+            if not member or (not member.get_role(secret.veteran_id) and not has_admin_role):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not authorized")
+            
+            if not stream:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no stream provided")
+            if not crud.get_twitchstream(db, stream):
+                return crud.create_twitchstream(db, schemas.TwitchStream(user_login=stream, added_by=str(db_user.id)))
+            else:
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="entry already exists")
+            
+
+        @self.router.delete('/api/twitchstreams/remove')
+        async def add_stream(stream: str, *, request: Request, db: Session = Depends(get_db)):
+            state, token = utils.getCookies(request)
+            if not token or not state:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
+            db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
+            if not db_user:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
+            if not db_user.member:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
+            
+            member = self.guild.get_member(int(db_user.id))
+            has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
+            if not member or (not member.get_role(secret.veteran_id) and not has_admin_role):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not authorized")
+            
+            if not stream:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no stream provided")
+            
+            db_stream = crud.get_twitchstream(db, stream)
+            if not db_stream:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="stream not found")
+            
+            return crud.del_twitchstream(db, stream)
+        
     
     @commands.Cog.listener()
     async def on_ready(self):
+        self.guild = self.bot.get_guild(secret.GUILD_ID)
+
         await main(self.bot)
     
 async def setup(bot):

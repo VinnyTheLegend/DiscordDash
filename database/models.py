@@ -23,3 +23,10 @@ class User(Base):
     joined_at = Column(DateTime(timezone=True), nullable=True)
     roles = Column(PickleType, nullable=True)
     connection_time = Column(Float)
+
+
+class TwitchStream(Base):
+    __tablename__ = "twitchstreams"
+
+    user_login = Column(String, primary_key=True)
+    added_by = Column(String, index=True)

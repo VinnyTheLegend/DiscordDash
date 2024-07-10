@@ -24,3 +24,10 @@ class UserCreate(User):
     access_token: Optional[str]
     expires_in: Optional[int]
     expires_at: Optional[int]
+
+class TwitchStream(BaseModel):
+    user_login: str
+    added_by: str
+
+    class Config:
+        orm_mode = True
