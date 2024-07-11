@@ -47,7 +47,7 @@ def get_db():
 class ServerInfo(commands.Cog):
     def __init__(self, bot):
         print("starting serverinfo")
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.router = APIRouter()   
 
         @self.router.get('/api/guild/members', response_model=list[schemas.User])
@@ -107,7 +107,7 @@ class ServerInfo(commands.Cog):
     @commands.hybrid_command(name='serverinfo', with_app_command=True)
     async def serverinfo(self, ctx):
         """Show server info"""
-        guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
+        guild = self.bot.get_guild(secret.GUILD_ID)
 
         roles = str(len(guild.roles))
         emojis = str(len(guild.emojis))
