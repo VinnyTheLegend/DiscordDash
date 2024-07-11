@@ -1,11 +1,15 @@
 <script lang="ts">
-    import { URLS } from "../../../utils";
+    import { fetch_members, URLS } from "../../../utils";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+    import {members} from "../../../stores"
 
-
+    let members_value: UserData[];
     let guild_info: GuildInfo
-    let members: UserData[]
+
+	members.subscribe((value) => {
+		members_value = value;
+	})
 
     fetch(URLS.BASE_URL+'/api/guild', { mode: "cors", credentials: "include" })
         .then((response) => {
@@ -26,24 +30,7 @@
             return [];
         });
 
-    fetch(URLS.BASE_URL+'/api/guild/members', { mode: "cors", credentials: "include" })
-        .then((response) => {
-          if (response.status === 400) {
-            return response.json().then((data) => {
-              throw new Error(data.detail || "Bad request");
-            });
-          }
-          return response.json();
-        })
-        .then((data: UserData[]) => {
-            members = data
-            console.log(members)
-        })
-        .catch((error) => {
-            console.log(error);
-            return [];
-        });
-
+    fetch_members()
 </script>
 
 <main class="w-[325px] h-[500px] border-2 border-border rounded flex flex-col bg-background">
@@ -75,8 +62,8 @@
     </div>
     <div class="overflow-auto grow">
         <ol class="h-full p-1">
-            {#if members}
-                {#each members.sort((a,b) => b.connection_time - a.connection_time) as member, i (member.id)}
+            {#if members_value}
+                {#each members_value.sort((a,b) => b.connection_time - a.connection_time) as member, i (member.id)}
                     <li class="w-full flex">
                         <div class="text-left w-3/4 text-nowrap flex-nowrap flex items-center justify-start overflow-ellipsis">
                             <h1>{i+1}</h1>

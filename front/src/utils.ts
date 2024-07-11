@@ -1,3 +1,5 @@
+import { members } from "./stores";
+
 export const BASE_URL: string = "https://localhost:8000";
 
 export const URLS = {
@@ -26,5 +28,35 @@ export function echo(message: string) {
         body: JSON.stringify({ message: message }),
     }).then((res) => {
         console.log("Echo response", res);
+    });
+}
+
+export function fetch_members() {
+    fetch(URLS.BASE_URL+'/api/guild/members', { mode: "cors", credentials: "include" })
+    .then((response) => {
+      if (response.status === 400) {
+        return response.json().then((data) => {
+          throw new Error(data.detail || "Bad request");
+        });
+      }
+      return response.json();
+    })
+    .then((data: UserData[]) => {
+        console.log(data)
+        let members_new = data
+        members.set(members_new)
+    })
+    .catch((error) => {
+        console.log(error);
+        return [];
+    });
+}
+
+export function get_member(id: string, members_list: UserData[]): UserData | void {
+    members_list.forEach(member => {
+        if (member.id === id) {
+            console.log(member.nickname)
+            return member
+        }
     });
 }

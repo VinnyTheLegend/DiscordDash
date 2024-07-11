@@ -10,7 +10,7 @@
 {#if current_app === "home"}
     <Home {USER}/>
 {:else if current_app === "twitch"}
-    <Twitch {USER}/>
+    <Twitch />
 {/if}
 </main>
 
