@@ -75,9 +75,14 @@
     USER.get();
   }
   
+  const apps = ['home', 'twitch']
   let current_app: string = "home"
-  if (window.location.pathname === '/test' || window.location.pathname === '/test/') {
-    current_app='test'
+  console.log(window.location.pathname)
+  let pathname = window.location.pathname.replace('/', '')
+  if (apps.includes(pathname)) {
+    current_app=pathname
+  } else if (pathname != '') {
+    window.location.pathname = ''
   }
   function changeApp(event: CustomEvent<string>) {
     USER.get()

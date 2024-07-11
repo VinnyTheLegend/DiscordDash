@@ -1,5 +1,6 @@
 <script lang="ts">
     import Home from "./apps/home/Home.svelte";
+    import Twitch from "./apps/twitch/Twitch.svelte";
 
     export let USER: User
     export let current_app: string
@@ -8,10 +9,8 @@
 <main class="flex flex-grow">
 {#if current_app === "home"}
     <Home {USER}/>
-{:else if current_app === "test"}
-    <div class="size-full border-2 border-green-500">
-
-    </div>
+{:else if current_app === "twitch"}
+    <Twitch {USER}/>
 {/if}
 </main>
 
