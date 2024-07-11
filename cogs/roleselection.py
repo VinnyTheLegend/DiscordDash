@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
-from database import crud
+from database import crud, schemas
 
 from utils import utils
 
@@ -41,6 +41,7 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             
             member = self.guild.get_member(int(db_user.id))
+            crud.update_user(db, member.id, schemas.UserCreate(**utils.create_user_from_member(member)))
             has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
             if not member or (not member.get_role(secret.member_id) and not member.get_role(secret.veteran_id) and not has_admin_role):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
@@ -52,7 +53,6 @@ class RoleSelection(commands.Cog):
             if int(role) not in self.optional_role_ids:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
             role = self.guild.get_role(int(role))
-            member = self.guild.get_member(int(db_user.id))
             if operation == "add":
                 if role in member.roles:
                     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")

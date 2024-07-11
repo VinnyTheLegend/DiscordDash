@@ -134,10 +134,9 @@ class Twitch(commands.Cog):
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
             if not db_user:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
-            if not db_user.member:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             
             member = self.guild.get_member(int(db_user.id))
+            crud.update_user(db, member.id, schemas.UserCreate(**utils.create_user_from_member(member)))
             has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
             if not member or (not member.get_role(secret.veteran_id) and not has_admin_role):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not authorized")
@@ -158,10 +157,9 @@ class Twitch(commands.Cog):
             db_user = crud.get_user_by_token(db=db, access_token=token['access_token'])
             if not db_user:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
-            if not db_user.member:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             
             member = self.guild.get_member(int(db_user.id))
+            crud.update_user(db, member.id, schemas.UserCreate(**utils.create_user_from_member(member)))
             has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
             if not member or (not member.get_role(secret.veteran_id) and not has_admin_role):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not authorized")
