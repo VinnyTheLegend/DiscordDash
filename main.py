@@ -54,7 +54,7 @@ app.add_middleware(SessionMiddleware, secret_key=secret.SESSION_MIDDLEWARE_KEY)
 app.add_middleware(CORSMiddleware, 
     allow_origins=secret.ALLOW_ORIGINS, 
     allow_credentials=True,
-    allow_methods=["GET", "POST", "HEAD", "OPTIONS"],
+    allow_methods=["GET", "POST", "HEAD", "OPTIONS", "DELETE"],
     allow_headers=["Access-Control-Allow-Headers", "Content-Type", "Authorization", "Access-Control-Allow-Origin", "Set-Cookie"],
 )
 

@@ -57,25 +57,28 @@
         console.log(stream_to_add)
         if (stream_to_add.includes(" ") || stream_to_add === "") {
             console.log("invalid stream name")
+            stream_to_add = ""
+
             return
         } 
             
         for (let i = 0; i < twitch_streams.length; i++) {
             if (twitch_streams[i].user_login === stream_to_add) {
                 console.log("stream already followed")
+                stream_to_add = ""
+
                 return
             }
         }
         stream_add_url.searchParams.set('stream', stream_to_add)
-
         fetch(stream_add_url, { mode: "cors", credentials: "include", method: "POST" })
         .then((response) => {
-        if (response.status !== 200) {
-            return response.json().then((data) => {
-            throw new Error(data.detail || "Bad request");
-            });
-        }
-        return response.json();
+            if (response.status !== 200) {
+                return response.json().then((data) => {
+                throw new Error(data.detail || "Bad request");
+                });
+            }
+            return response.json();
         })
         .then((data: TwitchStream) => {
             twitch_streams.push(data)
@@ -86,20 +89,64 @@
             console.log(error);
         
         });
-
+        stream_to_add = ""
     }
+
+    let stream_remove_url = new URL(URLS.BASE_URL+'/api/twitchstreams/remove')
+    function remove_stream(stream: string): void {
+        if (stream.includes(" ") || stream === "") {
+            console.log("invalid stream name")
+            return
+        } 
+        
+        let found = false
+        let stream_index: number
+        for (let i = 0; i < twitch_streams.length; i++) {
+            if (twitch_streams[i].user_login === stream) {
+                stream_index = i 
+                found = true
+                break
+            }
+        }
+        if (found === false) {
+            console.log("stream not followed")
+            return
+        }
+        stream_remove_url.searchParams.set('stream', stream)
+        console.log(stream_remove_url)
+
+        fetch(stream_remove_url, { mode: "cors", credentials: "include", method: 'DELETE' })
+        .then((response) => {
+        if (response.status !== 200) {
+            return response.json().then((data) => {
+            throw new Error(data.detail || "Bad request");
+            });
+        }
+        return response.json();
+        })
+        .then((data: TwitchStream) => {
+            console.log(twitch_streams[stream_index])
+            twitch_streams =  twitch_streams.filter(s => s.user_login !== stream);
+            console.log("removed: ", data)
+        })
+        .catch((error) => {
+            console.log(error);
+        
+        });
+    }
+
 </script>
 
 <main class="size-full flex flex-col justify-start items-center p-5">
     <form on:submit|preventDefault={add_stream} class="flex bg-background p-2 rounded-lg border-2 border-border">   
         <Button type="submit">Add Stream</Button> <Input placeholder="stream name" bind:value={stream_to_add}/>
     </form>
-    <ul class="border-2 border-border bg-background w-[500px] mt-5 flex flex-col items-center">
+    <ul class="border-2 border-border bg-background rounded-lg w-[500px] mt-5 flex flex-col items-center">
         {#if twitch_streams}
             {#each twitch_streams as stream}
                 <li class="flex w-full p-2 items-center justify-between">    
                     <div class="flex items-center">
-                        <Button variant="destructive" class="size-8 p-0">
+                        <Button on:click={() => remove_stream(stream.user_login)} variant="destructive" class="size-8 p-0">
                             <Trash/>
                         </Button>
                         <h1 class="ml-2">{stream.user_login}</h1>
