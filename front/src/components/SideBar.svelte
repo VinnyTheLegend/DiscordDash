@@ -12,7 +12,7 @@
 
 </script>
 
-<main class="border-r-[1px] border-[#47003C] w-40 bg-[#150013] text-center py-4">
+<main class="border-r-[1px] border-[#47003C] w-40 bg-[#150013] text-center py-4 flex-grow-0 flex-shrink-0">
     <Button class="w-32 mb-2" on:click={() => {changeApp("home");window.history.pushState("", "", '');}}>Home</Button>
     <Button class="w-32 mb-2" on:click={() => {changeApp("twitch");window.history.pushState("", "", '/twitch');}}>Twitch</Button>
 </main>

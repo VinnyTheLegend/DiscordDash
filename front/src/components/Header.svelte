@@ -69,11 +69,10 @@
 
 </script>
 
-<main class="border-b-[1px] border-[#47003C] h-[10%] bg-black">
-    <div class="flex items-center h-full w-full justify-between px-4">
-        <div class="w-[25%]"><img src="{sedicon}" alt="" class="size-14 rounded-full"></div>
-        <button class="seduction font-extrabold text-5xl" on:click={() => {window.location.href = URLS.FRONT_URL}}>SEDUCTION</button>
-        <div class="flex items-center justify-end w-[25%]">
+<main class="border-b-[1px] border-[#47003C] h-20 w-full bg-black flex items-center relative">
+        <div class="absolute left-5"><img src="{sedicon}" alt="" class="size-14 rounded-full"></div>
+        <button class="seduction m-auto font-extrabold text-5xl" on:click={() => {window.location.href = URLS.FRONT_URL}}>SEDUCTION</button>
+        <div class="right-5 absolute flex items-center justify-end">
             <span class="pr-4 font-bold">{USER.username}</span>
             <Dialog.Root>
                 <DropdownMenu.Root>
@@ -113,7 +112,6 @@
                 </Dialog.Content>
             </Dialog.Root>
         </div>
-    </div>
 </main>
 
 <style>
@@ -123,4 +121,10 @@
         background-clip: 0;
         -webkit-text-fill-color: transparent;
     }
+
+    @media(max-width:600px) {
+    .seduction {
+        visibility: hidden;
+    }
+}
 </style>

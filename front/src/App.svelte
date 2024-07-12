@@ -90,10 +90,10 @@
   }
 </script>
 
-<main class="h-screen w-screen">
+<main class="h-screen w-screen flex flex-col">
   {#if auth && USER.member}
     <Header {USER} />
-    <div class="h-[90%] flex">
+    <div class="flex-grow flex min-h-0 min-w-0">
       <SideBar on:changeApp={changeApp}/>
       <AppSwitch {current_app} {USER}/>
     </div>

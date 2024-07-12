@@ -134,33 +134,36 @@
 
 </script>
 
-<main class="size-full flex flex-col justify-start items-center p-5">
-    <form on:submit|preventDefault={add_stream} class="flex bg-background p-2 rounded-lg border-2 border-border">   
-        <Button type="submit">Add Stream</Button> <Input placeholder="stream name" bind:value={stream_to_add}/>
-    </form>
-    <ul class="border-2 border-border bg-background rounded-lg w-[500px] mt-5 flex flex-col items-center">
-        {#if twitch_streams}
-            {#each twitch_streams as stream}
-                <li class="flex w-full p-2 items-center justify-between">    
-                    <div class="flex items-center">
-                        <Button on:click={() => remove_stream(stream.user_login)} variant="destructive" class="size-8 p-0">
-                            <Trash/>
-                        </Button>
-                        <h1 class="ml-2">{stream.user_login}</h1>
-                    </div>
-                    <div class="flex items-center">
-                        {#if members_value.length !== 0}                            
-                            <span>
-                                Added By: {get_member(stream.added_by)}
-                            </span>
-                        {/if}
-                    </div>
-                </li>
-                <Separator class="w-[90%]"/>
-            {/each}
-        {/if}
-
-    </ul>
+<main class="size-full flex flex-col justify-start overflow-auto">
+    <div class="p-5 m-auto">
+        <form on:submit|preventDefault={add_stream} class="flex bg-background p-2 rounded-lg border-2 border-border">
+            <Button type="submit">Add Stream</Button> <Input placeholder="stream name" bind:value={stream_to_add}/>
+        </form>
+    </div>
+    <div class="flex-grow min-h-0 min-w-0 m-auto mb-5 flex flex-col">
+        <ul class="border-2 border-border bg-background rounded-lg max-w-[500px] max-h-full flex flex-col min-w-0 overflow-auto items-center">
+            {#if twitch_streams}
+                {#each twitch_streams as stream}
+                    <li class="flex w-full p-2 items-center justify-between">
+                        <div class="flex items-center">
+                            <Button on:click={() => remove_stream(stream.user_login)} variant="destructive" class="size-8 p-0">
+                                <Trash/>
+                            </Button>
+                            <h1 class="ml-2">{stream.user_login}</h1>
+                        </div>
+                        <div class="flex items-center ml-5">
+                            {#if members_value.length !== 0}
+                                <span>
+                                    Added By: {get_member(stream.added_by)}
+                                </span>
+                            {/if}
+                        </div>
+                    </li>
+                    <Separator class="w-[90%]"/>
+                {/each}
+            {/if}
+        </ul>
+    </div>
 </main>
 
 <style>
