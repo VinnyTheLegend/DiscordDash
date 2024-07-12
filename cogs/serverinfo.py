@@ -72,7 +72,6 @@ class ServerInfo(commands.Cog):
                 else:
                     new_member = crud.create_user(db, new_member)
                 members.append(new_member)
-                print(new_member.id)
             return members
         
         @self.router.get('/api/guild', response_model=GuildResponse)

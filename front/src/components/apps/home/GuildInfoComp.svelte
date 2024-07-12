@@ -3,13 +3,18 @@
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
     import {members} from "../../../stores"
+  import { onMount } from "svelte";
 
-    let members_value: UserData[];
+    let members_value: UserData[] = []
     let guild_info: GuildInfo
 
 	members.subscribe((value) => {
 		members_value = value;
 	})
+
+    onMount(() => {
+        if (members_value.length === 0) fetch_members()
+    })
 
     fetch(URLS.BASE_URL+'/api/guild', { mode: "cors", credentials: "include" })
         .then((response) => {
@@ -29,8 +34,6 @@
             console.log(error);
             return [];
         });
-
-    fetch_members()
 </script>
 
 <main class="w-[325px] h-[500px] border-2 border-border rounded flex flex-col bg-background">

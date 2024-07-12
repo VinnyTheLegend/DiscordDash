@@ -28,3 +28,8 @@ interface GuildInfo {
     verification_level: string,
     boosts: number
 }
+
+interface TwitchStream {
+    user_login: string
+    added_by: string
+}

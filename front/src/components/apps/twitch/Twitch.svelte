@@ -8,38 +8,37 @@
     import { members } from "../../../stores"
     import { fetch_members, URLS } from "../../../utils";
 
-    interface TwitchStream {
-        user_login: string
-        added_by: string
-    }
-
     let members_value: UserData[] = []
     members.subscribe((value) => {
         members_value = value;
     })
-
+    
+    
+    let twitch_streams: TwitchStream[] = []
     onMount(() => {
         if (members_value.length === 0) fetch_members()
+        if (twitch_streams.length === 0) {
+            fetch(URLS.BASE_URL+'/api/twitchstreams', { mode: "cors", credentials: "include" })
+            .then((response) => {
+            if (response.status === 400) {
+                return response.json().then((data) => {
+                throw new Error(data.detail || "Bad request");
+                });
+            }
+            return response.json();
+            })
+            .then((data: TwitchStream[]) => {
+                twitch_streams = data
+                console.log(twitch_streams)
+            })
+            .catch((error) => {
+                console.log(error);
+            
+            });
+        }
     })
     
-    let twitch_streams: TwitchStream[]
-    fetch(URLS.BASE_URL+'/api/twitchstreams', { mode: "cors", credentials: "include" })
-    .then((response) => {
-    if (response.status === 400) {
-        return response.json().then((data) => {
-        throw new Error(data.detail || "Bad request");
-        });
-    }
-    return response.json();
-    })
-    .then((data: TwitchStream[]) => {
-        twitch_streams = data
-        console.log(twitch_streams)
-    })
-    .catch((error) => {
-        console.log(error);
-    
-    });
+
 
 
     function get_member(id: string): string {
