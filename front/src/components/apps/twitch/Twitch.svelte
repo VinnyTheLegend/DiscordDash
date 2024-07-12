@@ -16,26 +16,24 @@
     
     let twitch_streams: TwitchStream[] = []
     onMount(() => {
-        if (members_value.length === 0) fetch_members()
-        if (twitch_streams.length === 0) {
-            fetch(URLS.BASE_URL+'/api/twitchstreams', { mode: "cors", credentials: "include" })
-            .then((response) => {
-            if (response.status === 400) {
-                return response.json().then((data) => {
-                throw new Error(data.detail || "Bad request");
-                });
-            }
-            return response.json();
-            })
-            .then((data: TwitchStream[]) => {
-                twitch_streams = data
-                console.log(twitch_streams)
-            })
-            .catch((error) => {
-                console.log(error);
-            
+        fetch(URLS.BASE_URL+'/api/twitchstreams', { mode: "cors", credentials: "include" })
+        .then((response) => {
+        if (response.status === 400) {
+            return response.json().then((data) => {
+            throw new Error(data.detail || "Bad request");
             });
         }
+        return response.json();
+        })
+        .then((data: TwitchStream[]) => {
+            twitch_streams = data
+            console.log(twitch_streams)
+        })
+        .catch((error) => {
+            console.log(error);
+        
+        });
+        if (members_value.length === 0) fetch_members()
     })
     
 
