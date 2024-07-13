@@ -22,11 +22,11 @@ fetch(URLS.BASE_URL+'/api/logs/recent', { mode: "cors", credentials: "include" }
 
 </script>
 
-<main class="h-[500px] border-2 border-border rounded bg-background overflow-auto">
+<main class="h-[500px] border-2 border-border rounded bg-background">
     {#if recent_logs}
-        <ol class="size-full overflow-auto p-1 flex flex-col-reverse">
+        <ol class="h-full flex flex-col-reverse overflow-y-auto overflow-x-hidden">
             {#each recent_logs.reverse() as log}
-                <li class="text-nowrap">{log}</li>
+                <li class="px-1 text-nowrap">{log}</li>
             {/each}
         </ol>
     {/if}
@@ -38,5 +38,11 @@ fetch(URLS.BASE_URL+'/api/logs/recent', { mode: "cors", credentials: "include" }
   main {
       width: 400px;
   }
+  ol {
+    overflow-x: auto
   }
+  }
+  * {
+    box-sizing: border-box;
+}
 </style>
