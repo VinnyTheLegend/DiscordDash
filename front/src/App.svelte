@@ -96,7 +96,7 @@
 
 </script>
 
-<main class="h-screen w-screen flex flex-col">
+<main class="h-screen w-screen flex flex-col relative">
   {#if auth && USER.member}
     <Header {USER} on:toggleSidebar={toggleSidebar}/>
     <div class="flex-grow flex min-h-0 min-w-0">
