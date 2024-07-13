@@ -22,7 +22,7 @@ fetch(URLS.BASE_URL+'/api/logs/recent', { mode: "cors", credentials: "include" }
 
 </script>
 
-<main class="w-[650px] h-[500px] border-2 border-border rounded bg-background">
+<main class="h-[500px] border-2 border-border rounded bg-background overflow-auto">
     {#if recent_logs}
         <ol class="size-full overflow-auto p-1 flex flex-col-reverse">
             {#each recent_logs.reverse() as log}
@@ -34,5 +34,9 @@ fetch(URLS.BASE_URL+'/api/logs/recent', { mode: "cors", credentials: "include" }
 </main>
 
 <style>
-
+  @media(max-width:790px) {
+  main {
+      width: 400px;
+  }
+  }
 </style>

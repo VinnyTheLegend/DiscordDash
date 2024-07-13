@@ -88,13 +88,19 @@
     USER.get()
     current_app = event.detail;
   }
+  
+  let sidebar_shown = false
+  function toggleSidebar(event: CustomEvent<boolean>) {
+    sidebar_shown = event.detail
+  }
+
 </script>
 
 <main class="h-screen w-screen flex flex-col">
   {#if auth && USER.member}
-    <Header {USER} />
+    <Header {USER} on:toggleSidebar={toggleSidebar}/>
     <div class="flex-grow flex min-h-0 min-w-0">
-      <SideBar on:changeApp={changeApp}/>
+      <SideBar {sidebar_shown} on:changeApp={changeApp}/>
       <AppSwitch {current_app} {USER}/>
     </div>
   {:else if auth}

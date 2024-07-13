@@ -6,6 +6,7 @@
     import { Checkbox } from "$lib/components/ui/checkbox/index.js";
     import { Label } from "$lib/components/ui/label/index.js";
     import { Button } from "$lib/components/ui/button";
+    import { createEventDispatcher } from 'svelte';
 
     import {URLS} from "../utils"
 
@@ -67,10 +68,20 @@
         });
     }
 
+
+    
+    const dispatch = createEventDispatcher<{toggleSidebar: boolean}>();
+
+    let shown = false
+    function toggleSidebar() {
+        shown = !shown
+        dispatch('toggleSidebar', shown);
+    }
+
 </script>
 
-<main class="border-b-[1px] border-[#47003C] h-20 w-full bg-black flex items-center relative">
-        <div class="absolute left-5"><img src="{sedicon}" alt="" class="size-14 rounded-full"></div>
+<main class="border-b-[1px] border-[#47003C] h-20 w-full bg-black flex items-center relative flex-shrink-0">
+        <button on:click={toggleSidebar} class="absolute left-5"><img src="{sedicon}" alt="" class="size-14 rounded-full"></button>
         <button class="seduction m-auto font-extrabold text-5xl" on:click={() => {window.location.href = URLS.FRONT_URL}}>SEDUCTION</button>
         <div class="right-5 absolute flex items-center justify-end">
             <span class="pr-4 font-bold">{USER.username}</span>

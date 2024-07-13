@@ -7,7 +7,7 @@
 
 </script>
 
-<main class="size-full flex justify-evenly items-center">
+<main class="size-full flex justify-evenly items-center flex-wrap overflow-auto pb-5">
     <div class="">
         <h1 class="text-center font-extrabold text-xl">Server</h1>
         <GuildInfoComp/>
