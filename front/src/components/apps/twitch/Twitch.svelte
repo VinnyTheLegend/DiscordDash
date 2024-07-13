@@ -140,8 +140,8 @@
             <Button type="submit">Add Stream</Button> <Input placeholder="stream name" bind:value={stream_to_add}/>
         </form>
     </div>
-    <div class="flex-grow min-h-0 min-w-0 m-auto mb-5 flex flex-col">
-        <ul class="border-2 border-border bg-background rounded-lg max-w-[500px] max-h-full flex flex-col min-w-0 overflow-auto items-center">
+    <div class="flex-grow min-h-0 min-w-0 mb-5 flex flex-col px-5">
+        <ul class="border-2 border-border bg-background rounded-lg max-h-full flex flex-col overflow-auto items-center mx-auto min-w-[50%]">
             {#if twitch_streams}
                 {#each twitch_streams as stream}
                     <li class="flex w-full p-2 items-center justify-between">
