@@ -1,4 +1,4 @@
-import { members } from "./stores";
+import { members, guild_info } from "./stores";
 
 export const BASE_URL: string = "https://localhost:8000";
 
@@ -58,5 +58,26 @@ export function get_member(id: string, members_list: UserData[]): UserData | voi
             console.log(member.nickname)
             return member
         }
+    });
+}
+
+export function fetch_guild() {
+    fetch(URLS.BASE_URL+'/api/guild', { mode: "cors", credentials: "include" })
+    .then((response) => {
+    if (response.status === 400) {
+        return response.json().then((data) => {
+        throw new Error(data.detail || "Bad request");
+        });
+    }
+    return response.json();
+    })
+    .then((data: GuildInfo) => {
+        data.created_at = new Date(data.created_at)
+        guild_info.set(data)
+        console.log(data)
+    })
+    .catch((error) => {
+        console.log(error);
+        return [];
     });
 }

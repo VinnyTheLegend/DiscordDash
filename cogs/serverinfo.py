@@ -36,6 +36,7 @@ class GuildResponse(BaseModel):
     emoji_count: int
     verification_level: str
     boosts: int
+    roles: list[schemas.Role]
 
 def get_db():
     db = SessionLocal()
@@ -87,6 +88,17 @@ class ServerInfo(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
 
             guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
+            roles: list[schemas.Role] = []
+            for role in guild.roles:
+                db_role = crud.get_role(db, str(role.id))
+                new_role = schemas.Role(id=str(role.id), name=role.name, optional=False)
+                if not db_role:
+                    crud.create_role(db, new_role)
+                else:
+                    new_role.optional = db_role.optional
+                    crud.update_role(db, str(role.id), new_role)
+                roles.append(new_role)
+
 
             guild_response = {
                 'id': str(guild.id),
@@ -98,7 +110,8 @@ class ServerInfo(commands.Cog):
                 "text_channel_count": len(guild.text_channels),
                 "emoji_count": len(guild.emojis),
                 "verification_level": str(guild.verification_level),
-                "boosts": guild.premium_subscription_count
+                "boosts": guild.premium_subscription_count,
+                "roles": roles
             }
 
 

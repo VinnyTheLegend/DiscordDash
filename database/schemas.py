@@ -31,3 +31,11 @@ class TwitchStream(BaseModel):
 
     class Config:
         orm_mode = True
+
+class Role(BaseModel):
+    id: str
+    name: str
+    optional: bool
+
+    class Config:
+        orm_mode = True

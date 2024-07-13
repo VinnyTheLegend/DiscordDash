@@ -30,3 +30,11 @@ class TwitchStream(Base):
 
     user_login = Column(String, primary_key=True)
     added_by = Column(String, index=True)
+
+
+class Role(Base):
+    __tablename__ = "roles"
+
+    id = Column(String, primary_key=True)
+    name = Column(String)
+    optional = Column(Boolean)

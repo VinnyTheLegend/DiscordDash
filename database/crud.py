@@ -110,6 +110,23 @@ def user_remove_role(db: Session, user_id: str, role_id: str):
     return None
 
 
+# roles
+def create_role(db: Session, role: schemas.Role):
+    db_role = models.Role(**role.model_dump())
+    db.add(db_role)
+    db.commit()
+    db.refresh(db_role)
+    return db_role
+
+def get_role(db: Session, role_id: str):
+    return db.query(models.Role).filter(models.Role.id == role_id).first()
+
+def update_role(db: Session, role_id: str, role: schemas.Role):
+    return db.query(models.Role).filter(models.Role.id == role_id).update(role.model_dump())
+
+def get_roles(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Role).offset(skip).limit(limit).all()
+
 # Twitch Streams
 def create_twitchstream(db: Session, stream: schemas.TwitchStream):
     db_stream = models.TwitchStream(**stream.model_dump())
@@ -128,3 +145,4 @@ def del_twitchstream(db: Session, user_login: str):
     deleted_rows = db.query(models.TwitchStream).filter(models.TwitchStream.user_login == user_login).delete()
     db.commit()
     return deleted_rows
+

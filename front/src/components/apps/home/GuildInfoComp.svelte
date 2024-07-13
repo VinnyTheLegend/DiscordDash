@@ -1,66 +1,57 @@
 <script lang="ts">
-    import { fetch_members, URLS } from "../../../utils";
+    import { fetch_members, URLS, fetch_guild } from "../../../utils";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-    import {members} from "../../../stores"
-  import { onMount } from "svelte";
+    import {members, guild_info} from "../../../stores"
+    import { onMount } from "svelte";
 
     let members_value: UserData[] = []
-    let guild_info: GuildInfo
+    let guild_info_value: GuildInfo
 
 	members.subscribe((value) => {
 		members_value = value;
 	})
 
+    guild_info.subscribe((value) => {
+		guild_info_value = value;
+	})
+
+
     onMount(() => {
         if (members_value.length === 0) fetch_members()
+        if (typeof guild_info_value === 'undefined') {
+            fetch_guild()
+        }
     })
 
-    fetch(URLS.BASE_URL+'/api/guild', { mode: "cors", credentials: "include" })
-        .then((response) => {
-          if (response.status === 400) {
-            return response.json().then((data) => {
-              throw new Error(data.detail || "Bad request");
-            });
-          }
-          return response.json();
-        })
-        .then((data: GuildInfo) => {
-            data.created_at = new Date(data.created_at)
-            guild_info = data
-            console.log(guild_info)
-        })
-        .catch((error) => {
-            console.log(error);
-            return [];
-        });
+
 </script>
 
 <main class="w-[325px] h-[500px] border-2 border-border rounded flex flex-col bg-background">
     <div class="border-b border-border">
         <div class="w-full flex px-2">
             <h1 class="text-left w-1/2">Creation Date:</h1>
-            <h1 class="text-right w-1/2">{guild_info?.created_at.toDateString() || ""}</h1>
+            <h1 class="text-right w-1/2">{guild_info_value?.created_at.toDateString() || ""}</h1>
         </div>
         <div class="w-full flex px-2">
             <h1 class="text-left w-1/2">Members:</h1>
-            <h1 class="text-right w-1/2">{guild_info?.member_count || ""}</h1>
+            <h1 class="text-right w-1/2">{guild_info_value?.member_count || ""}</h1>
         </div>
         <div class="w-full flex px-2">
             <h1 class="text-left w-1/2">Roles:</h1>
-            <h1 class="text-right w-1/2">{guild_info?.role_count || ""}</h1>
+            <h1 class="text-right w-1/2">{guild_info_value?.role_count || ""}</h1>
         </div>
         <div class="w-full flex px-2">
             <h1 class="text-left w-1/2">Text Channels:</h1>
-            <h1 class="text-right w-1/2">{guild_info?.text_channel_count || ""}</h1>
+            <h1 class="text-right w-1/2">{guild_info_value?.text_channel_count || ""}</h1>
         </div>
         <div class="w-full flex px-2">
             <h1 class="text-left w-1/2">Voice Channels:</h1>
-            <h1 class="text-right w-1/2">{guild_info?.voice_channel_count || ""}</h1>
+            <h1 class="text-right w-1/2">{guild_info_value?.voice_channel_count || ""}</h1>
         </div>
         <div class="w-full flex px-2">
             <h1 class="text-left w-1/2">Boosts:</h1>
-            <h1 class="text-right w-1/2">{guild_info?.boosts || ""}</h1>
+            <h1 class="text-right w-1/2">{guild_info_value?.boosts || ""}</h1>
         </div>
     </div>
     <div class="overflow-auto grow">
