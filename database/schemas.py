@@ -36,6 +36,7 @@ class Role(BaseModel):
     id: str
     name: str
     optional: bool
+    added_by: Optional[str]
 
     class Config:
         orm_mode = True
