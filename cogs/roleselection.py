@@ -85,6 +85,15 @@ class RoleSelection(commands.Cog):
     @discord.app_commands.choices(role=ROLE_CHOICES)
     async def role(self, ctx: commands.Context, *, operation: str, role: str):
         """Add/Remove optional roles."""
+        is_member = False
+        for role in ctx.author.roles:
+            if role.id in [secret.member_id, secret.veteran_id, secret.general_id, secret.warlord_id]:
+                is_member = True
+                break
+        if not is_member:
+                await ctx.reply("Unauthorized.", ephemeral=False)
+                return
+
         db = SessionLocal()
         db_user = crud.get_user(db=db, user_id=str(ctx.author.id))
         role: discord.Role = self.guild.get_role(int(role))
