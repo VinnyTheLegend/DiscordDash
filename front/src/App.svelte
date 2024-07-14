@@ -75,7 +75,7 @@
     USER.get();
   }
   
-  const apps = ['home', 'twitch']
+  const apps = ['home', 'twitch', 'roles']
   let current_app: string = "home"
   console.log(window.location.pathname)
   let pathname = window.location.pathname.replace('/', '')

@@ -16,6 +16,12 @@ interface User extends UserData {
     get: () => void
 }
 
+interface Role {
+    id: string,
+    name: string,
+    optional: boolean
+}
+
 interface GuildInfo {
     id: string,
     name: string,
@@ -26,7 +32,8 @@ interface GuildInfo {
     text_channel_count: number,
     emoji_count: number,
     verification_level: string,
-    boosts: number
+    boosts: number,
+    roles: Role[]
 }
 
 interface TwitchStream {
