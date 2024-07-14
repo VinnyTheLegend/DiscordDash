@@ -21,7 +21,7 @@
         </div>
     {/if}
     <div class="flex">
-        <h1 class="w-5/12 px-1">Connection Time:</h1><h1 class="w-7/12 text-right px-1">{USER.connection_time}mins</h1>
+        <h1 class="w-5/12 px-1">Connection Time:</h1><h1 class="w-7/12 text-right px-1">{USER.connection_time.toFixed(1)}mins</h1>
     </div>
     {#if USER.roles}      
         <div class="border-t border-border grow flex flex-col">
