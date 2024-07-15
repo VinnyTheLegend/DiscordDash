@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { guild_info } from "../../../stores";
-  import { fetch_guild } from "../../../utils";
+  import { guild_info, members } from "../../../stores";
+  import { fetch_guild, fetch_members, get_member } from "../../../utils";
   import * as Select from "$lib/components/ui/select/index.js";
   import Button from "$lib/components/ui/button/button.svelte";
   import { Trash } from "svelte-radix";
@@ -12,10 +12,21 @@
     guild_info_value = value;
   });
 
+  let members_value: UserData[];
+  members.subscribe((value) => {
+    members_value = value;
+  });
+
+
     onMount(() => {
         if (typeof guild_info_value === "undefined") {
             fetch_guild();
         }
+        if (members_value.length === 0) fetch_members()
+        if (typeof guild_info_value === 'undefined') {
+            fetch_guild()
+        }
+
     });
 </script>
 
@@ -31,7 +42,7 @@
               <Select.Group>
                 {#if (typeof guild_info_value !== 'undefined')}            
                     {#each guild_info_value?.roles as role}
-                        {#if !role.optional}
+                        {#if !role.optional && role.allowed_optional}
                             <Select.Item value={role.id} label={role.name}>{role.name}</Select.Item>
                         {/if}
                     {/each}
@@ -56,11 +67,11 @@
                         <h1 class="ml-2">{role.name}</h1>
                     </div>
                     <div class="flex items-center ml-5">
-                        <!-- {#if members_value.length !== 0}
+                        {#if members_value.length !== 0}
                             <span>
-                                Added By: 
+                                Added By: {get_member(role.added_by, members_value)}
                             </span>
-                        {/if} -->
+                        {/if}
                     </div>
                 </li>
                 {/if}

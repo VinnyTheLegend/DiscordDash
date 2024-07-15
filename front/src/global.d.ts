@@ -19,7 +19,9 @@ interface User extends UserData {
 interface Role {
     id: string,
     name: string,
-    optional: boolean
+    optional: boolean,
+    added_by: string,
+    allowed_optional: boolean
 }
 
 interface GuildInfo {

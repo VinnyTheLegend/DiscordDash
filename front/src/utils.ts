@@ -52,14 +52,6 @@ export function fetch_members() {
     });
 }
 
-export function get_member(id: string, members_list: UserData[]): UserData | void {
-    members_list.forEach(member => {
-        if (member.id === id) {
-            console.log(member.nickname)
-            return member
-        }
-    });
-}
 
 export function fetch_guild() {
     fetch(URLS.BASE_URL+'/api/guild', { mode: "cors", credentials: "include" })
@@ -80,4 +72,13 @@ export function fetch_guild() {
         console.log(error);
         return [];
     });
+}
+
+export function get_member(id: string, members_value: UserData[]): string {
+    const member = members_value.find(member => member.id === id);
+    if (member) {
+        console.log(member.nickname);
+        return member.nickname || member.global_name;
+    }
+    return 'Unknown'
 }
