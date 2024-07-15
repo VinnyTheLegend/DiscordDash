@@ -28,8 +28,8 @@ class RoleSelection(commands.Cog):
         self.bot: commands.Bot = bot
         self.router = APIRouter()
 
-        @self.router.get('/discord/guild/roles/optional/add')
-        async def roleaddremove(request: Request, db: Session = Depends(get_db)):
+        @self.router.post('/discord/guild/roles/optional/add')
+        async def optional_add(role_add_id: str, *, request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
@@ -39,11 +39,29 @@ class RoleSelection(commands.Cog):
             if not db_user.member:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             
-            member = self.guild.get_member(int(db_user.id))
+            guild = self.bot.get_guild(secret.GUILD_ID)
+            member = guild.get_member(int(db_user.id))
             has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
             if not has_admin_role:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not authorized")
 
+            if not role_add_id:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no role specified")
+            if role_add_id in self.optional_role_ids:
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="role already optional")
+
+            role = guild.get_role(int(role_add_id))
+            if not role:
+                crud.del_role(db, role_add_id)
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="role doesnt exist")
+            db_role = crud.get_role(db, str(role.id))
+            if db_role:
+                new_role = schemas.Role(id=str(role.id), name=role.name, optional=True, added_by=str(member.id))
+                print(db_role)
+                print(new_role)
+                return crud.update_role(db, db_role.id, new_role)
+                
+            
 
 
         @self.router.get('/discord/user/roles')
@@ -57,7 +75,8 @@ class RoleSelection(commands.Cog):
             if not db_user.member:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not a member")
             
-            member = self.guild.get_member(int(db_user.id))
+            guild = self.bot.get_guild(secret.GUILD_ID)
+            member = guild.get_member(int(db_user.id))
             crud.update_user(db, member.id, schemas.UserCreate(**utils.create_user_from_member(member)))
             has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
             if not member or (not member.get_role(secret.member_id) and not member.get_role(secret.veteran_id) and not has_admin_role):
@@ -69,7 +88,7 @@ class RoleSelection(commands.Cog):
             print(role, operation)
             if int(role) not in self.optional_role_ids:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
-            role = self.guild.get_role(int(role))
+            role = guild.get_role(int(role))
             if operation == "add":
                 if role in member.roles:
                     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
@@ -87,6 +106,7 @@ class RoleSelection(commands.Cog):
         db = SessionLocal()
         db_roles = crud.get_roles(db)
         db.close()
+        guild = self.bot.get_guild(secret.GUILD_ID)
         self.db_optional_roles = []
         self.optional_roles = []
         self.optional_role_ids = []
@@ -94,15 +114,21 @@ class RoleSelection(commands.Cog):
         for db_role in db_roles:
             if db_role.optional:
                 self.db_optional_roles.append(db_role)
-                role = self.guild.get_role(int(db_role.id))
+                role = guild.get_role(int(db_role.id))
                 self.optional_role_ids.append(int(db_role.id))
                 self.optional_roles.append(role)
                 print(role.id)
                 ROLE_CHOICES.append(discord.app_commands.Choice(name=str(role.name), value=str(role.id)))
 
+        self.role_ids: list[str] = []
+        for role in guild.roles:
+            self.role_ids.append(str(role.id))
+        for role in db_roles:
+            if role.id not in self.role_ids:
+                crud.del_role(db, role.id)
+
     @commands.Cog.listener()
     async def on_ready(self):
-        self.guild = self.bot.get_guild(secret.GUILD_ID)
         self.update_optional_roles()
 
     @commands.hybrid_command(name='role', with_app_command=True)
@@ -123,9 +149,10 @@ class RoleSelection(commands.Cog):
                 await ctx.reply("Unauthorized.", ephemeral=False)
                 return
 
+        guild = self.bot.get_guild(secret.GUILD_ID)
         db = SessionLocal()
         db_user = crud.get_user(db=db, user_id=str(ctx.author.id))
-        role: discord.Role = self.guild.get_role(int(role))
+        role: discord.Role = guild.get_role(int(role))
         if operation == "add":
             await ctx.author.add_roles(role)
             if role not in ctx.author.roles:

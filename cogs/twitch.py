@@ -135,7 +135,8 @@ class Twitch(commands.Cog):
             if not db_user:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
             
-            member = self.guild.get_member(int(db_user.id))
+            guild = self.bot.get_guild(secret.GUILD_ID)
+            member = guild.get_member(int(db_user.id))
             crud.update_user(db, member.id, schemas.UserCreate(**utils.create_user_from_member(member)))
             has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
             if not member or (not member.get_role(secret.veteran_id) and not has_admin_role):
@@ -158,7 +159,8 @@ class Twitch(commands.Cog):
             if not db_user:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not found")
             
-            member = self.guild.get_member(int(db_user.id))
+            guild = self.bot.get_guild(secret.GUILD_ID)
+            member = guild.get_member(int(db_user.id))
             crud.update_user(db, member.id, schemas.UserCreate(**utils.create_user_from_member(member)))
             has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
             if not member or (not member.get_role(secret.veteran_id) and not has_admin_role):
@@ -176,8 +178,6 @@ class Twitch(commands.Cog):
     
     @commands.Cog.listener()
     async def on_ready(self):
-        self.guild = self.bot.get_guild(secret.GUILD_ID)
-
         await main(self.bot)
     
 async def setup(bot):

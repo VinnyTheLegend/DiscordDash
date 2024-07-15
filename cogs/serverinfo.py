@@ -89,7 +89,9 @@ class ServerInfo(commands.Cog):
 
             guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
             roles: list[schemas.Role] = []
+            role_ids: list[str] = []
             for role in guild.roles:
+                role_ids.append(str(role.id))
                 db_role = crud.get_role(db, str(role.id))
                 new_role = schemas.Role(id=str(role.id), name=role.name, optional=False, added_by=None)
                 if not db_role:
@@ -100,6 +102,10 @@ class ServerInfo(commands.Cog):
                     crud.update_role(db, str(role.id), new_role)
                 roles.append(new_role)
 
+            db_roles = crud.get_roles(db)
+            for role in db_roles:
+                if role.id not in role_ids:
+                    crud.del_role(db, role.id)
 
             guild_response = {
                 'id': str(guild.id),

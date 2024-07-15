@@ -122,10 +122,17 @@ def get_role(db: Session, role_id: str):
     return db.query(models.Role).filter(models.Role.id == role_id).first()
 
 def update_role(db: Session, role_id: str, role: schemas.Role):
-    return db.query(models.Role).filter(models.Role.id == role_id).update(role.model_dump())
+    rows_updated = db.query(models.Role).filter(models.Role.id == role_id).update(role.model_dump())
+    db.commit()
+    return rows_updated
 
 def get_roles(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Role).offset(skip).limit(limit).all()
+
+def del_role(db: Session, role_id: str):
+    deleted_rows = db.query(models.Role).filter(models.Role.id == role_id).delete()
+    db.commit()
+    return deleted_rows
 
 # Twitch Streams
 def create_twitchstream(db: Session, stream: schemas.TwitchStream):
