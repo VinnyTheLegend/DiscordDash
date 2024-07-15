@@ -55,6 +55,8 @@ class RoleSelection(commands.Cog):
             if not role:
                 crud.del_role(db, role_add_id)
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="role doesnt exist")
+            if str(role.id) in secret.blocked_optional_roles:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="role blocked")
             db_role = crud.get_role(db, str(role.id))
             if db_role:
                 new_role = schemas.Role(id=str(role.id), name=role.name, optional=True, added_by=str(member.id))

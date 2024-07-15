@@ -93,7 +93,7 @@ class ServerInfo(commands.Cog):
             for role in guild.roles:
                 role_ids.append(str(role.id))
                 db_role = crud.get_role(db, str(role.id))
-                new_role = schemas.Role(id=str(role.id), name=role.name, optional=False, added_by=None)
+                new_role = schemas.Role(id=str(role.id), name=role.name, optional=False, added_by=None, allowed_optional=str(role.id) not in secret.blocked_optional_roles)
                 if not db_role:
                     crud.create_role(db, new_role)
                 else:

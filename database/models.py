@@ -39,3 +39,4 @@ class Role(Base):
     name = Column(String)
     optional = Column(Boolean)
     added_by = Column(String, nullable=True)
+    allowed_optional = Column(Boolean)
