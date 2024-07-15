@@ -47,6 +47,7 @@ class RoleSelection(commands.Cog):
 
             if not role_add_id:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no role specified")
+            self.update_optional_roles()
             if role_add_id in self.optional_role_ids:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="role already optional")
 
@@ -57,7 +58,6 @@ class RoleSelection(commands.Cog):
             db_role = crud.get_role(db, str(role.id))
             if db_role:
                 new_role = schemas.Role(id=str(role.id), name=role.name, optional=True, added_by=str(member.id))
-                self.update_optional_roles()
                 return crud.update_role(db, db_role.id, new_role)
                 
         @self.router.post('/discord/guild/roles/optional/remove')
@@ -78,7 +78,8 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not authorized")
 
             if not role_remove_id:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no role specified")
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no role specified")         
+            self.update_optional_roles()
             if role_remove_id not in self.optional_role_ids:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="role not optional")
 
@@ -89,7 +90,6 @@ class RoleSelection(commands.Cog):
             db_role = crud.get_role(db, str(role.id))
             if db_role:
                 new_role = schemas.Role(id=str(role.id), name=role.name, optional=False, added_by=None)
-                self.update_optional_roles()
                 return crud.update_role(db, db_role.id, new_role)
 
 
@@ -115,8 +115,9 @@ class RoleSelection(commands.Cog):
             operation = request.query_params['operation']
             role = request.query_params['role_id']
             print(role, operation)
-            if int(role) not in self.optional_role_ids:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="invalid role")
+            self.update_optional_roles()
+            if role not in self.optional_role_ids:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="role not optional")
             role = guild.get_role(int(role))
             if operation == "add":
                 if role in member.roles:

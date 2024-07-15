@@ -7,20 +7,61 @@
     import { Label } from "$lib/components/ui/label/index.js";
     import { Button } from "$lib/components/ui/button";
     import { createEventDispatcher } from 'svelte';
+    import {guild_info} from '../stores'
+    import { onMount } from "svelte";
 
-    import {URLS} from "../utils"
+    import {URLS, fetch_guild} from "../utils"
 
     export let USER: User;
 
-    let optional_roles = [{id: "1222684351054221312", name: 'Twitch Notifications', checked: false}, {id: "850013094758842400", name: 'Drops', checked: false}]
-    if (USER.roles != null) {
-        optional_roles.forEach(role => {
-            if (USER.roles?.includes(role.id)){
-                role.checked = true
+
+    let guild_info_value: GuildInfo
+    let optional_roles: {id: string, name: string, checked: boolean}[]
+
+    function processRoles(roles: Role[]): {id: string, name: string, checked: boolean}[] {
+        let processed_roles: {id: string, name: string, checked: boolean}[] = []
+        roles.forEach(role => {
+            let is_checked: boolean = false
+            if (role.optional) {
+                if (USER.roles && role.id in USER.roles) is_checked=true
+                processed_roles.push({id: role.id, name: role.name, checked: is_checked})                
             }
-            console.log(`${role.name}: ${role.checked}`)
-        })
+        });
+        return processed_roles
     }
+
+    guild_info.subscribe((value) => {
+		guild_info_value = value;
+        if (value) {
+            optional_roles = processRoles(value.roles)
+            for (let i in optional_roles) {
+                if (USER.roles?.includes(optional_roles[i].id)){
+                    optional_roles[i].checked = true
+                }
+                console.log(`${optional_roles[i].name}: ${optional_roles[i].checked}`)
+            }
+            optional_roles = optional_roles
+        }
+	})
+    //let optional_roles = [{id: "1222684351054221312", name: 'Twitch Notifications', checked: false}, {id: "850013094758842400", name: 'Drops', checked: false}]
+
+
+    onMount(() => {
+        if (typeof guild_info_value === 'undefined') {
+            fetch_guild()
+        } else {
+            optional_roles = processRoles(guild_info_value.roles)
+            for (let i in optional_roles) {
+                if (USER.roles?.includes(optional_roles[i].id)){
+                    optional_roles[i].checked = true
+                }
+                console.log(`${optional_roles[i].name}: ${optional_roles[i].checked}`)
+            }
+            optional_roles = optional_roles
+        }
+
+  
+    })
 
     const url = new URL(`${URLS.USER_URL}/roles`)
     function roleChange(role: {id: string, name: string, checked: boolean}) {
