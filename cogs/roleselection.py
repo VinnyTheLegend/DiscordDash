@@ -91,7 +91,7 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="role doesnt exist")
             db_role = crud.get_role(db, str(role.id))
             if db_role:
-                new_role = schemas.Role(id=str(role.id), name=role.name, optional=False, added_by=None)
+                new_role = schemas.Role(id=str(role.id), name=role.name, optional=False, added_by=None, allowed_optional=db_role.allowed_optional)
                 return crud.update_role(db, db_role.id, new_role)
 
 
