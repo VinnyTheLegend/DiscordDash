@@ -136,8 +136,8 @@
 
 <main class="size-full flex flex-col justify-start overflow-auto">
     <div class="p-5 m-auto">
-        <form on:submit|preventDefault={add_stream} class="flex bg-background p-2 rounded-lg border-2 border-border">
-            <Button type="submit">Add Stream</Button> <Input placeholder="stream name" bind:value={stream_to_add}/>
+        <form on:submit|preventDefault={add_stream} class="flex">
+            <Button type="submit">Add Stream</Button> <Input placeholder="stream name" bind:value={stream_to_add} class="ml-2 bg-gray-900"/>
         </form>
     </div>
     <div class="flex-grow min-h-0 min-w-0 mb-5 flex flex-col px-5">

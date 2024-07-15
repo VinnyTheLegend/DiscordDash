@@ -35,15 +35,15 @@
     <h1 class="font-extrabold text-center mb-2">Optional Roles</h1>
     <div class="flex">
         <Select.Root>
-            <Select.Trigger class="w-[180px]">
+            <Select.Trigger class="">
               <Select.Value placeholder="Add optional role" />
             </Select.Trigger>
-            <Select.Content>
+            <Select.Content class="border-border">
               <Select.Group>
                 {#if (typeof guild_info_value !== 'undefined')}            
                     {#each guild_info_value?.roles as role}
                         {#if !role.optional && role.allowed_optional}
-                            <Select.Item value={role.id} label={role.name}>{role.name}</Select.Item>
+                            <Select.Item value={role.id} label={role.name}> {role.name} </Select.Item>
                         {/if}
                     {/each}
                 {/if}
@@ -55,7 +55,7 @@
     </div>      
   </div>
   <div class="flex-grow min-h-0 min-w-0 mb-5 flex flex-col px-5">
-    <ul class="border-2 border-border bg-background rounded-lg max-h-full flex flex-col overflow-auto items-center mx-auto min-w-[30%]">
+    <ul class="border-2 border-border bg-background rounded-lg max-h-full flex flex-col overflow-auto items-center mx-auto min-w-[50%]">
         {#if (typeof guild_info_value !== 'undefined')}            
             {#each guild_info_value?.roles as role}
                 {#if role.optional}
