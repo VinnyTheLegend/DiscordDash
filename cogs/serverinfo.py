@@ -52,7 +52,7 @@ class ServerInfo(commands.Cog):
         self.router = APIRouter()   
 
         @self.router.get('/api/guild/members', response_model=list[schemas.User])
-        async def members(request: Request, db: Session = Depends(get_db)):
+        async def members(skip: int = 0, limit: int = 100, *, request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="state or token not provided")
@@ -65,7 +65,7 @@ class ServerInfo(commands.Cog):
 
             guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
             members = []
-            for member in guild.members:
+            for member in guild.members[skip:skip+limit]:
                 db_member = crud.get_user(db, member.id)
                 new_member = schemas.UserCreate(**utils.create_user_from_member(member))
                 if db_member:
