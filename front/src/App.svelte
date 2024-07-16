@@ -5,6 +5,7 @@
   import { Button } from "$lib/components/ui/button";
   import AppSwitch from "./components/AppSwitch.svelte";
   import UserInfoComp from "./components/apps/home/UserInfoComp.svelte";
+  import { Toaster } from "$lib/components/ui/sonner";
 
   let USER: User = {
     id: "",
@@ -100,6 +101,7 @@
 <main class="h-screen w-screen flex flex-col relative">
   {#if auth && USER.id}
     <Header {USER} on:toggleSidebar={toggleSidebar}/>
+    <Toaster/>
     {#if USER.member}
       <div class="flex-grow flex min-h-0 min-w-0">
         <SideBar {sidebar_shown} on:changeApp={changeApp}/>

@@ -3,6 +3,7 @@
   import * as Avatar from "$lib/components/ui/avatar/index.js";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import * as Dialog from "$lib/components/ui/dialog";
+  import { toast } from "svelte-sonner"
   import { Checkbox } from "$lib/components/ui/checkbox/index.js";
   import { Label } from "$lib/components/ui/label/index.js";
   import { createEventDispatcher } from "svelte";
@@ -92,6 +93,7 @@
           }
           console.log(USER.roles);
         });
+        role.checked ? toast.success('Role added') : toast.success('Role removed.')
       })
       .catch((error) => {
         optional_roles.forEach((role) => {

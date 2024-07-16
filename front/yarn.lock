@@ -1059,6 +1059,11 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.6"
 
+mode-watcher@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/mode-watcher/-/mode-watcher-0.4.0.tgz#87a406e11edefeb78072538dad1bcbe8db28df3e"
+  integrity sha512-zuHYgY7Cq4NAB1JHj0NpxTKfx6RMH3A2yAoDfjF1UTaIbgWzRyCQRcK/uE9EuVt2PqAGZZbqxRC0h9eB1hfyJQ==
+
 mri@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/mri/-/mri-1.2.0.tgz#6721480fec2a11a4889861115a48b6cbe7cc8f0b"
@@ -1538,6 +1543,11 @@ svelte-radix@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/svelte-radix/-/svelte-radix-1.1.0.tgz#5fb0c8d37422ea4863649180f6277af2d8b70dd3"
   integrity sha512-kyE9wZiJV937INGb+wiBkAjmGtQUUYRPkVL2Q+/gj+9Vog1Ewd2wNvNmpNMUd+c+euxoc5u5YZMuCUgky9EUPw==
+
+svelte-sonner@^0.3.27:
+  version "0.3.27"
+  resolved "https://registry.yarnpkg.com/svelte-sonner/-/svelte-sonner-0.3.27.tgz#e64c2a35de8b08e9f00038a4b30afe891fc45d2e"
+  integrity sha512-+PvbuePNTyTNCepCWqKcFeu+Lo27yYuwfSc7zJvrWjCRMJrWAmccPg3j7jO1W13QoN3TySXU5Trb956VBQiM5Q==
 
 svelte@^4.2.11:
   version "4.2.11"

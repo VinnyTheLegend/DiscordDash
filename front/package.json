@@ -25,8 +25,10 @@
     "@types/node": "^20.11.24",
     "bits-ui": "^0.21.12",
     "clsx": "^2.1.1",
+    "mode-watcher": "^0.4.0",
     "shadcn-svelte": "^0.10.7",
     "svelte-radix": "^1.1.0",
+    "svelte-sonner": "^0.3.27",
     "tailwind-merge": "^2.3.0",
     "tailwind-variants": "^0.2.1"
   }
