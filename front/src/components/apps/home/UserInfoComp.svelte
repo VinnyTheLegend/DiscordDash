@@ -27,7 +27,7 @@
         }
     })
 
-    $: if(USER.id) {
+    $: if(USER.roles) {
         if (guild_info_value && USER.roles) {
             roles_with_color = []
             console.log(USER.roles)
