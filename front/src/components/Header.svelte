@@ -122,9 +122,9 @@
 <main
   class="border-b-[1px] border-[#47003C] h-20 w-full bg-black flex items-center relative flex-shrink-0"
 >
-  <button on:click={toggleSidebar} class="absolute left-5"
-    ><img src={sedicon} alt="" class="size-14 rounded-full" /></button
-  >
+  <button on:click={toggleSidebar} class="absolute left-5">
+    <img src={sedicon} alt="" class="size-14 rounded-full" />
+  </button>
   <button
     class="seduction m-auto font-extrabold text-5xl"
     on:click={() => {
@@ -149,17 +149,16 @@
             <DropdownMenu.Label>My Account</DropdownMenu.Label>
             <DropdownMenu.Separator />
             {#if USER.member}
-              <Dialog.Trigger class="w-full"
-                ><DropdownMenu.Item>Role Selection</DropdownMenu.Item
-                ></Dialog.Trigger
-              >
+              <Dialog.Trigger class="w-full">
+                <DropdownMenu.Item>Role Selection</DropdownMenu.Item>
+              </Dialog.Trigger>
             {/if}
             <DropdownMenu.Item
               class="bg-destructive data-[highlighted]:bg-red-700"
               on:click={() =>
                 (window.location.href = `${URLS.BASE_URL}/logout`)}
-              >Sign Out</DropdownMenu.Item
-            >
+              >Sign Out
+            </DropdownMenu.Item>
           </DropdownMenu.Group>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
