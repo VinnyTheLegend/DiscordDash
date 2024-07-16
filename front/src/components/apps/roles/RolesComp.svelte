@@ -18,44 +18,65 @@
     members_value = value;
   });
 
-
-    onMount(() => {
-        if (typeof guild_info_value === "undefined") {
-            fetch_guild();
-        }
-        if (members_value.length === 0) fetch_members()
-        if (typeof guild_info_value === 'undefined') {
-            fetch_guild()
-        }
-    });
-
-    let role_to_add: string
+  
+  
+  onMount(() => {
+    if (typeof guild_info_value === "undefined") {
+      fetch_guild();
+    }
+    if (members_value.length === 0) fetch_members()
+    if (typeof guild_info_value === 'undefined') {
+      fetch_guild()
+    }
+  });
+  
+  let role_to_add: {label: string | undefined, value: string | undefined, disabled: boolean}
+  function add_role(): void {
+    console.log(role_to_add)
+    if (!role_to_add.value) {return}
     let optional_role_add_url = new URL(URLS.BASE_URL+'/api/guild/roles/optional/add')
-    function add_role(): void {
-        optional_role_add_url.searchParams.set('role_add_id', role_to_add)
-        fetch(optional_role_add_url, { mode: "cors", credentials: "include", method: "POST" })
-        .then((response) => {
-            if (response.status !== 200) {
-                return response.json().then((data) => {
-                throw new Error(data.detail || "Bad request");
-                });
-            }
-            return response.json();
-        })
-        .then((data: TwitchStream) => {
-            fetch_guild()
-            console.log("added: ", data)
-        })
-        .catch((error) => {
-            console.log(error);
-            fetch_guild()
-        });
-        role_to_add = ""
-    }
+    optional_role_add_url.searchParams.set('role_add_id', role_to_add.value)
+    fetch(optional_role_add_url, { mode: "cors", credentials: "include", method: "POST" })
+      .then((response) => {
+          if (response.status !== 200) {
+              return response.json().then((data) => {
+              throw new Error(data.detail || "Bad request");
+              });
+          }
+          return response.json();
+      })
+      .then((data: TwitchStream) => {
+          fetch_guild()
+          console.log("added: ", data)
+      })
+      .catch((error) => {
+          console.log(error);
+          fetch_guild()
+      });
+    role_to_add = {value:undefined, label:undefined, disabled:true}
+  }
 
-    function roleSelector(v: any) {
-      role_to_add = v.value as string
-    }
+  function remove_role(role_id: string): void {
+    let optional_role_remove_url = new URL(URLS.BASE_URL+'/api/guild/roles/optional/remove')
+    optional_role_remove_url.searchParams.set('role_remove_id', role_id)
+    fetch(optional_role_remove_url, { mode: "cors", credentials: "include", method: "POST" })
+      .then((response) => {
+          if (response.status !== 200) {
+              return response.json().then((data) => {
+              throw new Error(data.detail || "Bad request");
+              });
+          }
+          return response.json();
+      })
+      .then((data: TwitchStream) => {
+          fetch_guild()
+          console.log("removed: ", data)
+      })
+      .catch((error) => {
+          console.log(error);
+          fetch_guild()
+      });
+  }
 
 </script>
 
@@ -63,8 +84,8 @@
   <div class="p-5 m-auto">
     <h1 class="font-extrabold text-center mb-2">Optional Roles</h1>
     <div class="flex">
-        <Select.Root onSelectedChange={roleSelector}>
-            <Select.Trigger  class="">
+        <Select.Root bind:selected={role_to_add}>
+            <Select.Trigger  class="w-52">
               <Select.Value placeholder="Add optional role" />
             </Select.Trigger>
             <Select.Content class="border-border">
@@ -90,7 +111,7 @@
                 {#if role.optional}
                 <li class="flex w-full p-2 items-center justify-between">
                     <div class="flex items-center">
-                        <Button variant="destructive" class="size-8 p-0">
+                        <Button on:click={() => {remove_role(role.id)}} variant="destructive" class="size-8 p-0">
                             <Trash/>
                         </Button>
                         <h1 class="ml-2">{role.name}</h1>
