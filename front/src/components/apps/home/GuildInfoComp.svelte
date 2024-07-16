@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { fetch_members, URLS, fetch_guild } from "../../../utils";
+    import { update_member_store, URLS, fetch_guild } from "../../../utils";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
     import {members, guild_info} from "../../../stores"
@@ -18,7 +18,7 @@
 
 
     onMount(() => {
-        if (members_value.length === 0) fetch_members()
+        if (members_value.length === 0) update_member_store()
         if (typeof guild_info_value === 'undefined') {
             fetch_guild()
         }

@@ -6,7 +6,7 @@
     import { onMount } from 'svelte';
 
     import { members } from "../../../stores"
-    import { fetch_members, URLS } from "../../../utils";
+    import { update_member_store, URLS } from "../../../utils";
     import { toast } from "svelte-sonner";
 
     let members_value: UserData[] = []
@@ -34,7 +34,7 @@
             console.log(error);
         
         });
-        if (members_value.length === 0) fetch_members()
+        if (members_value.length === 0) update_member_store()
     })
     
 

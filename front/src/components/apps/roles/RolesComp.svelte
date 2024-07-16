@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   import { guild_info, members } from "../../../stores";
-  import { fetch_guild, fetch_members, get_member, URLS } from "../../../utils";
+  import { fetch_guild, update_member_store, get_member, URLS } from "../../../utils";
   import * as Select from "$lib/components/ui/select/index.js";
   import Button from "$lib/components/ui/button/button.svelte";
   import { Trash } from "svelte-radix";
@@ -25,7 +25,7 @@
     if (typeof guild_info_value === "undefined") {
       fetch_guild();
     }
-    if (members_value.length === 0) fetch_members()
+    if (members_value.length === 0) update_member_store()
     if (typeof guild_info_value === 'undefined') {
       fetch_guild()
     }

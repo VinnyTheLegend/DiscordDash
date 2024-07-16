@@ -31,8 +31,13 @@ export function echo(message: string) {
     });
 }
 
-export function fetch_members() {
-    fetch(URLS.BASE_URL+'/api/guild/members', { mode: "cors", credentials: "include" })
+export async function fetch_members(skip: number = 0, limit: number = 100): Promise<UserData[] | void> {
+    let member_url = new URL(URLS.BASE_URL+'/api/guild/members')
+    member_url.searchParams.set('skip', skip.toString())
+    member_url.searchParams.set('limit', limit.toString())
+
+
+    return fetch(member_url, { mode: "cors", credentials: "include" })
     .then((response) => {
       if (response.status === 400) {
         return response.json().then((data) => {
@@ -43,13 +48,25 @@ export function fetch_members() {
     })
     .then((data: UserData[]) => {
         console.log(data)
-        let members_new = data
-        members.set(members_new)
+        return data
     })
     .catch((error) => {
         console.log(error);
-        return [];
+        return;
     });
+}
+
+export async function update_member_store() {
+    let new_members_value: UserData[] = []
+    let fetched_members = await fetch_members()
+    console.log('new members:', fetched_members)
+    if (!fetched_members) return
+    new_members_value.push(...fetched_members)
+    while (fetched_members && fetched_members.length >= 100) {
+        fetched_members = await fetch_members()
+        if (fetched_members) new_members_value.push(...fetched_members)
+    }
+    members.set(new_members_value)
 }
 
 
