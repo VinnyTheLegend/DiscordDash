@@ -4,6 +4,7 @@
   import { URLS } from "./utils";
   import { Button } from "$lib/components/ui/button";
   import AppSwitch from "./components/AppSwitch.svelte";
+  import UserInfoComp from "./components/apps/home/UserInfoComp.svelte";
 
   let USER: User = {
     id: "",
@@ -97,16 +98,20 @@
 </script>
 
 <main class="h-screen w-screen flex flex-col relative">
-  {#if auth && USER.member}
+  {#if auth && USER.id}
     <Header {USER} on:toggleSidebar={toggleSidebar}/>
-    <div class="flex-grow flex min-h-0 min-w-0">
-      <SideBar {sidebar_shown} on:changeApp={changeApp}/>
-      <AppSwitch {current_app} {USER}/>
-    </div>
+    {#if USER.member}
+      <div class="flex-grow flex min-h-0 min-w-0">
+        <SideBar {sidebar_shown} on:changeApp={changeApp}/>
+        <AppSwitch {current_app} {USER}/>
+      </div>
+    {:else if USER.member === false}
+      <div class="flex-grow flex min-h-0 min-w-0 justify-center items-center">
+        <div>Not a member</div>
+      </div>
+    {/if}
   {:else if auth}
-    <div class="flex h-full justify-center items-center">
-      <div>Not a member</div>
-    </div>
+    <div class="flex h-full justify-center items-center"></div>
   {:else}
     <div class="flex h-full justify-center items-center">
       <Button on:click={() => {window.location.href = URLS.AUTH_URL}}>Authenticate</Button>
