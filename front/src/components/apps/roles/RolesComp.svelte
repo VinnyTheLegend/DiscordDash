@@ -85,7 +85,7 @@
     <h1 class="font-extrabold text-center mb-2">Optional Roles</h1>
     <div class="flex">
         <Select.Root bind:selected={role_to_add}>
-            <Select.Trigger  class="w-52">
+            <Select.Trigger  class="w-52 bg-gray-900">
               <Select.Value placeholder="Add optional role" />
             </Select.Trigger>
             <Select.Content class="border-border">
