@@ -7,6 +7,7 @@
 
     import { members } from "../../../stores"
     import { fetch_members, URLS } from "../../../utils";
+    import { toast } from "svelte-sonner";
 
     let members_value: UserData[] = []
     members.subscribe((value) => {
@@ -53,7 +54,7 @@
     function add_stream(): void {
         console.log(stream_to_add)
         if (stream_to_add.includes(" ") || stream_to_add === "") {
-            console.log("invalid stream name")
+            toast.error('Invalid stream name')
             stream_to_add = ""
 
             return
@@ -61,7 +62,7 @@
             
         for (let i = 0; i < twitch_streams.length; i++) {
             if (twitch_streams[i].user_login === stream_to_add) {
-                console.log("stream already followed")
+                toast.error("Stream already followed.")
                 stream_to_add = ""
 
                 return
@@ -80,11 +81,11 @@
         .then((data: TwitchStream) => {
             twitch_streams.push(data)
             twitch_streams = twitch_streams
-            console.log("added: ", data)
+            toast.success('Stream added.')
         })
         .catch((error) => {
             console.log(error);
-        
+            toast.error("Operation failed.")
         });
         stream_to_add = ""
     }
@@ -92,7 +93,7 @@
     let stream_remove_url = new URL(URLS.BASE_URL+'/api/twitchstreams/remove')
     function remove_stream(stream: string): void {
         if (stream.includes(" ") || stream === "") {
-            console.log("invalid stream name")
+            toast.error("Invalid stream.")
             return
         } 
         
@@ -106,7 +107,7 @@
             }
         }
         if (found === false) {
-            console.log("stream not followed")
+            toast.error("Stream not followed.")
             return
         }
         stream_remove_url.searchParams.set('stream', stream)
@@ -122,13 +123,12 @@
         return response.json();
         })
         .then((data: TwitchStream) => {
-            console.log(twitch_streams[stream_index])
             twitch_streams =  twitch_streams.filter(s => s.user_login !== stream);
-            console.log("removed: ", data)
+            toast.success("Stream removed.")
         })
         .catch((error) => {
             console.log(error);
-        
+            toast.error("Operation failed.")
         });
     }
 

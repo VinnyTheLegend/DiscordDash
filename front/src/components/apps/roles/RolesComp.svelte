@@ -7,6 +7,7 @@
   import Button from "$lib/components/ui/button/button.svelte";
   import { Trash } from "svelte-radix";
   import type { Selected } from "bits-ui"
+  import { toast } from "svelte-sonner";
 
   let guild_info_value: GuildInfo;
   guild_info.subscribe((value) => {
@@ -47,11 +48,12 @@
       })
       .then((data: TwitchStream) => {
           fetch_guild()
-          console.log("added: ", data)
+          toast.success('Role added.')
       })
       .catch((error) => {
           console.log(error);
           fetch_guild()
+          toast.error('Operation failed.')
       });
     role_to_add = {value:undefined, label:undefined}
   }
@@ -70,11 +72,12 @@
       })
       .then((data: TwitchStream) => {
           fetch_guild()
-          console.log("removed: ", data)
+          toast.success('Role removed.')
       })
       .catch((error) => {
           console.log(error);
           fetch_guild()
+          toast.error('Operation failed.')
       });
   }
 

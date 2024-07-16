@@ -106,6 +106,7 @@
         });
         optional_roles = optional_roles;
         console.log(error);
+        toast.error('Operation failed')
         return [];
       });
   }
