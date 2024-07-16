@@ -9,13 +9,14 @@ export const URLS = {
     FRONT_URL: "https://localhost:5173"
 }
 
-export const ROLES_DICT: { [key: string]: {name: string, color: string} } = {
-    "591686220996935691": {name: "Warlord", color: "red"},
-    "591686523142012948": {name: "General", color: "green"},
-    "591687458819932172": {name: "Veteran", color: "darkorange"},
-    "591687038902992928": {name: "Member", color: "blue"},
-    "1222684351054221312":{name: "Twitch Notifications", color: "#47003C"},
-    "850013094758842400": {name: "Drops", color: "#47003C"}
+export const role_colors: { [key: string]: {color: string} } = {
+    "Warlord": {color: "red"},
+    "General": {color: "green"},
+    "Veteran Member": {color: "darkorange"},
+    "Member": {color: "blue"},
+    "Twitch Notifications": {color:"#47003C"},
+    "Drops": {color: "#47003C"},
+    "Valheim": {color: "#47003C"}
 
 }
 

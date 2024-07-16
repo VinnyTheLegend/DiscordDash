@@ -1,7 +1,52 @@
 <script lang="ts">
-    import { ROLES_DICT } from "../../../utils";
+    import { fetch_guild, role_colors } from "../../../utils";
+    import { onMount } from "svelte";
+    import { guild_info } from "../../../stores";
+  import { RotateCounterClockwise } from "svelte-radix";
 
     export let USER: User;
+
+    interface RoleWithColor extends Role {
+        color: string
+    }
+    let roles_with_color: RoleWithColor[] = []
+
+    let guild_info_value: GuildInfo
+    guild_info.subscribe((value) => {
+        guild_info_value = value
+        if (value && USER.roles) {
+            console.log(USER.roles)
+            for (let i in value.roles) {
+                for (let k=0; k < USER.roles.length; k++) {
+                    if (value.roles[i].id === USER.roles[k] && value.roles[i].name in role_colors) {                    
+                        roles_with_color.push({...value.roles[i], color: role_colors[value.roles[i].name].color})
+                    }
+                }
+            }
+            roles_with_color = roles_with_color
+        }
+    })
+
+    $: if(USER.id) {
+        if (guild_info_value && USER.roles) {
+            roles_with_color = []
+            console.log(USER.roles)
+            for (let i in guild_info_value.roles) {
+                for (let k=0; k < USER.roles.length; k++) {
+                    if (guild_info_value.roles[i].id === USER.roles[k] && guild_info_value.roles[i].name in role_colors) {                    
+                        roles_with_color.push({...guild_info_value.roles[i], color: role_colors[guild_info_value.roles[i].name].color})
+                    }
+                }
+            }
+            roles_with_color = roles_with_color
+        }
+    }
+
+    onMount(() => {
+        if (typeof guild_info_value === 'undefined') {
+            fetch_guild()
+        }
+    })
 
 </script>
 
@@ -23,13 +68,11 @@
     <div class="flex">
         <h1 class="w-5/12 px-1">Connection Time:</h1><h1 class="w-7/12 text-right px-1">{USER.connection_time.toFixed(1)}mins</h1>
     </div>
-    {#if USER.roles}      
+    {#if roles_with_color}      
         <div class="border-t border-border grow flex flex-col">
             <div class="flex flex-wrap justify-evenly px-2">
-                {#each USER.roles as role (role)}
-                    {#if role in ROLES_DICT}
-                        <div style="background-color: {ROLES_DICT[role].color}" class="my-2 h-fit p-1.5 rounded-2xl border border-border">{ROLES_DICT[role].name}</div>
-                    {/if}
+                {#each roles_with_color as role (role)}
+                        <div style="background-color: {role_colors[role.name].color}" class="my-2 h-fit p-1.5 rounded-2xl border border-border">{role.name}</div>
                 {/each}
             </div>
         </div>
