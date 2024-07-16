@@ -12,7 +12,6 @@ interface UserData {
 }
 
 interface User extends UserData {
-    update: () => void,
     get: () => void
 }
 
