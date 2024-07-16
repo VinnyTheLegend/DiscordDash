@@ -60,7 +60,6 @@ export async function fetch_members(skip: number = 0, limit: number = 100): Prom
 export async function update_member_store() {
     let new_members_value: UserData[] = []
     let fetched_members = await fetch_members()
-    console.log('new members:', fetched_members)
     if (!fetched_members) return
     new_members_value.push(...fetched_members)
     while (fetched_members && fetched_members.length >= 100) {
