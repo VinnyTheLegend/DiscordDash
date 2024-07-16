@@ -171,14 +171,13 @@
           {#each optional_roles as role}
             <div class="flex items-center space-x-2 w-auto mx-4 my-2">
               <Checkbox
-                id="terms"
+                id="{role.id}"
                 bind:checked={role.checked}
                 onCheckedChange={() => roleChange(role)}
                 aria-labelledby="terms-label"
               />
               <Label
-                id="terms-label"
-                for="terms"
+                for="{role.id}"
                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-center"
               >
                 {role.name}
