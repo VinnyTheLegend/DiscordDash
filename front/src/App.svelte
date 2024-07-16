@@ -104,7 +104,7 @@
     <Toaster/>
     {#if USER.member}
       <div class="flex-grow flex min-h-0 min-w-0">
-        <SideBar {sidebar_shown} on:changeApp={changeApp}/>
+        <SideBar {sidebar_shown} on:changeApp={changeApp} {USER}/>
         <AppSwitch {current_app} {USER}/>
       </div>
     {:else if USER.member === false}
