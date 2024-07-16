@@ -28,7 +28,7 @@ class RoleSelection(commands.Cog):
         self.bot: commands.Bot = bot
         self.router = APIRouter()
 
-        @self.router.post('/discord/guild/roles/optional/add')
+        @self.router.post('/api/guild/roles/optional/add')
         async def optional_add(role_add_id: str, *, request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:
@@ -59,10 +59,10 @@ class RoleSelection(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="role blocked")
             db_role = crud.get_role(db, str(role.id))
             if db_role:
-                new_role = schemas.Role(id=str(role.id), name=role.name, optional=True, added_by=str(member.id))
+                new_role = schemas.Role(id=str(role.id), name=role.name, optional=True, added_by=str(member.id), allowed_optional=db_role.allowed_optional)
                 return crud.update_role(db, db_role.id, new_role)
                 
-        @self.router.post('/discord/guild/roles/optional/remove')
+        @self.router.post('/api/guild/roles/optional/remove')
         async def optional_remove(role_remove_id: str, *, request: Request, db: Session = Depends(get_db)):
             state, token = utils.getCookies(request)
             if not token or not state:

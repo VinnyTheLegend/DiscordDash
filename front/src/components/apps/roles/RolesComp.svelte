@@ -2,10 +2,11 @@
   import { onMount } from "svelte";
 
   import { guild_info, members } from "../../../stores";
-  import { fetch_guild, fetch_members, get_member } from "../../../utils";
+  import { fetch_guild, fetch_members, get_member, URLS } from "../../../utils";
   import * as Select from "$lib/components/ui/select/index.js";
   import Button from "$lib/components/ui/button/button.svelte";
   import { Trash } from "svelte-radix";
+  import type { ChangeEventHandler } from "svelte/elements";
 
   let guild_info_value: GuildInfo;
   guild_info.subscribe((value) => {
@@ -26,16 +27,44 @@
         if (typeof guild_info_value === 'undefined') {
             fetch_guild()
         }
-
     });
+
+    let role_to_add: string
+    let optional_role_add_url = new URL(URLS.BASE_URL+'/api/guild/roles/optional/add')
+    function add_role(): void {
+        optional_role_add_url.searchParams.set('role_add_id', role_to_add)
+        fetch(optional_role_add_url, { mode: "cors", credentials: "include", method: "POST" })
+        .then((response) => {
+            if (response.status !== 200) {
+                return response.json().then((data) => {
+                throw new Error(data.detail || "Bad request");
+                });
+            }
+            return response.json();
+        })
+        .then((data: TwitchStream) => {
+            fetch_guild()
+            console.log("added: ", data)
+        })
+        .catch((error) => {
+            console.log(error);
+            fetch_guild()
+        });
+        role_to_add = ""
+    }
+
+    function roleSelector(v: any) {
+      role_to_add = v.value as string
+    }
+
 </script>
 
 <main class="size-full flex flex-col justify-start overflow-auto">
   <div class="p-5 m-auto">
     <h1 class="font-extrabold text-center mb-2">Optional Roles</h1>
     <div class="flex">
-        <Select.Root>
-            <Select.Trigger class="">
+        <Select.Root onSelectedChange={roleSelector}>
+            <Select.Trigger  class="">
               <Select.Value placeholder="Add optional role" />
             </Select.Trigger>
             <Select.Content class="border-border">
@@ -51,7 +80,7 @@
             </Select.Content>
             <Select.Input name="addoptionalrole" />
           </Select.Root>
-          <Button class="ml-2">Submit</Button>
+          <Button on:click={add_role} class="ml-2">Submit</Button>
     </div>      
   </div>
   <div class="flex-grow min-h-0 min-w-0 mb-5 flex flex-col px-5">
