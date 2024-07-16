@@ -6,7 +6,7 @@
   import * as Select from "$lib/components/ui/select/index.js";
   import Button from "$lib/components/ui/button/button.svelte";
   import { Trash } from "svelte-radix";
-  import type { ChangeEventHandler } from "svelte/elements";
+  import type { Selected } from "bits-ui"
 
   let guild_info_value: GuildInfo;
   guild_info.subscribe((value) => {
@@ -30,7 +30,7 @@
     }
   });
   
-  let role_to_add: {label: string | undefined, value: string | undefined, disabled: boolean}
+  let role_to_add: Selected<string | undefined>
   function add_role(): void {
     console.log(role_to_add)
     if (!role_to_add.value) {return}
@@ -53,7 +53,7 @@
           console.log(error);
           fetch_guild()
       });
-    role_to_add = {value:undefined, label:undefined, disabled:true}
+    role_to_add = {value:undefined, label:undefined}
   }
 
   function remove_role(role_id: string): void {
