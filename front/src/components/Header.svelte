@@ -5,7 +5,6 @@
   import * as Dialog from "$lib/components/ui/dialog";
   import { Checkbox } from "$lib/components/ui/checkbox/index.js";
   import { Label } from "$lib/components/ui/label/index.js";
-  import { Button } from "$lib/components/ui/button";
   import { createEventDispatcher } from "svelte";
   import { guild_info } from "../stores";
   import { onMount } from "svelte";
@@ -48,7 +47,6 @@
       optional_roles = optional_roles;
     }
   });
-  //let optional_roles = [{id: "1222684351054221312", name: 'Twitch Notifications', checked: false}, {id: "850013094758842400", name: 'Drops', checked: false}]
 
   onMount(() => {
     if (typeof guild_info_value === "undefined") {
