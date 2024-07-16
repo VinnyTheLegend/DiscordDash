@@ -118,7 +118,7 @@
                     </div>
                     <div class="flex items-center ml-5">
                         {#if members_value.length !== 0}
-                            <span>
+                            <span class="text-right">
                                 Added By: {get_member(role.added_by, members_value)}
                             </span>
                         {/if}
