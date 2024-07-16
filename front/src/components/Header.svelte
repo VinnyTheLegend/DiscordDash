@@ -174,7 +174,6 @@
                 id="{role.id}"
                 bind:checked={role.checked}
                 onCheckedChange={() => roleChange(role)}
-                aria-labelledby="terms-label"
               />
               <Label
                 for="{role.id}"
