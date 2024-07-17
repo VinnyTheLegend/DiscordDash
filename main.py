@@ -1,6 +1,8 @@
 import asyncio
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+import uvicorn
 
 from routers import oauth
 
@@ -44,6 +46,9 @@ async def lifespan(app: FastAPI):
     app.include_router(bot.get_cog("RoleSelection").router)
     app.include_router(bot.get_cog("Twitch").router)
 
+    app.mount("/", StaticFiles(directory="front/dist", html=True), name="dist")
+
+
     yield
     # on shutdown
 
@@ -62,3 +67,7 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(oauth.router)
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, ssl_keyfile='./ssl/localhost-key.pem', ssl_certfile='./ssl/localhost.pem')
