@@ -21,4 +21,4 @@ env
 
 # front
 /front/**
-!/front/dist
+!/front/dist**
