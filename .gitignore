@@ -22,4 +22,3 @@ env
 # front
 /front/**
 !/front/dist
-!/front/public
