@@ -62,8 +62,10 @@ export async function update_member_store() {
     let fetched_members = await fetch_members()
     if (!fetched_members) return
     new_members_value.push(...fetched_members)
+    let toskip = 100
     while (fetched_members && fetched_members.length >= 100) {
-        fetched_members = await fetch_members()
+        fetched_members = await fetch_members(toskip)
+        toskip = toskip + 100
         if (fetched_members) new_members_value.push(...fetched_members)
     }
     members.set(new_members_value)
