@@ -1,12 +1,12 @@
 import { members, guild_info } from "./stores";
 
-export const BASE_URL: string = "https://localhost:8000";
+export const BASE_URL: string = import.meta.env.VITE_BACK_URL;
 
 export const URLS = {
     BASE_URL: BASE_URL,
     AUTH_URL: BASE_URL + "/discord/authenticate",
     USER_URL: BASE_URL + "/discord/user",
-    FRONT_URL: "https://localhost:5173"
+    FRONT_URL: import.meta.env.VITE_FRONT_URL
 }
 
 export const role_colors: { [key: string]: {color: string} } = {
