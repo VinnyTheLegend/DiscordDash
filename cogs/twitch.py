@@ -66,7 +66,6 @@ async def main(bot: commands.Bot):
         db = SessionLocal()
         db_streamers = crud.get_twitchstreams(db)
         db.close()
-        print(type(db_streamers), db_streamers)
         if not db_streamers: 
             await asyncio.sleep(5)
             continue
