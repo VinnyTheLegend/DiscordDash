@@ -9,6 +9,8 @@
 
   console.log('here')
   console.log('env', import.meta.env.VITE_BACK_URL)
+  console.log('env', import.meta.env.VITE_FRONT_URL)
+
 
   let USER: User = {
     id: "",
