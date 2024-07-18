@@ -9,22 +9,17 @@
   import type { Selected } from "bits-ui"
   import { toast } from "svelte-sonner";
 
-  let guild_info_value: GuildInfo;
+  let guild_info_value: GuildInfo = $guild_info
   guild_info.subscribe((value) => {
     guild_info_value = value;
   });
 
-  let members_value: UserData[];
+  let members_value: UserData[] = $members
   members.subscribe((value) => {
     members_value = value;
   });
-
-  
   
   onMount(() => {
-    if (typeof guild_info_value === "undefined") {
-      fetch_guild();
-    }
     if (members_value.length === 0) update_member_store()
     if (typeof guild_info_value === 'undefined') {
       fetch_guild()
