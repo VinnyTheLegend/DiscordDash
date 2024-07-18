@@ -1,11 +1,11 @@
 import { members, guild_info } from "./stores";
 
-export const BASE_URL: string = import.meta.env.VITE_BACK_URL;
+export const BASE_URL = import.meta.env.VITE_BACK_URL;
 
 export const URLS = {
     BASE_URL: BASE_URL,
-    AUTH_URL: BASE_URL + "/discord/authenticate",
-    USER_URL: BASE_URL + "/discord/user",
+    AUTH_URL: `${BASE_URL}/discord/authenticate`,
+    USER_URL: `${BASE_URL}/discord/user`,
     FRONT_URL: import.meta.env.VITE_FRONT_URL
 }
 

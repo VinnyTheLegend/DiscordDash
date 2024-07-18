@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "SET VITE_FRONT_URL=https://localhost:5173 && SET VITE_BACK_URL=https://localhost:8000 && vite",
-    "build": "SET VITE_FRONT_URL=https://discordapi.seduction.lol:2053 && SET VITE_BACK_URL=https://discordapi.seduction.lol:2053 && vite build",
+    "dev": "SET VITE_FRONT_URL=https://localhost:5173&& SET VITE_BACK_URL=https://localhost:8000&& vite",
+    "build": "SET VITE_FRONT_URL=https://discordapi.seduction.lol:2053&& SET VITE_BACK_URL=https://discordapi.seduction.lol:2053&& vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
