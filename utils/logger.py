@@ -4,6 +4,8 @@ import threading
 
 folder = os.path.dirname(__file__)
 now = datetime.datetime.now()
+if (not os.path.exists(os.path.join(folder, "logs"))):
+    os.mkdir(os.path.join(folder, "logs"))
 path = os.path.join(folder, f"logs\\{now.strftime('%Y-%m')}.txt")
 
 last_25 = []
