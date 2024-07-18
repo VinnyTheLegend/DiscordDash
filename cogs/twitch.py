@@ -64,8 +64,13 @@ async def main(bot: commands.Bot):
     channel = bot.get_channel(secret.BOT_SPAM_CHANNEL_ID)
     while True:
         db = SessionLocal()
-        streamers = [stream.user_login for stream in crud.get_twitchstreams(db)]
+        db_streamers = crud.get_twitchstreams(db)
         db.close()
+        print(type(db_streamers), db_streamers)
+        if not db_streamers: 
+            await asyncio.sleep(5)
+            continue
+        streamers = [stream.user_login for stream in db_streamers]
         response = await fetch(streamers)
         while not response:
             print("Twitch: no response retrying in 5s...")

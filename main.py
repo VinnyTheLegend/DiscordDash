@@ -70,4 +70,4 @@ app.include_router(oauth.router)
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, ssl_keyfile='./ssl/localhost-key.pem', ssl_certfile='./ssl/localhost.pem')
+    uvicorn.run("main:app", host="0.0.0.0", port=secret.BACK_PORT, reload=True, ssl_keyfile=secret.ssl_keyfile, ssl_certfile=secret.ssl_certfile)
