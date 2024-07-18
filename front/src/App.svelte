@@ -7,6 +7,7 @@
   import UserInfoComp from "./components/apps/home/UserInfoComp.svelte";
   import { Toaster } from "$lib/components/ui/sonner";
 
+  console.log('here')
   console.log('env', import.meta.env.VITE_BACK_URL)
 
   let USER: User = {
