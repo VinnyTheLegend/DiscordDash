@@ -35,6 +35,7 @@
         })
         .then((data: UserData) => {
           if ("error" in data) {
+            window.location.href = `${URLS.BASE_URL}/logout`
             console.log(data);
           } else {
             console.log(data);
@@ -44,6 +45,7 @@
         })
         .catch((error) => {
           console.log(error);
+          window.location.href = `${URLS.BASE_URL}/logout`
           // AuthRedirect()
           return [];
         });
@@ -92,7 +94,7 @@
       </div>
     {/if}
   {:else if auth}
-    <div class="flex h-full justify-center items-center"></div>
+    <div class="flex h-full justify-end"></div>
   {:else}
     <div class="flex h-full justify-center items-center">
       <Button on:click={() => {window.location.href = URLS.AUTH_URL}}>Authenticate</Button>
