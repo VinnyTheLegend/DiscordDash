@@ -35,7 +35,11 @@ async def lifespan(app: FastAPI):
     await bot.load_extension("cogs.serverinfo")
     await bot.load_extension("cogs.roleselection")
     await bot.load_extension("cogs.twitch")
+    await bot.load_extension("cogs.gemini")
+
+
     asyncio.create_task(bot.start(secret.BOT_TOKEN))
+    print('all cogs loaded')
 
     global test
     test = bot.get_cog("TestCog")
@@ -48,7 +52,8 @@ async def lifespan(app: FastAPI):
 
     app.mount("/", StaticFiles(directory="front/dist", html=True), name="dist")
 
-
+    print('routers loaded')
+    print('done')
     yield
     # on shutdown
 
