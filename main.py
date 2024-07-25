@@ -2,6 +2,7 @@ import asyncio
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 import uvicorn
 
 from routers import oauth
@@ -50,7 +51,9 @@ async def lifespan(app: FastAPI):
     app.include_router(bot.get_cog("RoleSelection").router)
     app.include_router(bot.get_cog("Twitch").router)
 
-    app.mount("/", StaticFiles(directory="front/dist", html=True), name="dist")
+    @app.get("/")
+    async def root_redirect():
+        return RedirectResponse(secret.guild_invite)
 
     print('routers loaded')
     print('done')
