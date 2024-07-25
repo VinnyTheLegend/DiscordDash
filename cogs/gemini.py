@@ -48,14 +48,14 @@ class Gemini(commands.Cog):
                     else:
                         image_bytes = await message.attachments[0].read()
                         image = Image.open(BytesIO(image_bytes))
-                    print('made it')
                     response = await chat.send_message_async([
                         f"from: {message.author.display_name}\n{message.content.replace('<@1040105644306472960>', '')}",
                         image
                         ], safety_settings=safety_settings)
                 else:
                     response = await chat.send_message_async(f"from: {message.author.display_name}\n{message.content.replace('<@1040105644306472960>', '')}", safety_settings=safety_settings)
-                await message.reply(response.text)
+                for i in range(0, len(response.text), 2000):
+                    await message.reply(response.text[i:i + 2000]) 
                 return
          
     
