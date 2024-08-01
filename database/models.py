@@ -47,4 +47,5 @@ class LeftOrRight(Base):
 
     name = Column(String, primary_key=True)
     img_url = Column(String)
+    added_by = Column(String)
     wins = Column(Integer, nullable=True)

@@ -45,4 +45,5 @@ class Role(BaseModel):
 class LeftOrRight(BaseModel):
     name: str
     img_url: str
+    added_by: str
     wins: Optional[int]

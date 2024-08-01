@@ -23,7 +23,7 @@ def get_db():
 class LeftOrRight(commands.Cog):
     def __init__(self, bot):
         print("starting leftorright")
-        self.bot: commands.bot = bot
+        self.bot: commands.Bot = bot
         self.router = APIRouter()
 
         @self.router.get('/api/leftorright')
@@ -64,9 +64,10 @@ class LeftOrRight(commands.Cog):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="missing img details")
             db_lor = crud.get_leftorright(db, name)
             if not db_lor:
-                return crud.create_leftorright(db, schemas.LeftOrRight(name=name, img_url=img_url, wins=0))
+                return crud.create_leftorright(db, schemas.LeftOrRight(name=name, img_url=img_url, added_by=str(member.id), wins=0))
             else:
                 db_lor.img_url = img_url
+                db_lor.added_by = str(member.id)
                 db.commit()
                 db.refresh(db_lor)
                 return db_lor
