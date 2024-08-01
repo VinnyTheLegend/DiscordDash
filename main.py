@@ -37,6 +37,7 @@ async def lifespan(app: FastAPI):
     await bot.load_extension("cogs.roleselection")
     await bot.load_extension("cogs.twitch")
     await bot.load_extension("cogs.gemini")
+    await bot.load_extension("cogs.leftorright")
 
 
     asyncio.create_task(bot.start(secret.BOT_TOKEN))
@@ -50,6 +51,8 @@ async def lifespan(app: FastAPI):
     app.include_router(bot.get_cog("ServerInfo").router)
     app.include_router(bot.get_cog("RoleSelection").router)
     app.include_router(bot.get_cog("Twitch").router)
+    app.include_router(bot.get_cog("LeftOrRight").router)
+
 
     @app.get("/")
     async def root_redirect():

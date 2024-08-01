@@ -153,3 +153,40 @@ def del_twitchstream(db: Session, user_login: str):
     db.commit()
     return deleted_rows
 
+#leftorright
+def create_leftorright(db: Session, lor: schemas.LeftOrRight):
+    lor.name = lor.name.lower()
+    db_lor = models.LeftOrRight(**lor.model_dump())
+    db.add(db_lor)
+    db.commit()
+    db.refresh(db_lor)
+    return db_lor
+
+def get_leftorright(db: Session, name: str):
+    name = name.lower()
+    return db.query(models.LeftOrRight).filter(models.LeftOrRight.name == name).first()
+
+def get_leftorrights(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.LeftOrRight).offset(skip).limit(limit).all()
+
+def del_leftorright(db: Session, name: str):
+    name = name.lower()
+    deleted_rows = db.query(models.LeftOrRight).filter(models.LeftOrRight.name == name).delete()
+    db.commit()
+    return deleted_rows
+
+def leftorright_update_img(db: Session, name: str, img_url: str):
+    name = name.lower()
+    db_lor = db.query(models.LeftOrRight).filter(models.LeftOrRight.name == name).first()
+    db_lor.img_url = img_url
+    db.commit()
+    db.refresh()
+    return db_lor
+
+def leftorright_add_win(db: Session, name: str):
+    name = name.lower()
+    db_lor = db.query(models.LeftOrRight).filter(models.LeftOrRight.name == name).first()
+    db_lor.wins = db_lor.wins + 1
+    db.commit()
+    db.refresh()
+    return db_lor

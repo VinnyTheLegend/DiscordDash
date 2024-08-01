@@ -40,3 +40,11 @@ class Role(Base):
     optional = Column(Boolean)
     added_by = Column(String, nullable=True)
     allowed_optional = Column(Boolean)
+
+
+class LeftOrRight(Base):
+    __tablename__ = "leftorright"
+
+    name = Column(String, primary_key=True)
+    img_url = Column(String)
+    wins = Column(Integer, nullable=True)

@@ -41,3 +41,8 @@ class Role(BaseModel):
 
     class Config:
         orm_mode = True
+
+class LeftOrRight(BaseModel):
+    name: str
+    img_url: str
+    wins: Optional[int]
