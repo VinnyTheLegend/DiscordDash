@@ -3,6 +3,9 @@
     import Input from "$lib/components/ui/input/input.svelte";
     import Separator from "$lib/components/ui/separator/separator.svelte";
     import Trash from "svelte-radix/Trash.svelte"
+    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+    import * as Dialog from "$lib/components/ui/dialog/index.js";
+
     import { onMount } from 'svelte';
 
     import { members } from "../../../stores"
@@ -164,7 +167,25 @@
                             <Button on:click={() => remove_lor(lor.name)} variant="destructive" class="size-8 p-0">
                                 <Trash/>
                             </Button>
-                            <h1 class="ml-2">{lor.name}</h1>
+                            <Dialog.Root>
+                                <Dialog.Trigger>                            
+                                    <Tooltip.Root disableHoverableContent>
+                                        <Tooltip.Trigger>
+                                            <h1 class="ml-2">{lor.name}</h1>
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Content class="h-[300px] w-[200px] flex justify-center items-center overflow-hidden">
+                                            <img src="{lor.img_url}" alt="">
+                                        </Tooltip.Content>
+                                    </Tooltip.Root>
+                                </Dialog.Trigger>
+                                <Dialog.Content class="p-7 flex justify-center items-center bg-black border-border">
+                                    <div class="size-full flex justify-center items-center object-contain">
+                                        <a href="{lor.img_url}" target="_blank">
+                                            <img src="{lor.img_url}" alt="">
+                                        </a>
+                                    </div>
+                                </Dialog.Content>
+                              </Dialog.Root>
                         </div>
                         <div class="flex items-center ml-5">
                             {#if members_value.length !== 0}
