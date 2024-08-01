@@ -1,5 +1,6 @@
 <script lang="ts">
     import Home from "./apps/home/Home.svelte";
+  import LeftOrRight from "./apps/leftorright/LeftOrRight.svelte";
   import RolesComp from "./apps/roles/RolesComp.svelte";
     import Twitch from "./apps/twitch/Twitch.svelte";
 
@@ -14,6 +15,8 @@
     <Twitch />
 {:else if current_app === "roles"}
     <RolesComp />
+{:else if current_app === "leftorright"}
+    <LeftOrRight />
 {/if}
 </main>
 

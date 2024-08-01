@@ -41,3 +41,10 @@ interface TwitchStream {
     user_login: string
     added_by: string
 }
+
+interface LeftOrRight {
+    name: string
+    img_url: string
+    added_by: string
+    wins: number
+}

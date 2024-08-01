@@ -17,6 +17,7 @@
 <main class="border-r-[1px] border-b-[1px] border-[#47003C] w-40 z-10 bg-[#150013] text-center py-4 flex-grow-0 flex-shrink-0 {sidebar_shown ? "" : "hidden"}">
     <Button class="w-32 mb-2" on:click={() => changeApp("home")}>Home</Button>
     <Button class="w-32 mb-2" on:click={() => changeApp("twitch")}>Twitch</Button>
+    <Button class="w-32 mb-2" on:click={() => changeApp("leftorright")}>Left Or Right</Button>
     {#if USER.admin}
         <Button class="w-32 mb-2" on:click={() => changeApp("roles")}>Roles</Button>
     {/if}
