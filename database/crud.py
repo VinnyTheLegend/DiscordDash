@@ -180,7 +180,7 @@ def leftorright_update_img(db: Session, name: str, img_url: str):
     db_lor = db.query(models.LeftOrRight).filter(models.LeftOrRight.name == name).first()
     db_lor.img_url = img_url
     db.commit()
-    db.refresh()
+    db.refresh(db_lor)
     return db_lor
 
 def leftorright_add_win(db: Session, name: str):
@@ -188,5 +188,5 @@ def leftorright_add_win(db: Session, name: str):
     db_lor = db.query(models.LeftOrRight).filter(models.LeftOrRight.name == name).first()
     db_lor.wins = db_lor.wins + 1
     db.commit()
-    db.refresh()
+    db.refresh(db_lor)
     return db_lor
