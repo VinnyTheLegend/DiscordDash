@@ -1,6 +1,9 @@
 from fastapi import APIRouter, HTTPException, Request, status, Depends
 from pydantic import BaseModel
 
+from random import randint
+import asyncio
+
 import discord
 from discord.ext import commands
 
@@ -96,18 +99,79 @@ class LeftOrRight(commands.Cog):
             else:
                 return crud.del_leftorright(db, name)
 
+    @commands.hybrid_command(name='lorstart', with_app_command=True)
+    @discord.app_commands.describe(round_time="Round length in seconds.")
+    async def lorstart(self, ctx: commands.Context, *, round_time: int):
+        """Start Left or Right game."""
 
-    @commands.hybrid_command(name='embedtest', with_app_command=True)
-    async def embedtest(self, ctx: commands.Context):
-        """test sidebyside embed"""
-        embed_1 = discord.Embed(description="description")
-        embed_2 = discord.Embed()
-        for embed in [embed_1, embed_2]:
-            embed.url = secret.FRONT_URI
-            embed.set_image(url="https://pbs.twimg.com/media/GNuSP3UbUAAcS-N?format=jpg&name=large")
-        reply = await ctx.channel.send(embeds=[embed_1, embed_2])
-        await reply.add_reaction("⬅️")
-        await reply.add_reaction("➡️")
+        member = ctx.author
+        has_admin_role = not (not member.get_role(secret.general_id) and not member.get_role(secret.warlord_id))
+        if not member or (not member.get_role(secret.veteran_id) and not has_admin_role):
+            await ctx.reply("Unauthorized.")
+            return
+        
+        if isinstance(round_time, int) == False:
+            await ctx.reply("Invalid round time.", ephemeral=True)
+            return
+        
+
+        db = SessionLocal()
+        images = crud.get_leftorrights(db)
+        if len(images) == 100:
+            new_images = crud.get_leftorrights(db, 100)
+            images = images + new_images
+            skip = 100
+            while len(new_images) == 100:
+                skip + 100
+                new_images = crud.get_leftorrights(db, skip)
+                images = images + new_images
+        db.close()
+        if not images or images == []:
+            await ctx.reply("No images.")
+            return
+        
+        await ctx.reply("Starting game.")
+
+        while len(images) > 1:
+            num1 = randint(0, len(images)-1)
+            num2 = randint(0, len(images)-1)
+            while num1 == num2:
+                num2 = randint(0, len(images)-1)
+            image_1 = images[num1]
+            image_2 = images[num2]
+
+            embed_1 = discord.Embed(description=f"{image_1.name} vs {image_2.name}")
+            embed_1.url = secret.FRONT_URI
+            embed_1.set_image(url=image_1.img_url)
+
+            embed_2 = discord.Embed()
+            embed_2.url = secret.FRONT_URI
+            embed_2.set_image(url=image_2.img_url)
+
+            reply = await ctx.channel.send(embeds=[embed_1, embed_2])
+            await reply.add_reaction("⬅️")
+            await reply.add_reaction("➡️")
+            await asyncio.sleep(int(round_time))
+            await ctx.channel.send("5 seconds remaining...")
+            await asyncio.sleep(5)
+            message = await ctx.channel.fetch_message(reply.id)
+            left_count = 0
+            right_count = 0
+            for reaction in message.reactions:
+                if reaction.emoji == "⬅️":
+                    left_count = reaction.count
+                if reaction.emoji == "➡️":
+                    right_count = reaction.count
+            if left_count > right_count:
+                await ctx.channel.send(f"{image_1.name} wins the round.")
+                del images[num2]
+            else:
+                await ctx.channel.send(f"{image_2.name} wins the round.")
+                del images[num1]
+        db = SessionLocal()
+        new_lor = crud.leftorright_add_win(db, images[0].name)
+        db.close()
+        await ctx.channel.send(f"{new_lor.name} wins! ({new_lor.wins} total wins)")
 
 async def setup(bot):
 	await bot.add_cog(LeftOrRight(bot))
