@@ -24,19 +24,22 @@ class GeminiImage(commands.Cog):
     async def genimage(self, ctx: commands.Context, *, prompt):
         """asd"""
         print(prompt)
-        contents = "IMAGE GENERATION PROMPT: " + prompt
+        contents = prompt
         await ctx.defer()
-
-        response = self.gemini_client.models.generate_content(
-            model="gemini-2.0-flash-exp-image-generation",
-            contents=contents,
-            config=types.GenerateContentConfig(
-            response_modalities=['Text', 'Image']
+        try:
+            response = self.gemini_client.models.generate_content(
+                model="gemini-2.0-flash-exp-image-generation",
+                contents=contents,
+                config=types.GenerateContentConfig(
+                response_modalities=['Text', 'Image']
+                )
             )
-        )
+        except:
+            await ctx.reply("Request failed. Probably too many requests.")
+            return
         for part in response.candidates[0].content.parts:
-            if part.text is not None:
-                print(part.text)
+            if part.text is not None and part.inline_data is None:
+                await ctx.reply(part.text)
             elif part.inline_data is not None:
                 image_data = base64.b64decode(part.inline_data.data)
                 image = BytesIO(image_data)
