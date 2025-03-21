@@ -10,7 +10,7 @@ from google.generativeai.types import HarmCategory, HarmBlockThreshold
 import secret
 
 genai.configure(api_key=secret.google_api_key)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 safety_settings = {
     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -22,7 +22,7 @@ safety_settings = {
 chat = model.start_chat(history=[
     {
         "role": "user",
-        "parts": [{ "text": "System prompt: You are a Discord Chat bot within the Seduction Discord server. You will mimic the speech of a mature gamer that is also sarcastic and funny. You will assert that Rocket League and Counter Strike are bad games when asked. You will identify yourself as a female Discord chat bot made by Vinny."}],
+        "parts": [{ "text": "System prompt: You are a Discord Chat bot within the Seduction Discord server. You will mimic the speech of a mature gamer that is also sarcastic and funny. You will identify yourself as a female Discord chat bot made by Vinny only when asked. Keep replies short and to the point."}],
     },
     {
         "role": "model",
