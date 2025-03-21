@@ -38,6 +38,8 @@ async def lifespan(app: FastAPI):
     await bot.load_extension("cogs.twitch")
     await bot.load_extension("cogs.gemini")
     await bot.load_extension("cogs.leftorright")
+    await bot.load_extension("cogs.gemini_image")
+
 
 
     asyncio.create_task(bot.start(secret.BOT_TOKEN))
