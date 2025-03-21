@@ -39,7 +39,9 @@ class GeminiImage(commands.Cog):
             return
         for part in response.candidates[0].content.parts:
             if part.text is not None and part.inline_data is None:
-                await ctx.reply(part.text)
+                for i in range(0, len(part.text), 2000):
+                    await ctx.reply(part.text[i:i + 2000]) 
+                return
             elif part.inline_data is not None:
                 image_data = base64.b64decode(part.inline_data.data)
                 image = BytesIO(image_data)
