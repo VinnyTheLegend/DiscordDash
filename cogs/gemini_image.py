@@ -8,6 +8,7 @@ from google.genai import types
 from PIL import Image
 from io import BytesIO
 import base64
+from typing import Optional
 
 
 class GeminiImage(commands.Cog):
@@ -20,16 +21,15 @@ class GeminiImage(commands.Cog):
 
         
     @commands.hybrid_command(name='genimage', with_app_command=True)
-    @discord.app_commands.describe(prompt='Image generation prompt.')
-    async def genimage(self, ctx: commands.Context, *, prompt):
+    @discord.app_commands.describe(prompt='Image generation prompt.', attachment= "Optional image to alter.")
+    async def genimage(self, ctx: commands.Context, *, prompt: str, attachment: Optional[discord.Attachment]):
         """asd"""
         print(prompt)
-        contents = prompt
         await ctx.defer()
         try:
             response = self.gemini_client.models.generate_content(
                 model="gemini-2.0-flash-exp-image-generation",
-                contents=contents,
+                contents=[prompt, Image.open(BytesIO(await attachment.read()))],
                 config=types.GenerateContentConfig(
                 response_modalities=['Text', 'Image']
                 )
