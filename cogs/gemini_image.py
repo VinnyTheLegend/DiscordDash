@@ -27,13 +27,22 @@ class GeminiImage(commands.Cog):
         print(prompt)
         await ctx.defer()
         try:
-            response = self.gemini_client.models.generate_content(
-                model="gemini-2.0-flash-exp-image-generation",
-                contents=[prompt, Image.open(BytesIO(await attachment.read()))],
-                config=types.GenerateContentConfig(
-                response_modalities=['Text', 'Image']
+            if attachment:
+                response = self.gemini_client.models.generate_content(
+                    model="gemini-2.0-flash-exp-image-generation",
+                    contents=[prompt, Image.open(BytesIO(await attachment.read()))],
+                    config=types.GenerateContentConfig(
+                    response_modalities=['Text', 'Image']
+                    )
                 )
-            )
+            else:
+                response = self.gemini_client.models.generate_content(
+                    model="gemini-2.0-flash-exp-image-generation",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                    response_modalities=['Text', 'Image']
+                    )
+                )
         except:
             await ctx.reply("Request failed. Probably too many requests.")
             return
