@@ -69,12 +69,19 @@ def update_user(db: Session, user_id: int, user: schemas.UserCreate):
             updated_user_data['expires_in'] = db_user.expires_in
             updated_user_data['expires_at'] = db_user.expires_at
 
+        print(user.muted_time)
         if user.connection_time == 0 or user.connection_time == None:
             updated_user_data['connection_time'] = db_user.connection_time
         if user.muted_time == 0 or user.muted_time == None:
-            updated_user_data['muted_time'] = db_user.muted_time
+            if db_user.muted_time != 0 and db_user.muted_time != None:
+                updated_user_data['muted_time'] = db_user.muted_time
+            else:
+                updated_user_data['muted_time'] = 0
         if user.deafened_time == 0 or user.deafened_time == None:
-            updated_user_data['deafened_time'] = db_user.deafened_time
+            if db_user.deafened_time != 0 and db_user.deafened_time != None:
+                updated_user_data['deafened_time'] = db_user.deafened_time
+            else:
+                updated_user_data['deafened_time'] = 0
             
         db.query(models.User).filter(models.User.id == user_id).update(updated_user_data)
         db.commit()
