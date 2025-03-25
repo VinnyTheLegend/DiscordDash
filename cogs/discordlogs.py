@@ -149,7 +149,6 @@ class DiscordLogs(commands.Cog):
                         self.undeafen(member, after)
                     if member.id in self.muted:
                         self.unmute(member, after)
-        print(before.self_deaf, after.self_deaf)
         if after.channel:
             if before.self_deaf == False and after.self_deaf == True:
                 print(logger.new(member.name + " deafened"))
