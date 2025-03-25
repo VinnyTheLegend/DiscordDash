@@ -16,6 +16,8 @@ class User(BaseModel):
     joined_at: Optional[datetime]
     roles: Optional[list[str]]
     connection_time: float
+    muted_time: float
+    deafened_time: float
 
     class Config:
         orm_mode = True
