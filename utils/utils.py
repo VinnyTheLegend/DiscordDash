@@ -28,6 +28,8 @@ def create_user_from_member(member: discord.Member):
         'joined_at': member.joined_at,
         'roles': roles,
         'connection_time': 0,
+        'muted_time': 0,
+        'deafened_time': 0,
         'access_token': None,
         'expires_in': None,
         'expires_at': None
@@ -106,9 +108,13 @@ async def FetchDiscordProfile(state, token):
     db_user_old = crud.get_user(db=db, user_id=user['id'])
     if db_user_old:
         db_user['connection_time'] = db_user_old.connection_time
+        db_user['muted_time'] = db_user_old.muted_time
+        db_user['deafened_time'] = db_user_old.deafened_time
         crud.update_user(db=db, user_id=user['id'], user=schemas.UserCreate(**db_user))
     else:
         db_user['connection_time'] = 0
+        db_user['muted_time'] = 0
+        db_user['deafened_time'] = 0
         crud.create_user(db=db, user=schemas.UserCreate(**db_user))
 
     db.close()

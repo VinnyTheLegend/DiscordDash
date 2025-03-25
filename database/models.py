@@ -23,6 +23,8 @@ class User(Base):
     joined_at = Column(DateTime(timezone=True), nullable=True)
     roles = Column(PickleType, nullable=True)
     connection_time = Column(Float)
+    muted_time = Column(Float)
+    deafened_time = Column(Float)
 
 
 class TwitchStream(Base):

@@ -71,6 +71,10 @@ def update_user(db: Session, user_id: int, user: schemas.UserCreate):
 
         if user.connection_time == 0 or user.connection_time == None:
             updated_user_data['connection_time'] = db_user.connection_time
+        if user.muted_time == 0 or user.muted_time == None:
+            updated_user_data['muted_time'] = db_user.muted_time
+        if user.deafened_time == 0 or user.deafened_time == None:
+            updated_user_data['deafened_time'] = db_user.deafened_time
             
         db.query(models.User).filter(models.User.id == user_id).update(updated_user_data)
         db.commit()
@@ -82,6 +86,24 @@ def update_user_connection_time(db: Session, user_id: str, time: float):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user:
         db_user.connection_time = db_user.connection_time + time
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    return None
+
+def update_user_muted_time(db: Session, user_id: str, time: float):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user:
+        db_user.muted_time = db_user.muted_time + time
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    return None
+
+def update_user_deafened_time(db: Session, user_id: str, time: float):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user:
+        db_user.deafened_time = db_user.deafened_time + time
         db.commit()
         db.refresh(db_user)
         return db_user
