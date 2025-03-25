@@ -94,7 +94,7 @@ class DiscordLogs(commands.Cog):
 
             del self.deafened[member.id]
 
-        if after.self_mute == True:
+        if after.channel and after.self_mute == True:
             print(logger.new(member.name + " muted"))
             self.muted[member.id] = datetime.now()
 
@@ -111,6 +111,12 @@ class DiscordLogs(commands.Cog):
             self.connected[member.id] = datetime.now()
             log = member.name + ' connected to ' + after.channel.name
             print(logger.new(log))
+            if after.self_deaf == True:
+                print(logger.new(member.name + " deafened"))
+                self.deafened[member.id] = datetime.now()
+            elif after.self_mute == True:
+                self.muted[member.id] = datetime.now()
+                print(logger.new(member.name + " muted"))
         else:
             if after.channel != before.channel:
                 if member.id in self.connected:
@@ -138,19 +144,25 @@ class DiscordLogs(commands.Cog):
                     self.connected[member.id] = datetime.now()
                     log = member.name + ' connected to ' + after.channel.name
                     print(logger.new(log))
-
-        if before.self_deaf == False and after.self_deaf == True:
-            print(logger.new(member.name + " deafened"))
-            self.deafened[member.id] = datetime.now()
-            if member.id in self.muted:
+                else:
+                    if member.id in self.deafened:
+                        self.undeafen(member, after)
+                    if member.id in self.muted:
+                        self.unmute(member, after)
+        print(before.self_deaf, after.self_deaf)
+        if after.channel:
+            if before.self_deaf == False and after.self_deaf == True:
+                print(logger.new(member.name + " deafened"))
+                self.deafened[member.id] = datetime.now()
+                if member.id in self.muted:
+                    self.unmute(member, after)
+            elif before.self_deaf == True and after.self_deaf == False:
+                self.undeafen(member, after)
+            elif before.self_mute == False and after.self_mute == True:
+                self.muted[member.id] = datetime.now()
+                print(logger.new(member.name + " muted"))
+            elif before.self_mute == True and after.self_mute == False:
                 self.unmute(member, after)
-        elif before.self_deaf == True and after.self_deaf == False:
-            self.undeafen(member, after)
-        elif before.self_mute == False and after.self_mute == True:
-            self.muted[member.id] = datetime.now()
-            print(logger.new(member.name + " muted"))
-        elif before.self_mute == True and after.self_mute == False:
-            self.unmute(member, after)
 
 
 
