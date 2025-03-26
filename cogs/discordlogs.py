@@ -61,16 +61,17 @@ class DiscordLogs(commands.Cog):
             if after.self_deaf == False:
                 print(logger.new(member.name + " unmuted " + f'({muted_minutes}mins)'))
 
-            db = SessionLocal()
-            db_user = crud.get_user(db=db, user_id=str(member.id))
-            new_user = utils.create_user_from_member(member)
-            if db_user:
-                new_user['muted_time'] = (db_user.muted_time or 0) + muted_minutes
-                crud.update_user(db=db, user_id=new_user['id'], user=schemas.UserCreate(**new_user))
-            else:
-                new_user['muted_time'] = muted_minutes
-                crud.create_user(db=db, user=schemas.UserCreate(**new_user))
-            db.close()
+            if muted_minutes >= 10:
+                db = SessionLocal()
+                db_user = crud.get_user(db=db, user_id=str(member.id))
+                new_user = utils.create_user_from_member(member)
+                if db_user:
+                    new_user['muted_time'] = (db_user.muted_time or 0) + muted_minutes
+                    crud.update_user(db=db, user_id=new_user['id'], user=schemas.UserCreate(**new_user))
+                else:
+                    new_user['muted_time'] = muted_minutes
+                    crud.create_user(db=db, user=schemas.UserCreate(**new_user))
+                db.close()
 
             del self.muted[member.id]
 
