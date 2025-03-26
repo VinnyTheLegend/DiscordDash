@@ -8,7 +8,9 @@ interface UserData {
     nickname: string | null,
     joined_at: string | null,
     roles: string[] | null,
-    connection_time: number
+    connection_time: number,
+    muted_time: number,
+    deafened_time: number
 }
 
 interface User extends UserData {

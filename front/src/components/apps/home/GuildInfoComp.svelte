@@ -78,12 +78,33 @@
                                     {#if member.global_name}
                                         <p>Global Nickname: {member.global_name}</p>
                                     {/if}
+                                    {#if member.connection_time > 60}
+                                        <p>Raw Connection Time: {(member.connection_time/60).toFixed(1)}hrs</p>
+                                    {:else}
+                                        <p>Raw Connection Time: {member.connection_time.toFixed(1)}mins</p>
+                                    {/if}
+                                    {#if member.muted_time > 60}
+                                        <p>Muted Time: {(member.muted_time/60).toFixed(1)}hrs</p>
+                                    {:else}
+                                        <p>Muted Time: {member.muted_time.toFixed(1)}mins</p>
+                                    {/if}
+                                    {#if member.deafened_time > 60}
+                                        <p>Deafened Time: {(member.deafened_time/60).toFixed(1)}hrs</p>
+                                    {:else}
+                                        <p>Deafened Time: {member.deafened_time.toFixed(1)}mins</p>
+                                    {/if}
                                 </Tooltip.Content>
                               </Tooltip.Root>
                         </div>
-                        <div class="text-right w-1/4 flex justify-end items-center">
-                            <h1>{member.connection_time.toFixed(1)}mins</h1>
-                        </div>
+                        {#if member.connection_time > 60}
+                            <div class="text-right w-1/4 flex justify-end items-center">
+                                <h1>{((member.connection_time-member.muted_time-member.deafened_time)/60).toFixed(1)}hrs</h1>
+                            </div>
+                        {:else}
+                            <div class="text-right w-1/4 flex justify-end items-center">
+                                <h1>{(member.connection_time-member.muted_time-member.deafened_time).toFixed(1)}mins</h1>
+                            </div>
+                        {/if}
                     </li>
                 {/each}
             

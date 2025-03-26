@@ -65,9 +65,33 @@
             <h1 class="w-1/3 px-1">Join Date:</h1><h1 class="w-2/3 text-right px-1">{(() => new Date(USER.joined_at).toDateString())()}</h1>
         </div>
     {/if}
-    <div class="flex">
-        <h1 class="w-5/12 px-1">Connection Time:</h1><h1 class="w-7/12 text-right px-1">{USER.connection_time.toFixed(1)}mins</h1>
-    </div>
+    {#if USER.connection_time > 60}
+        <div class="flex">
+            <h1 class="w-5/12 px-1">Connection Time:</h1><h1 class="w-7/12 text-right px-1">{(USER.connection_time/60).toFixed(1)}hrs</h1>
+        </div>
+    {:else}
+        <div class="flex">
+            <h1 class="w-5/12 px-1">Connection Time:</h1><h1 class="w-7/12 text-right px-1">{USER.connection_time.toFixed(1)}mins</h1>
+        </div>
+    {/if}
+    {#if USER.muted_time > 60}
+        <div class="flex">
+            <h1 class="w-5/12 px-1">Muted Time:</h1><h1 class="w-7/12 text-right px-1">{(USER.muted_time/60).toFixed(1)}hrs</h1>
+        </div>
+    {:else}
+        <div class="flex">
+            <h1 class="w-5/12 px-1">Muted Time:</h1><h1 class="w-7/12 text-right px-1">{USER.muted_time.toFixed(1)}mins</h1>
+        </div>
+    {/if}
+    {#if USER.deafened_time > 60}
+        <div class="flex">
+            <h1 class="w-5/12 px-1">Deafened Time:</h1><h1 class="w-7/12 text-right px-1">{(USER.deafened_time/60).toFixed(1)}hrs</h1>
+        </div>
+    {:else}
+        <div class="flex">
+            <h1 class="w-5/12 px-1">Deafened Time:</h1><h1 class="w-7/12 text-right px-1">{USER.deafened_time.toFixed(1)}mins</h1>
+        </div>
+    {/if}
     {#if roles_with_color}      
         <div class="border-t border-border grow flex flex-col">
             <div class="flex flex-wrap justify-evenly px-2">
