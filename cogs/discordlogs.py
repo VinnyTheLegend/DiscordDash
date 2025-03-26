@@ -65,7 +65,7 @@ class DiscordLogs(commands.Cog):
             db_user = crud.get_user(db=db, user_id=str(member.id))
             new_user = utils.create_user_from_member(member)
             if db_user:
-                new_user['muted_time'] = db_user.muted_time or 0 + muted_minutes
+                new_user['muted_time'] = (db_user.muted_time or 0) + muted_minutes
                 crud.update_user(db=db, user_id=new_user['id'], user=schemas.UserCreate(**new_user))
             else:
                 new_user['muted_time'] = muted_minutes
@@ -85,7 +85,7 @@ class DiscordLogs(commands.Cog):
             db_user = crud.get_user(db=db, user_id=str(member.id))
             new_user = utils.create_user_from_member(member)
             if db_user:
-                new_user['deafened_time'] = db_user.deafened_time or 0 + deafened_minutes
+                new_user['deafened_time'] = (db_user.deafened_time or 0) + deafened_minutes
                 crud.update_user(db=db, user_id=new_user['id'], user=schemas.UserCreate(**new_user))
             else:
                 new_user['deafened_time'] = deafened_minutes
