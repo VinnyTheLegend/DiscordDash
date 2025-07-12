@@ -3,7 +3,7 @@ import datetime
 import threading
 
 folder = os.path.dirname(__file__)
-now = datetime.datetime.now()
+now = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=-4.0)))
 if (not os.path.exists(os.path.join(folder, "logs"))):
     os.mkdir(os.path.join(folder, "logs"))
 path = os.path.join(folder, f"logs\\{now.strftime('%Y-%m')}.txt")
@@ -16,14 +16,14 @@ if os.path.exists(path):
             last_25.append(line)
 
 def logWrite(new_log: str):
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=-4.0)))
     path = os.path.join(folder, f"logs\\{now.strftime('%Y-%m')}.txt")
     f = open(path, "a")
     f.write(new_log)
     f.close()
 
 def new(new_log: str):
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=-4.0)))
     new_string = f"{now.strftime('%m/%d/%Y %I:%M:%S%p')} {new_log}\n"
     last_25.append(new_string[:-1])
 
