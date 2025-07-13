@@ -29,29 +29,29 @@ class GeminiImage(commands.Cog):
         try:
             if attachment:
                 response = self.gemini_client.models.generate_content(
-                    model="gemini-2.0-flash-exp-image-generation",
+                    model="gemini-2.0-flash-preview-image-generation",
                     contents=[prompt, Image.open(BytesIO(await attachment.read()))],
                     config=types.GenerateContentConfig(
-                    response_modalities=['Text', 'Image']
+                    response_modalities=['TEXT', 'IMAGE']
                     )
                 )
             else:
                 response = self.gemini_client.models.generate_content(
-                    model="gemini-2.0-flash-exp-image-generation",
+                    model="gemini-2.0-flash-preview-image-generation",
                     contents=prompt,
                     config=types.GenerateContentConfig(
-                    response_modalities=['Text', 'Image']
+                    response_modalities=['TEXT', 'IMAGE']
                     )
                 )
         except:
             await ctx.reply("Request failed. Probably too many requests.")
             return
         for part in response.candidates[0].content.parts:
-            if part.text is not None and part.inline_data is None:
+            if part.text is not None:
                 for i in range(0, len(part.text), 2000):
                     await ctx.reply(part.text[i:i + 2000]) 
-                return
             elif part.inline_data is not None:
+                print('inline data found')
                 image_data = base64.b64decode(part.inline_data.data)
                 image = BytesIO(image_data)
                 image.seek(0)
