@@ -77,12 +77,24 @@
     let lor_add_url = new URL(URLS.BASE_URL+'/api/leftorright/add')
     function add_lor(): void {
         console.log(lor_to_add_name)
-        if (lor_to_add_img_url === "" || lor_to_add_name === "") {
+        if (!lor_to_add_img_url || !lor_to_add_name) {
             toast.error('Invalid image details')
-
             return
-        } 
-            
+        }
+        for (let i = 0; i < lors.length; i++) {
+            if (lors[i].name.toLowerCase() === lor_to_add_name.toLowerCase()) {
+                toast.error('Image name already exists')
+                return
+            }
+        }
+        let url: URL
+        try {
+            url = new URL(lor_to_add_img_url);
+        } catch (_) {
+            toast.error('Invalid image URL')
+            return;  
+        }
+        
         lor_add_url.searchParams.set('name', lor_to_add_name)
         lor_add_url.searchParams.set('img_url', lor_to_add_img_url)
         fetch(lor_add_url, { mode: "cors", credentials: "include", method: "POST" })
@@ -97,11 +109,11 @@
         .then((data: LeftOrRight) => {
             lors.push(data)
             lors = lors
-            toast.success('Image added.')
+            toast.success('Image added')
         })
         .catch((error) => {
             console.log(error);
-            toast.error("Operation failed.")
+            toast.error("Operation failed")
         });
         lor_to_add_name = ""
         lor_to_add_img_url = ""
@@ -110,7 +122,7 @@
     let lor_remove_url = new URL(URLS.BASE_URL+'/api/leftorright/remove')
     function remove_lor(lor: string): void {
         if (lor === "") {
-            toast.error("Invalid image.")
+            toast.error("Invalid image")
             return
         } 
         
@@ -124,7 +136,7 @@
             }
         }
         if (found === false) {
-            toast.error("Image not found.")
+            toast.error("Image not found")
             return
         }
         lor_remove_url.searchParams.set('name', lor)
