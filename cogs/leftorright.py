@@ -162,6 +162,9 @@ class LeftOrRight(commands.Cog):
                     left_count = reaction.count
                 if reaction.emoji == "➡️":
                     right_count = reaction.count
+            if left_count == right_count:
+                await ctx.channel.send("It's a tie! No one is eliminated.")
+                continue
             if left_count > right_count:
                 await ctx.channel.send(f"{image_1.name} wins the round.")
                 del images[num2]
