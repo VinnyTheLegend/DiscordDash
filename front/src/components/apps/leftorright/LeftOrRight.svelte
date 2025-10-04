@@ -171,55 +171,50 @@
         </form>
     </div>
     <div class="flex-grow min-h-0 min-w-0 mb-5 flex flex-col px-5">
-        <ul class="border-2 border-border bg-background rounded-lg max-h-full flex flex-col overflow-auto items-center mx-auto min-w-[50%]">
+        <div class="border-2 border-border bg-background rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {#if lors}
                 {#each lors as lor}
-                    <li class="flex w-full p-2 items-center justify-between">
-                        <div class="flex items-center">
+                    <div class="relative group">
+                        <Dialog.Root>
+                            <Dialog.Trigger>
+                                <div class="aspect-square w-full overflow-hidden rounded-lg">
+                                    <img src="{lor.img_url}" alt="{lor.name}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"/>
+                                </div>
+                            </Dialog.Trigger>
+                            <Dialog.Content class="p-7 flex justify-center items-center bg-black border-border">
+                                <div class="size-full flex justify-center items-center object-contain">
+                                    <a href="{lor.img_url}" target="_blank">
+                                        <img src="{lor.img_url}" alt="{lor.name}">
+                                    </a>
+                                </div>
+                            </Dialog.Content>
+                        </Dialog.Root>
+                        
+                        <div class="absolute bottom-0 left-0 right-0 bg-black/60 p-2 flex justify-between items-center">
+                            <h1 class="text-white truncate">{lor.name}</h1>
                             <Button on:click={() => remove_lor(lor.name)} variant="destructive" class="size-8 p-0">
                                 <Trash/>
                             </Button>
-                            <Dialog.Root>
-                                <Dialog.Trigger>                            
-                                    <Tooltip.Root disableHoverableContent>
-                                        <Tooltip.Trigger>
-                                            <h1 class="ml-2">{lor.name}</h1>
-                                        </Tooltip.Trigger>
-                                        <Tooltip.Content class="h-[300px] w-[200px] flex justify-center items-center overflow-hidden">
-                                            <img src="{lor.img_url}" alt="">
-                                        </Tooltip.Content>
-                                    </Tooltip.Root>
-                                </Dialog.Trigger>
-                                <Dialog.Content class="p-7 flex justify-center items-center bg-black border-border">
-                                    <div class="size-full flex justify-center items-center object-contain">
-                                        <a href="{lor.img_url}" target="_blank">
-                                            <img src="{lor.img_url}" alt="">
-                                        </a>
-                                    </div>
-                                </Dialog.Content>
-                              </Dialog.Root>
                         </div>
-                        <div class="flex items-center ml-5">
-                            {#if members_value.length !== 0}
-                                <span class="text-right">
-                                    Added By: {get_member(lor.added_by)}
-                                </span>
-                            {/if}
-                        </div>
-                    </li>
-                    <Separator class="w-[90%]"/>
+                        
+                        {#if members_value.length !== 0}
+                            <div class="absolute top-0 right-0 bg-black/60 p-1 rounded-bl-lg text-xs">
+                                Added By: {get_member(lor.added_by)}
+                            </div>
+                        {/if}
+                    </div>
                 {/each}
             {/if}
-        </ul>
+        </div>
     </div>
 </main>
 
 <style>
-  h1 {
+h1 {
     text-shadow:
-      -1px -1px 0 #47003c,
-      1px -1px 0 #47003c,
-      -1px 1px 0 #47003c,
-      1px 1px 0 #47003c;
-  }
+        -1px -1px 0 #47003c,
+        1px -1px 0 #47003c,
+        -1px 1px 0 #47003c,
+        1px 1px 0 #47003c;
+}
 </style>
