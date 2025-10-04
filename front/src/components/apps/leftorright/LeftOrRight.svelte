@@ -107,16 +107,16 @@
             return response.json();
         })
         .then((data: LeftOrRight) => {
-            lors.push(data)
-            lors = lors
             toast.success('Image added')
             lor_to_add_name = ""
             lor_to_add_img_url = ""
-            setTimeout(scrollToBottom, 100)
         })
         .catch((error) => {
             console.log(error);
             toast.error("Operation failed")
+        })
+        .finally(() => {
+            update_leftorrights().then(() => scrollToBottom())
         });
     }
 
@@ -152,12 +152,14 @@
         return response.json();
         })
         .then((data: number) => {
-            lors =  lors.filter(s => s.name !== lor);
             toast.success(`Removed ${data} image(s).`)
         })
         .catch((error) => {
             console.log(error);
             toast.error("Operation failed.")
+        })
+        .finally(() => {
+            update_leftorrights()
         });
     }
 
