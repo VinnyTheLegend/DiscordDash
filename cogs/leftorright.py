@@ -159,9 +159,15 @@ class LeftOrRight(commands.Cog):
             right_count = 0
             for reaction in message.reactions:
                 if reaction.emoji == "⬅️":
-                    left_count = reaction.count
+                    left_count = reaction.count - 1  # Subtract bot's reaction
                 if reaction.emoji == "➡️":
-                    right_count = reaction.count
+                    right_count = reaction.count - 1  # Subtract bot's reaction
+                    
+            # Check if there were any votes
+            if left_count == 0 and right_count == 0:
+                await ctx.channel.send("Game cancelled due to no participation.")
+                return
+                
             if left_count == right_count:
                 await ctx.channel.send("It's a tie! No one is eliminated.")
                 continue
