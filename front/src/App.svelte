@@ -1,12 +1,12 @@
 <script lang="ts">
   import Header from "./components/Header.svelte";
   import SideBar from "./components/SideBar.svelte";
-  import { URLS } from "./utils";
+  import { update_member_store, URLS } from "./utils";
   import { Button } from "$lib/components/ui/button";
   import AppSwitch from "./components/AppSwitch.svelte";
-  import UserInfoComp from "./components/apps/home/UserInfoComp.svelte";
   import { Toaster } from "$lib/components/ui/sonner";
-
+  import { fetch_guild, } from "./utils";
+  
   console.log('here')
   console.log('env', import.meta.env.VITE_BACK_URL)
   console.log('env', import.meta.env.VITE_FRONT_URL)
@@ -23,6 +23,8 @@
     joined_at: null,
     roles: null,
     connection_time: 0,
+    muted_time: 0,
+    deafened_time: 0,
     get: function (this: User) {
       fetch(URLS.USER_URL, { mode: "cors", credentials: "include" })
         .then((response) => {
@@ -55,7 +57,34 @@
   let auth;
   document.cookie === "" ? (auth = false) : (auth = true);
   if (auth) {
-    USER.get();
+    fetch(URLS.USER_URL, { mode: "cors", credentials: "include" })
+      .then((response) => {
+        if (response.status === 400) {
+          return response.json().then((data) => {
+            throw new Error(data.detail || "Bad request");
+          });
+        }
+        return response.json();
+      })
+      .then((data: UserData) => {
+        if ("error" in data) {
+          window.location.href = `${URLS.BASE_URL}/logout`;
+          console.log(data);
+        } else {
+          console.log(data);
+          Object.assign(USER, data);
+          USER = USER;
+          if (USER.member) {
+            fetch_guild();
+            update_member_store();
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        window.location.href = `${URLS.BASE_URL}/logout`;
+        return [];
+      });
   }
   
   const apps = ['home', 'twitch', 'roles']

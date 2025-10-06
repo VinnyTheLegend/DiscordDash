@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { update_member_store, URLS, fetch_guild } from "../../../utils";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
     import {members, guild_info} from "../../../stores"
-    import { onMount } from "svelte";
 
     let members_value: UserData[] = []
     let guild_info_value: GuildInfo
@@ -15,15 +13,6 @@
     guild_info.subscribe((value) => {
 		guild_info_value = value;
 	})
-
-
-    onMount(() => {
-        if (members_value.length === 0) update_member_store()
-        if (typeof guild_info_value === 'undefined') {
-            fetch_guild()
-        }
-    })
-
 
 </script>
 

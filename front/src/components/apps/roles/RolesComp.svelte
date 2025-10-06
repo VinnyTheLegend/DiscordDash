@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import { guild_info, members } from "../../../stores";
-  import { fetch_guild, update_member_store, get_member, URLS } from "../../../utils";
+  import { fetch_guild, get_member, URLS } from "../../../utils";
   import * as Select from "$lib/components/ui/select/index.js";
   import Button from "$lib/components/ui/button/button.svelte";
   import { Trash } from "svelte-radix";
@@ -17,13 +15,6 @@
   let members_value: UserData[] = $members
   members.subscribe((value) => {
     members_value = value;
-  });
-  
-  onMount(() => {
-    if (members_value.length === 0) update_member_store()
-    if (typeof guild_info_value === 'undefined') {
-      fetch_guild()
-    }
   });
   
   let role_to_add: Selected<string | undefined>

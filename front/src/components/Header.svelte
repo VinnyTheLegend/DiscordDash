@@ -8,9 +8,8 @@
   import { Label } from "$lib/components/ui/label/index.js";
   import { createEventDispatcher } from "svelte";
   import { guild_info } from "../stores";
-  import { onMount } from "svelte";
 
-  import { URLS, fetch_guild } from "../utils";
+  import { URLS } from "../utils";
 
   export let USER: User;
 
@@ -49,20 +48,16 @@
     }
   });
 
-  onMount(() => {
-    if (typeof guild_info_value === "undefined") {
-      fetch_guild();
-    } else {
-      optional_roles = processRoles(guild_info_value.roles);
-      for (let i in optional_roles) {
-        if (USER.roles?.includes(optional_roles[i].id)) {
-          optional_roles[i].checked = true;
-        }
-        console.log(`${optional_roles[i].name}: ${optional_roles[i].checked}`);
-      }
-      optional_roles = optional_roles;
-    }
-  });
+  // onMount(() => {
+  //   optional_roles = processRoles(guild_info_value.roles);
+  //   for (let i in optional_roles) {
+  //     if (USER.roles?.includes(optional_roles[i].id)) {
+  //       optional_roles[i].checked = true;
+  //     }
+  //     console.log(`${optional_roles[i].name}: ${optional_roles[i].checked}`);
+  //   }
+  //   optional_roles = optional_roles;
+  // });
 
   const url = new URL(`${URLS.USER_URL}/roles`);
   function roleChange(role: { id: string; name: string; checked: boolean }) {

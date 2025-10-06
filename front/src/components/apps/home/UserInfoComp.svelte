@@ -1,8 +1,6 @@
 <script lang="ts">
-    import { fetch_guild, role_colors } from "../../../utils";
-    import { onMount } from "svelte";
+    import { role_colors } from "../../../utils";
     import { guild_info } from "../../../stores";
-  import { RotateCounterClockwise } from "svelte-radix";
 
     export let USER: User;
 
@@ -41,12 +39,6 @@
             roles_with_color = roles_with_color
         }
     }
-
-    onMount(() => {
-        if (typeof guild_info_value === 'undefined') {
-            fetch_guild()
-        }
-    })
 
 </script>
 
