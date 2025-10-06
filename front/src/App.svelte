@@ -87,7 +87,7 @@
       });
   }
   
-  const apps = ['home', 'twitch', 'roles']
+  const apps = ['home', 'twitch', 'roles', 'leftorright']
   let current_app: string = "home"
   console.log(window.location.pathname)
   let pathname = window.location.pathname.replace('/', '')
@@ -96,9 +96,14 @@
   } else if (pathname != '') {
     window.location.pathname = ''
   }
-  function changeApp(event: CustomEvent<string>) {
-    USER.get()
+  async function changeApp(event: CustomEvent<string>) {
+    await USER.get()
     current_app = event.detail;
+    if (current_app !== 'home') {
+      window.location.pathname = '/' + current_app
+    } else {
+      window.location.pathname = ''
+    }
   }
   
   let sidebar_shown = false
