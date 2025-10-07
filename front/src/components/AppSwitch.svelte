@@ -8,17 +8,20 @@
     export let current_app: string
 </script>
 
-<main class="flex size-full min-w-0">
-{#if current_app === "home"}
-    <Home {USER}/>
-{:else if current_app === "twitch"}
-    <Twitch />
-{:else if current_app === "roles"}
-    <RolesComp />
-{:else if current_app === "leftorright"}
-    <LeftOrRight />
-{/if}
-</main>
+<div class="w-full flex-grow">
+    <div class="size-full" style:display={current_app === 'home' ? 'block' : 'none'}>
+        <Home {USER} visible={current_app === 'home'}/>
+    </div>
+    <div class="size-full" style:display={current_app === 'twitch' ? 'block' : 'none'}>
+        <Twitch visible={current_app === 'twitch'} />
+    </div>
+    <div class="size-full" style:display={current_app === 'roles' ? 'block' : 'none'}>
+        <RolesComp visible={current_app === 'roles'}/>
+    </div>
+    <div class="size-full" style:display={current_app === 'leftorright' ? 'block' : 'none'}>
+        <LeftOrRight visible={current_app === 'leftorright'} />
+    </div>
+</div>
 
 <style>
 

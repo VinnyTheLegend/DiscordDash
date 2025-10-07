@@ -4,6 +4,7 @@
     import RecentLogsComp from "./RecentLogsComp.svelte";
 
     export let USER: User;
+    export let visible = false;
 
 </script>
 
@@ -14,7 +15,7 @@
     </div>
     <div>
         <h1 class="text-center font-extrabold text-xl">Recent Logs</h1>    
-        <RecentLogsComp/>
+        <RecentLogsComp {visible}/>
     </div>
     <div>
         <h1 class="text-center font-extrabold text-xl">{USER?.username || "User"}</h1>

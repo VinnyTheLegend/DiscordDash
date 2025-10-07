@@ -43,6 +43,7 @@
 
     let lors: LeftOrRight[] = []
     export async function update_leftorrights() {
+        
         let new_lor_value: LeftOrRight[] = []
         let fetched_lor = await fetch_leftorrights()
         if (!fetched_lor) return
@@ -55,13 +56,7 @@
         }
         lors = new_lor_value
         console.log(lors)
-    }
-    
-    onMount(() => {
-       update_leftorrights()
-       if (members_value.length === 0) update_member_store()
-    })
-    
+    }    
 
     function get_member(id: string): string {
         const member = members_value.find(member => member.id === id);
@@ -177,6 +172,15 @@
             }, 200);
         }
     }
+
+    export let visible = false;
+
+
+    // Watch for visibility changes
+    $: if (visible) {
+        update_leftorrights()
+    }
+
 </script>
 
 <main class="size-full flex flex-col overflow-hidden">

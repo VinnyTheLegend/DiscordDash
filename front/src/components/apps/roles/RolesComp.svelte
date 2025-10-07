@@ -16,6 +16,12 @@
   members.subscribe((value) => {
     members_value = value;
   });
+
+  export let visible = false;
+  $: if (visible) {
+    fetch_guild()
+  }
+
   
   let role_to_add: Selected<string | undefined>
   function add_role(): void {

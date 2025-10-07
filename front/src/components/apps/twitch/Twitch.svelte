@@ -14,9 +14,7 @@
         members_value = value;
     })
     
-    
-    let twitch_streams: TwitchStream[] = []
-    onMount(() => {
+    async function updateStreamers() {
         fetch(URLS.BASE_URL+'/api/twitchstreams', { mode: "cors", credentials: "include" })
         .then((response) => {
         if (response.status === 400) {
@@ -34,9 +32,14 @@
             console.log(error);
         
         });
-        if (members_value.length === 0) update_member_store()
-    })
+    }
     
+    let twitch_streams: TwitchStream[] = []
+    
+    export let visible = false
+    $: if (visible) {
+        updateStreamers();
+    }
 
 
 
