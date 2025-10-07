@@ -60,51 +60,66 @@ async def fetch(streamers: list[str]):
         print(repr(exc))
 
 async def main(bot: commands.Bot):
-    streamers_live = []
+    streamers_live = set()
     channel = bot.get_channel(secret.BOT_SPAM_CHANNEL_ID)
+    consecutive_errors = 0
+    
     while True:
-        db = SessionLocal()
-        db_streamers = crud.get_twitchstreams(db)
-        db.close()
-        if not db_streamers: 
+        try:
+            db = SessionLocal()
+            db_streamers = crud.get_twitchstreams(db)
+            db.close()
+            
+            if not db_streamers: 
+                await asyncio.sleep(5)
+                continue
+
+            streamers = [stream.user_login for stream in db_streamers]
+            response = await fetch(streamers)
+
+            if not response:
+                print("Twitch: no response retrying in 5s...")
+                consecutive_errors += 1
+                if consecutive_errors > 3:
+                    streamers_live.clear()
+                await asyncio.sleep(5)
+                continue
+
+            if response[0] != 200:
+                print("Twitch: Retrying authentication in 60s...")
+                consecutive_errors += 1
+                if consecutive_errors > 3:
+                    streamers_live.clear()
+                await asyncio.sleep(60)
+                global twitch_token
+                twitch_token = ''
+                continue
+
+            consecutive_errors = 0
+            response_json = response[1]
+            
+            current_live = {stream['user_login'] for stream in response_json['data']}
+            
+            for streamer in current_live - streamers_live:
+                await channel.send(
+                    content=f"https://www.twitch.tv/{streamer}", 
+                    allowed_mentions=discord.AllowedMentions(roles=True)
+                )
+                print(f"{streamer} live")
+            
+            for streamer in streamers_live - current_live:
+                print(f"{streamer}: Going offline.")
+            
+            streamers_live = current_live
+            
+        except Exception as e:
+            print(f"Error in Twitch monitoring loop: {str(e)}")
+            consecutive_errors += 1
+            if consecutive_errors > 3:
+                streamers_live.clear()
             await asyncio.sleep(5)
             continue
-        streamers = [stream.user_login for stream in db_streamers]
-        response = await fetch(streamers)
-        while not response:
-            print("Twitch: no response retrying in 5s...")
-            await asyncio.sleep(5)
-            response = await fetch(streamers)
-        while response[0] != 200:
-            print("Twitch: Retrying authentication in 60s...")
-            await asyncio.sleep(60)
-            global twitch_token
-            twitch_token = ''
-            response = await fetch(streamers)
-        response_json = response[1]
-        if response_json['data'] == []:
-            try:
-                for streamer in streamers_live:
-                    print(streamer, " going offline")
-                streamers_live = []
-            except:
-                pass
-        else:
-            streamers_live_response = []
-            for stream in response_json['data']:
-                streamers_live_response.append(stream['user_login'])
-                if stream['user_login'] not in streamers_live:
-                    streamers_live.append(stream['user_login'])
-                    await channel.send(content=f"https://www.twitch.tv/{stream['user_login']}", allowed_mentions=discord.AllowedMentions(roles=True)) #<@&1222684351054221312>\n
-                    print(stream['user_login'] + " live")
-            for stream in streamers_live:
-                if stream not in streamers_live_response:
-                    try:
-                        streamers_live.remove(stream)
-                        print(stream + ": Going offline.")
-                    except:
-                        pass
-
+        
         await asyncio.sleep(5)
 
 
