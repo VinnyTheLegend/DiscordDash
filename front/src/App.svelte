@@ -97,12 +97,11 @@
     window.location.pathname = ''
   }
   async function changeApp(event: CustomEvent<string>) {
-    await USER.get()
     current_app = event.detail;
     if (current_app !== 'home') {
-      window.location.pathname = '/' + current_app
+        history.pushState({}, '', '/' + current_app);
     } else {
-      window.location.pathname = ''
+        history.pushState({}, '', '/');
     }
   }
   
