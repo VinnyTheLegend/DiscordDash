@@ -169,6 +169,12 @@ class LeftOrRight(commands.Cog):
                 return
                 
             if left_count == right_count:
+                if len(images) <= 2:
+                    db = SessionLocal()
+                    new_lor1 = crud.leftorright_add_win(db, images[0].name)
+                    new_lor2 = crud.leftorright_add_win(db, images[1].name)
+                    await ctx.channel.send(f"It's a tie! {new_lor1.name} and {new_lor2.name} each get a win! ({new_lor1.wins} and {new_lor2.wins} total wins respectively)")
+                    return
                 await ctx.channel.send("It's a tie! No one is eliminated.")
                 continue
             if left_count > right_count:
