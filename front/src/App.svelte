@@ -89,12 +89,20 @@
   
   const apps = ['home', 'twitch', 'roles', 'leftorright']
   let current_app: string = "home"
-  console.log(window.location.pathname)
-  let pathname = window.location.pathname.replace('/', '')
-  if (apps.includes(pathname)) {
-    current_app=pathname
-  } else if (pathname != '') {
-    window.location.pathname = ''
+  let redirect = sessionStorage.getItem('redirect');
+  if (redirect) {
+      let path = redirect.replace('/', '');
+      if (apps.includes(path)) {
+          current_app = path;
+      }
+      sessionStorage.removeItem('redirect');
+  } else {
+      let pathname = window.location.pathname.replace('/', '')
+      if (apps.includes(pathname)) {
+        current_app = pathname
+      } else if (pathname != '') {
+        window.location.pathname = ''
+      }
   }
   async function changeApp(event: CustomEvent<string>) {
     current_app = event.detail;
