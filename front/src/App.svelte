@@ -94,6 +94,7 @@
       let path = redirect.replace('/', '');
       if (apps.includes(path)) {
           current_app = path;
+          history.pushState({}, '', '/' + current_app);
       }
       sessionStorage.removeItem('redirect');
   } else {
