@@ -51,16 +51,3 @@ class LeftOrRight(Base):
     img_url = Column(String)
     added_by = Column(String)
     wins = Column(Integer, nullable=True)
-
-#permissions
-class RolePermissions(Base):
-    __tablename__ = "role-permissions"
-    id = Column(String, primary_key=True, autoincrement=True)
-    app = Column(String)
-    role = Column(String)
-
-class ClientPermissions(Base):
-    __tablename__ = "client-permissions"
-    id = Column(String, primary_key=True, autoincrement=True)
-    app = Column(String)
-    client = Column(String)
