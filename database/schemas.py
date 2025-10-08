@@ -52,20 +52,3 @@ class LeftOrRight(BaseModel):
 
     class Config:
         from_attributes = True
-
-#permissions
-class RolePermissions(BaseModel):
-    id: Optional[int]
-    app: str
-    role: str
-
-    class Config:
-        from_attributes = True
-
-class ClientPermissions(BaseModel):
-    id: Optional[int]
-    app: str
-    client: str
-
-    class Config:
-        from_attributes = True
