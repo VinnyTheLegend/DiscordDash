@@ -65,7 +65,7 @@ async def lifespan(app: FastAPI):
     yield
     # on shutdown
 
-channel_botspam = 1040851566736986193
+channel_botspam = secret.BOT_SPAM_CHANNEL_ID
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=secret.SESSION_MIDDLEWARE_KEY)
