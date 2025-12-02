@@ -11,6 +11,8 @@ from database import crud, schemas
 from utils import logger, utils
 from datetime import datetime, timedelta
 
+import secret
+
 def get_db():
     db = SessionLocal()
     try:
@@ -21,11 +23,14 @@ def get_db():
 class DiscordLogs(commands.Cog):
     def __init__(self, bot):
         print("starting discordlogs")
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.connected = {}
         self.muted = {}
         self.deafened = {}
         self.router = APIRouter()   
+
+        self.current_channel = 0
+        self.voiceclient: discord.VoiceClient
 
         @self.router.get('/api/logs', response_model=list[str])
         async def logs(request: Request, db: Session = Depends(get_db)):
@@ -100,10 +105,22 @@ class DiscordLogs(commands.Cog):
             self.muted[member.id] = datetime.now()
 
     @commands.Cog.listener()
+    async def on_ready(self):
+        guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
+        self.voiceclient = await guild.get_channel(591684990811635736).connect()
+        self.current_channel = 591684990811635736
+
+
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         channel = member.guild.system_channel
         if channel is not None:
             await channel.send(f'Welcome {member.mention}.')
+
+    @commands.Cog.listener()
+    async def on_presence_update(self, before: discord.Member, after: discord.Member):
+        print(after.name, " ", after.status)
+        # await self.bot.get_channel(secret.BOT_SPAM_CHANNEL_ID).send("")
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
@@ -164,7 +181,18 @@ class DiscordLogs(commands.Cog):
             elif before.self_mute == True and after.self_mute == False:
                 self.unmute(member, after)
 
-
+        if member.id == secret.kris_id:
+            if after.channel and after.channel.id != self.current_channel:
+                await self.voiceclient.disconnect()
+                self.voiceclient = await after.channel.connect()
+                self.current_channel = after.channel.id
+            elif after.channel and after.channel.id == self.current_channel: 
+                pass
+            else:
+                await self.voiceclient.disconnect()
+                guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
+                self.voiceclient = await guild.get_channel(591684990811635736).connect()
+                self.current_channel = 591684990811635736
 
     @commands.hybrid_command(name='voicelogs', with_app_command=True)
     async def voicelogs(self, ctx):

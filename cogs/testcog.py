@@ -28,7 +28,7 @@ class Message(BaseModel):
 class TestCog(commands.Cog):
     def __init__(self, bot):
         print("starting testroute")
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.router = APIRouter()
         self._last_member = None
 
@@ -65,6 +65,7 @@ class TestCog(commands.Cog):
     async def ping(self, ctx):
         """asd"""
         await ctx.reply("Pong")
+
 
     @commands.hybrid_command(name='sync', with_app_command=True)
     async def sync(self, ctx):
