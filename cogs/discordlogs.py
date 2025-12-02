@@ -118,11 +118,6 @@ class DiscordLogs(commands.Cog):
             await channel.send(f'Welcome {member.mention}.')
 
     @commands.Cog.listener()
-    async def on_presence_update(self, before: discord.Member, after: discord.Member):
-        print(after.name, " ", after.status)
-        # await self.bot.get_channel(secret.BOT_SPAM_CHANNEL_ID).send("")
-
-    @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         log = ''
         if before.channel == None:

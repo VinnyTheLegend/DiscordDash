@@ -37,7 +37,7 @@ class Gemini(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         for mention in message.mentions:
-            if mention.id == self.bot.user.id:
+            if mention.id == self.bot.user.id and message.author.id != self.bot.user.id:
                 image = None
                 if message.attachments:
                     if message.attachments[0].filename.endswith('.mp4'):
@@ -49,15 +49,36 @@ class Gemini(commands.Cog):
                         image_bytes = await message.attachments[0].read()
                         image = Image.open(BytesIO(image_bytes))
                     response = await chat.send_message_async([
-                        f"from: {message.author.display_name}\n{message.content.replace('<@1040105644306472960>', '')}",
+                        f"from: {message.author}\n{message.content.replace('<@1040105644306472960>', '')}",
                         image
                         ], safety_settings=safety_settings)
                 else:
-                    response = await chat.send_message_async(f"from: {message.author.display_name}\n{message.content.replace('<@1040105644306472960>', '')}", safety_settings=safety_settings)
+                    response = await chat.send_message_async(f"from: {message.author}\n{message.content.replace('<@1040105644306472960>', '')}", safety_settings=safety_settings)
                 for i in range(0, len(response.text), 2000):
                     await message.reply(response.text[i:i + 2000]) 
                 return
-         
+            
+    @commands.hybrid_command(name='summarize', with_app_command=True)
+    @discord.app_commands.describe(messages="Amount of messages to summarize.")
+    async def summarize(self, ctx: commands.Context, messages: int):  
+        """Summarize a specified amount of messages"""
+        await ctx.defer()
+
+        channel = ctx.channel
+        history = [message async for message in channel.history(limit=messages)]
+        history.reverse()
+        history_str = ""
+        for message in history:
+            history_str += (f"{message.author}: {message.content}" + "\n")
+
+        clean_chat = model.start_chat()
+        
+        response = await clean_chat.send_message_async("Summarize the following conversation.\n" + history_str, safety_settings=safety_settings)
+
+        await ctx.reply(response.text[0:2000])
+        for i in range(2000, len(response.text), 2000):
+            await channel.send(response.text[i:i + 2000])
+    
     
 async def setup(bot):
     await bot.add_cog(Gemini(bot))
