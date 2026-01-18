@@ -6,7 +6,8 @@ export const URLS = {
     BASE_URL: BASE_URL,
     AUTH_URL: `${BASE_URL}/discord/authenticate`,
     USER_URL: `${BASE_URL}/discord/user`,
-    FRONT_URL: import.meta.env.VITE_FRONT_URL
+    FRONT_URL: import.meta.env.VITE_FRONT_URL,
+    INVITE_URL: 'https://discord.gg/zcrX9ntken'
 }
 
 export const role_colors: { [key: string]: {color: string} } = {

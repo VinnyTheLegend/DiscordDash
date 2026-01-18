@@ -11,7 +11,6 @@
   console.log('env', import.meta.env.VITE_BACK_URL)
   console.log('env', import.meta.env.VITE_FRONT_URL)
 
-
   let USER: User = {
     id: "",
     username: '',
@@ -101,6 +100,9 @@
       let pathname = window.location.pathname.replace('/', '')
       if (apps.includes(pathname)) {
         current_app = pathname
+      } else if (pathname == 'invite') {
+        window.location.href = 'https://discord.gg/zcrX9ntken'
+        console.log('https://discord.gg/zcrX9ntken')
       } else if (pathname != '') {
         window.location.pathname = ''
       }
