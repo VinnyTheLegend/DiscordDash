@@ -176,6 +176,7 @@ class DiscordLogs(commands.Cog):
             elif before.self_mute == True and after.self_mute == False:
                 self.unmute(member, after)
 
+        # kris listener
         if member.id == secret.kris_id:
             if after.channel and after.channel.id != self.current_channel:
                 await self.voiceclient.disconnect()
@@ -185,9 +186,6 @@ class DiscordLogs(commands.Cog):
                 pass
             else:
                 await self.voiceclient.disconnect()
-                guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
-                self.voiceclient = await guild.get_channel(591684990811635736).connect()
-                self.current_channel = 591684990811635736
 
     @commands.hybrid_command(name='voicelogs', with_app_command=True)
     async def voicelogs(self, ctx):
