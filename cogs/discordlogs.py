@@ -110,7 +110,6 @@ class DiscordLogs(commands.Cog):
         self.voiceclient = await guild.get_channel(591684990811635736).connect()
         self.current_channel = 591684990811635736
 
-
     @commands.Cog.listener()
     async def on_member_join(self, member):
         channel = member.guild.system_channel
