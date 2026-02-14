@@ -11,6 +11,7 @@
 /front/node_modules
 /front/dist-ssr
 /front/*.local
+/front/pnpm-lock.yaml
 
 # Editor directories and files
 .vscode
