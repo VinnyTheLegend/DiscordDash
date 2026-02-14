@@ -200,6 +200,5 @@ class DiscordLogs(commands.Cog):
         logs = logs + "```"
         await ctx.send(logs)
 
-
 async def setup(bot):
 	await bot.add_cog(DiscordLogs(bot))
