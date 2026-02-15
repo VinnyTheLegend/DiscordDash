@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cross-env VITE_FRONT_URL=https://localhost:5173&& cross-env VITE_BACK_URL=https://localhost:8000&& vite",
-    "build": "cross-env VITE_FRONT_URL=https://discord.seduction.lol&& cross-env VITE_BACK_URL=https://discordapi.seduction.lol:2053&& vite build",
+    "dev": "cross-env VITE_FRONT_URL=https://localhost:5173 VITE_BACK_URL=https://localhost:8000 vite",
+    "build": "cross-env VITE_FRONT_URL=https://discord.seduction.lol VITE_BACK_URL=https://discordapi.seduction.lol:2053 vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
