@@ -172,9 +172,13 @@ class DiscordLogs(commands.Cog):
         # kris listener
         if member.id == secret.kris_id:
             if after.channel and after.channel.id != self.current_channel:
-                await self.voiceclient.disconnect()
-                self.voiceclient = await after.channel.connect()
-                self.current_channel = after.channel.id
+                if not self.voiceclient
+                    self.voiceclient = await after.channel.connect()
+                    self.current_channel = after.channel.id
+                else:
+                    await self.voiceclient.disconnect()
+                    self.voiceclient = await after.channel.connect()
+                    self.current_channel = after.channel.id
             elif after.channel and after.channel.id == self.current_channel: 
                 pass
             else:
