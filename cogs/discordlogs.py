@@ -105,12 +105,6 @@ class DiscordLogs(commands.Cog):
             self.muted[member.id] = datetime.now()
 
     @commands.Cog.listener()
-    async def on_ready(self):
-        guild: discord.Guild = self.bot.get_guild(secret.GUILD_ID)
-        self.voiceclient = await guild.get_channel(591684990811635736).connect()
-        self.current_channel = 591684990811635736
-
-    @commands.Cog.listener()
     async def on_member_join(self, member):
         channel = member.guild.system_channel
         if channel is not None:
