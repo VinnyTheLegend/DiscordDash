@@ -86,7 +86,7 @@
       });
   }
   
-  const apps = ['home', 'twitch', 'roles', 'leftorright']
+  const apps = ['home', 'twitch', 'roles', 'leftorright', 'invite']
   let current_app: string = "home"
   let redirect = sessionStorage.getItem('redirect');
   if (redirect) {
@@ -100,9 +100,6 @@
       let pathname = window.location.pathname.replace('/', '')
       if (apps.includes(pathname)) {
         current_app = pathname
-      } else if (pathname == 'invite') {
-        window.location.href = 'https://discord.gg/zcrX9ntken'
-        console.log('https://discord.gg/zcrX9ntken')
       } else if (pathname != '') {
         window.location.pathname = ''
       }
@@ -140,9 +137,14 @@
   {:else if auth}
     <div class="flex h-full justify-end"></div>
   {:else}
-    <div class="flex h-full justify-center items-center">
-      <Button on:click={() => {window.location.href = URLS.AUTH_URL}}>Authenticate</Button>
-    </div>
+    {#if current_app == "invite"}
+      <div class="flex h-full justify-center items-center">
+        <Button on:click={() => {window.location.href = "https://discord.gg/zcrX9ntken"}}>Join</Button> </div>
+    {:else}
+      <div class="flex h-full justify-center items-center">
+        <Button on:click={() => {window.location.href = URLS.AUTH_URL}}>Authenticate</Button>
+      </div>
+    {/if}
   {/if}
 </main>
 
